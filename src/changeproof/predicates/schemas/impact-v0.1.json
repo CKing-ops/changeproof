@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:changeproof:predicate:impact:v0.1",
+  "title": "changeproof impact predicate v0.1 (draft)",
+  "description": "What a change touches: changed entities, what depends on them, and who relies on those.",
+  "type": "object",
+  "required": ["change", "who", "when", "changed", "impacted", "touches_crypto", "unresolved", "engine"],
+  "additionalProperties": false,
+  "properties": {
+    "change": {"$ref": "urn:changeproof:schema:common:v0.1#/$defs/change"},
+    "who": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["role", "id"],
+        "additionalProperties": false,
+        "properties": {
+          "role": {"enum": ["author", "committer", "approver", "agent"]},
+          "id": {"type": "string", "minLength": 1},
+          "source": {"type": "string"}
+        }
+      }
+    },
+    "when": {
+      "type": "object",
+      "required": ["committed_at"],
+      "additionalProperties": false,
+      "properties": {
+        "authored_at": {"type": "string", "format": "date-time"},
+        "committed_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "why": {"$ref": "urn:changeproof:schema:common:v0.1#/$defs/why"},
+    "changed": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          {"$ref": "urn:changeproof:schema:common:v0.1#/$defs/entityRef"},
+          {"required": ["change"], "properties": {"change": {"enum": ["added", "removed", "modified"]}}}
+        ]
+      }
+    },
+    "impacted": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          {"$ref": "urn:changeproof:schema:common:v0.1#/$defs/entityRef"},
+          {
+            "required": ["confidence", "via"],
+            "properties": {
+              "confidence": {"enum": ["definite", "probable", "possible"]},
+              "via": {
+                "description": "Dependency path from a changed entity, one edge per step, each with provenance.",
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "required": ["from", "to", "edge", "provenance"],
+                  "properties": {
+                    "from": {"type": "string"},
+                    "to": {"type": "string"},
+                    "edge": {"type": "string"},
+                    "provenance": {"$ref": "urn:changeproof:schema:common:v0.1#/$defs/provenance"}
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "reliant_systems": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "via_component"],
+        "properties": {"id": {"type": "string"}, "via_component": {"type": "string"}}
+      }
+    },
+    "touches_crypto": {"type": "boolean"},
+    "unresolved": {
+      "description": "Edges the analysis could not resolve. Reported, never hidden.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["description", "provenance"],
+        "properties": {
+          "description": {"type": "string"},
+          "provenance": {"$ref": "urn:changeproof:schema:common:v0.1#/$defs/provenance"}
+        }
+      }
+    },
+    "engine": {"$ref": "urn:changeproof:schema:common:v0.1#/$defs/engine"}
+  }
+}

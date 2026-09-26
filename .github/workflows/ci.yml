@@ -1,0 +1,23 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.8.17"
+      - name: Install (network allowed)
+        run: uv sync --locked --python 3.12
+      - name: Tests with sockets blocked in-process
+        run: uv run --offline pytest
+      - name: Tests again inside a network namespace with no interfaces
+        run: sudo unshare --net -- sudo -u "$USER" env "PATH=$PATH" "HOME=$HOME" uv run --offline pytest -p no:cacheprovider

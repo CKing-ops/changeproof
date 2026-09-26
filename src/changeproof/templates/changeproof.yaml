@@ -1,0 +1,38 @@
+version: 0.1
+system:
+  name: {name}
+  owner: {owner}
+  classification: unclassified          # unclassified | cui
+
+# One entry per part of the system. `language` picks the adapter.
+components: []
+#  - id: pay-batch
+#    path: src/cobol/pay
+#    language: cobol
+#    criticality: high
+#    data_stores: [PAYDB]
+#    relied_on_by: [finance-reporting]
+
+evidence:
+  produce: [impact, behavioral-equivalence, crypto-inventory]
+  outputs: [in-toto]
+
+crypto:
+  profile: hybrid                        # cnsa2 | nist-pqc | hybrid | classical-legacy
+  signing: [ml-dsa-87, ecdsa-p384]
+  release_signing: lms-sha256-192
+  hash: sha-384
+
+optimization:
+  backend: classical                     # classical | quantum-sim | qpu
+
+# Nothing leaves this machine unless this section allows it. See docs/adr/003-data-egress.md.
+egress:
+  allowed: false
+  data_tier: public                      # public | synthetic | customer-unclassified
+  approved_vendors: []
+  customer_approval_ref: null
+  require_pq_transport: true
+
+policy: []
+frameworks: []
