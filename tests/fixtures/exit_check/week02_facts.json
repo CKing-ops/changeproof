@@ -1,0 +1,102 @@
+[
+ {
+  "id": "call:CBACT01C.9999-ABEND-PROGRAM.CEE3ABD#1",
+  "kind": "call",
+  "provenance": "app/cbl/CBACT01C.cbl:410"
+ },
+ {
+  "id": "condition:COTRTUPC.CC-WORK-AREAS.CC-WORK-AREA.CCARD-AID.CCARD-AID-PA1",
+  "kind": "condition",
+  "provenance": "app/cpy/CVCRD01Y.cpy:6"
+ },
+ {
+  "id": "copybook:COSGN00C.CSMSG01Y#1",
+  "kind": "copybook",
+  "provenance": "app/cbl/COSGN00C.cbl:54"
+ },
+ {
+  "id": "data:COTRTUPC.ABEND-DATA.ABEND-CULPRIT",
+  "kind": "data",
+  "provenance": "app/cpy/CSMSG02Y.cpy:24-25"
+ },
+ {
+  "id": "exec-cics:COTRTUPC.1100-RECEIVE-MAP#1",
+  "kind": "exec-cics",
+  "provenance": "app/app-transaction-type-db2/cbl/COTRTUPC.cbl:642-647"
+ },
+ {
+  "id": "exec-sql:COTRTUPC.9600-WRITE-PROCESSING#1",
+  "kind": "exec-sql",
+  "provenance": "app/app-transaction-type-db2/cbl/COTRTUPC.cbl:1544-1548"
+ },
+ {
+  "id": "file:CBACT01C.ACCTFILE-FILE",
+  "kind": "file",
+  "provenance": "app/cbl/CBACT01C.cbl:29-33"
+ },
+ {
+  "id": "paragraph:COTRTUPC.9600-WRITE-PROCESSING-EXIT",
+  "kind": "paragraph",
+  "provenance": "app/app-transaction-type-db2/cbl/COTRTUPC.cbl:1593-1595"
+ },
+ {
+  "id": "program:CBACT01C",
+  "kind": "program",
+  "provenance": "app/cbl/CBACT01C.cbl:22-426"
+ },
+ {
+  "id": "call:CBACT01C.1300-POPUL-ACCT-RECORD.COBDATFT#1",
+  "kind": "call",
+  "provenance": "app/cbl/CBACT01C.cbl:231"
+ },
+ {
+  "id": "condition:COTRTUPC.WS-MISC-STORAGE.WS-NON-KEY-FLAGS.WS-EDIT-DESC-FLAGS.FLG-DESCRIPTION-ISVALID",
+  "kind": "condition",
+  "provenance": "app/app-transaction-type-db2/cbl/COTRTUPC.cbl:101"
+ },
+ {
+  "id": "copybook:COSGN00C.CSUSR01Y#1",
+  "kind": "copybook",
+  "provenance": "app/cbl/COSGN00C.cbl:55"
+ },
+ {
+  "id": "data:COSGN00C.WS-DATE-TIME.WS-TIMESTAMP.FILLER#4",
+  "kind": "data",
+  "provenance": "app/cpy/CSDAT01Y.cpy:50"
+ },
+ {
+  "id": "exec-cics:COSGN00C.READ-USER-SEC-FILE#1",
+  "kind": "exec-cics",
+  "provenance": "app/cbl/COSGN00C.cbl:211-219"
+ },
+ {
+  "id": "exec-sql:COTRTUPC.9800-DELETE-PROCESSING#1",
+  "kind": "exec-sql",
+  "provenance": "app/app-transaction-type-db2/cbl/COTRTUPC.cbl:1627-1630"
+ },
+ {
+  "id": "file:CBACT01C.OUT-FILE",
+  "kind": "file",
+  "provenance": "app/cbl/CBACT01C.cbl:35-38"
+ },
+ {
+  "id": "paragraph:COTRTUPC.0000-MAIN-EXIT",
+  "kind": "paragraph",
+  "provenance": "app/app-transaction-type-db2/cbl/COTRTUPC.cbl:573-575"
+ },
+ {
+  "id": "program:COTRTUPC",
+  "kind": "program",
+  "provenance": "app/app-transaction-type-db2/cbl/COTRTUPC.cbl:21-1701"
+ },
+ {
+  "id": "condition:COTRTUPC.WS-MISC-STORAGE.WS-PFK-FLAG.PFK-VALID",
+  "kind": "condition",
+  "provenance": "app/app-transaction-type-db2/cbl/COTRTUPC.cbl:89"
+ },
+ {
+  "id": "copybook:COTRTUPC.CSSETATY#1",
+  "kind": "copybook",
+  "provenance": "app/app-transaction-type-db2/cbl/COTRTUPC.cbl:1358"
+ }
+]

@@ -34,6 +34,7 @@ name = "changeproof"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
+    { name = "antlr4-python3-runtime" },
     { name = "jsonschema" },
     { name = "pydantic" },
     { name = "pyyaml" },
@@ -46,7 +47,6 @@ dev = [
     { name = "pytest-socket" },
 ]
 spike = [
-    { name = "antlr4-python3-runtime" },
     { name = "tree-sitter" },
     { name = "tree-sitter-java" },
     { name = "tree-sitter-javascript" },
@@ -55,6 +55,7 @@ spike = [
 
 [package.metadata]
 requires-dist = [
+    { name = "antlr4-python3-runtime", specifier = "==4.13.2" },
     { name = "jsonschema", specifier = ">=4.26,<5" },
     { name = "pydantic", specifier = ">=2.13,<3" },
     { name = "pyyaml", specifier = ">=6.0,<7" },
@@ -67,7 +68,6 @@ dev = [
     { name = "pytest-socket", specifier = ">=0.8" },
 ]
 spike = [
-    { name = "antlr4-python3-runtime", specifier = "==4.13.2" },
     { name = "tree-sitter", specifier = ">=0.26,<0.27" },
     { name = "tree-sitter-java", specifier = "==0.23.5" },
     { name = "tree-sitter-javascript", specifier = "==0.25.0" },
