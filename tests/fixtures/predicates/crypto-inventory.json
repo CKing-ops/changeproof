@@ -2,7 +2,7 @@
   "scope": {"revision": "9b7e011", "components": ["pay-batch"]},
   "findings": [
     {"id": "crypto-0001", "primitive": "signature", "algorithm": "rsa-2048", "parameters": {"key_bits": 2048},
-     "quantum_vulnerable": true, "cnsa2_category": "software-signing", "evidence": "CALL 'CSNDDSG'",
+     "quantum_vulnerable": true, "migration_category": "eu-pqc-roadmap:high-risk", "migration_deadline": "2030-12-31", "evidence": "CALL 'CSNDDSG'",
      "provenance": {"file": "src/cobol/pay/PAYSIGN.cbl", "line": 212}}
   ],
   "engine": {"name": "changeproof", "version": "0.1.0", "adapters": [{"language": "cobol", "version": "0.1.0"}]}

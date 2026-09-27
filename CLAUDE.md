@@ -45,7 +45,7 @@ Read it before starting any week.
 - Anything not yet proven is labeled **planned**.
 
 ## Compliance guardrails
-- Use only public, open-source or synthetic code in `corpus/`. No CUI or classified code.
+- Use only public, open-source or synthetic code in `corpus/`. No bank code, customer data or personal data.
 - Architecture decisions go in `docs/adr/NNN-<topic>.md`.
 
 ## Licensing

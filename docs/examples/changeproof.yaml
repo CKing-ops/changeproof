@@ -1,33 +1,35 @@
 version: 0.1
 system:
-  name: logistics-core
-  owner: program-office-x
-  classification: unclassified          # unclassified | cui (future)
+  name: eu-payments-core
+  owner: ict-risk-office
+  classification: confidential          # public | internal | confidential | restricted
 components:
   - id: pay-batch
     path: src/cobol/pay
     language: cobol                      # selects the adapter
     criticality: high
     data_stores: [PAYDB, VSAM.PAYMAST]
-    relied_on_by: [finance-reporting, partner-feed-A]
+    relied_on_by: [sepa-gateway, regulatory-reporting]
 evidence:
   produce: [impact, behavioral-equivalence, crypto-inventory]
   outputs: [in-toto, oscal, cyclonedx-cbom, pdf]
 crypto:
-  profile: cnsa2                         # cnsa2 | nist-pqc | hybrid | classical-legacy
-  signing: [ml-dsa-87, ecdsa-p384]       # hybrid during transition; classical dropped by 2030
-  release_signing: lms-sha256-192        # engine's own release signing (CNSA 2.0 software signing)
+  profile: hybrid                        # hybrid | nist-pqc | classical-legacy
+  signing: [ml-dsa-87, ecdsa-p384]       # hybrid until the EU PQC roadmap's 2030 high-risk deadline
+  release_signing: lms-sha256-192
   hash: sha-384
 optimization:
   backend: classical                     # classical | quantum-sim | qpu (public/synthetic data only)
 egress:
   allowed: false                         # default; must be explicitly enabled
-  data_tier: public                      # public | synthetic | customer-unclassified
+  data_tier: public                      # public | synthetic | customer-confidential
   approved_vendors: []
-  customer_approval_ref: null
+  customer_approval_ref: null            # written approval, required for customer-confidential
+  ict_register_ref: null                 # DORA register of information entry, required for customer-confidential
+  processing_region: null                # eea | adequacy | other
   require_pq_transport: true
 policy:
   - rule: high-criticality-needs-two-approvers
   - rule: equivalence-required-outside-impact-set
   - rule: no-new-quantum-vulnerable-crypto
-frameworks: [nist-ssdf, nist-800-53-cm, nist-800-53-sc, swft, cnsa2]
+frameworks: [dora, dora-rts-ict-risk, eu-pqc-roadmap, gdpr]

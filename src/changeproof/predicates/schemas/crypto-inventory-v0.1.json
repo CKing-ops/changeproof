@@ -24,7 +24,8 @@
           "algorithm": {"type": "string", "description": "Identifier as detected, e.g. rsa-2048; 'unknown' when not determinable."},
           "parameters": {"type": "object"},
           "quantum_vulnerable": {"type": ["boolean", "null"], "description": "null when the algorithm could not be determined."},
-          "cnsa2_category": {"type": ["string", "null"]},
+          "migration_category": {"type": ["string", "null"], "description": "Category under the active crypto profile, e.g. eu-pqc-roadmap high-risk."},
+          "migration_deadline": {"type": ["string", "null"], "format": "date"},
           "evidence": {"type": "string", "description": "The call, API or config key that revealed the use."},
           "provenance": {"$ref": "urn:changeproof:schema:common:v0.1#/$defs/provenance"}
         }

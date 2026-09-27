@@ -2,8 +2,10 @@
   "$defs": {
     "Classification": {
       "enum": [
-        "unclassified",
-        "cui"
+        "public",
+        "internal",
+        "confidential",
+        "restricted"
       ],
       "title": "Classification",
       "type": "string"
@@ -105,7 +107,7 @@
       "enum": [
         "public",
         "synthetic",
-        "customer-unclassified"
+        "customer-confidential"
       ],
       "title": "DataTier",
       "type": "string"
@@ -142,6 +144,29 @@
           ],
           "default": null,
           "title": "Customer Approval Ref"
+        },
+        "ict_register_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ict Register Ref"
+        },
+        "processing_region": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProcessingRegion"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "require_pq_transport": {
           "default": true,
@@ -228,6 +253,15 @@
       "title": "PolicyRule",
       "type": "object"
     },
+    "ProcessingRegion": {
+      "enum": [
+        "eea",
+        "adequacy",
+        "other"
+      ],
+      "title": "ProcessingRegion",
+      "type": "string"
+    },
     "System": {
       "additionalProperties": false,
       "properties": {
@@ -243,7 +277,7 @@
         },
         "classification": {
           "$ref": "#/$defs/Classification",
-          "default": "unclassified"
+          "default": "internal"
         }
       },
       "required": [
@@ -303,6 +337,8 @@
         "data_tier": "public",
         "approved_vendors": [],
         "customer_approval_ref": null,
+        "ict_register_ref": null,
+        "processing_region": null,
         "require_pq_transport": true
       }
     },

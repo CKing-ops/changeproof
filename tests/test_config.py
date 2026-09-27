@@ -28,7 +28,7 @@ def with_changes(raw: dict, **sections) -> dict:
 
 def test_roadmap_sample_config_validates():
     config = load_config(EXAMPLE)
-    assert config.system.name == "logistics-core"
+    assert config.system.name == "eu-payments-core"
     assert config.components[0].language == "cobol"
     assert config.version == "0.1"
 
@@ -49,7 +49,7 @@ def test_egress_is_denied_when_section_is_missing(raw):
 
 
 def test_unknown_keys_are_rejected(raw):
-    raw["system"]["clasification"] = "unclassified"
+    raw["system"]["clasification"] = "internal"
     with pytest.raises(ValidationError, match="clasification"):
         Config.model_validate(raw)
 
@@ -75,38 +75,51 @@ def test_qpu_backend_allowed_for_public_data_with_vendor(raw):
     assert Config.model_validate(data).optimization.backend == "qpu"
 
 
-def test_customer_data_egress_needs_written_approval(raw):
+def test_customer_data_egress_needs_approval_register_entry_and_eu_processing(raw):
     data = with_changes(
         raw,
         optimization={"backend": "qpu"},
-        egress={"allowed": True, "data_tier": "customer-unclassified", "approved_vendors": ["ibm-quantum"]},
+        egress={"allowed": True, "data_tier": "customer-confidential", "approved_vendors": ["ibm-quantum"]},
     )
-    with pytest.raises(ValidationError, match="customer_approval_ref"):
+    with pytest.raises(ValidationError) as err:
         Config.model_validate(data)
-    data["egress"]["customer_approval_ref"] = "LETTER-2026-014"
-    assert Config.model_validate(data).egress.customer_approval_ref == "LETTER-2026-014"
+    for field in ("customer_approval_ref", "ict_register_ref", "processing_region"):
+        assert field in str(err.value)
+    data["egress"] |= {"customer_approval_ref": "LTR-7", "ict_register_ref": "ROI-2026-0042", "processing_region": "eea"}
+    assert Config.model_validate(data).egress.ict_register_ref == "ROI-2026-0042"
 
 
-def test_cui_system_can_never_allow_egress(raw):
+def test_restricted_system_can_never_allow_egress(raw):
     data = with_changes(
         raw,
-        system={"classification": "cui"},
+        system={"classification": "restricted"},
         egress={"allowed": True, "data_tier": "public", "approved_vendors": ["ibm-quantum"]},
     )
-    with pytest.raises(ValidationError, match="cui"):
+    with pytest.raises(ValidationError, match="restricted"):
         Config.model_validate(data)
 
 
 def test_local_backends_never_need_egress(raw):
     for backend in ("classical", "quantum-sim"):
-        data = with_changes(raw, system={"classification": "cui"}, optimization={"backend": backend})
+        data = with_changes(raw, system={"classification": "restricted"}, optimization={"backend": backend})
         assert Config.model_validate(data).optimization.backend == backend
 
 
-def test_cnsa2_profile_requires_pq_transport(raw):
+def test_hybrid_profile_requires_pq_transport(raw):
     data = with_changes(raw, egress={"require_pq_transport": False})
     with pytest.raises(ValidationError, match="require_pq_transport"):
         Config.model_validate(data)
+
+
+def test_us_only_values_are_rejected(raw):
+    for section, values in [("system", {"classification": "cui"}), ("egress", {"data_tier": "customer-unclassified"})]:
+        with pytest.raises(ValidationError):
+            Config.model_validate(with_changes(raw, **{section: values}))
+
+
+def test_default_classification_is_internal(raw):
+    del raw["system"]["classification"]
+    assert Config.model_validate(raw).system.classification == "internal"
 
 
 def test_crypto_algorithms_are_identifiers_not_a_closed_list(raw):

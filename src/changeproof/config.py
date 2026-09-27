@@ -22,9 +22,12 @@ class Strict(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
 
+# Bank-style information classification, as most EU financial entities label their data.
 class Classification(StrEnum):
-    UNCLASSIFIED = "unclassified"
-    CUI = "cui"
+    PUBLIC = "public"
+    INTERNAL = "internal"
+    CONFIDENTIAL = "confidential"
+    RESTRICTED = "restricted"
 
 
 class Criticality(StrEnum):
@@ -36,7 +39,14 @@ class Criticality(StrEnum):
 class DataTier(StrEnum):
     PUBLIC = "public"
     SYNTHETIC = "synthetic"
-    CUSTOMER_UNCLASSIFIED = "customer-unclassified"
+    CUSTOMER_CONFIDENTIAL = "customer-confidential"
+
+
+# Where a vendor processes data: inside the EEA, in a country with a GDPR adequacy decision, or elsewhere.
+class ProcessingRegion(StrEnum):
+    EEA = "eea"
+    ADEQUACY = "adequacy"
+    OTHER = "other"
 
 
 class EvidenceKind(StrEnum):
@@ -55,7 +65,7 @@ class OutputFormat(StrEnum):
 class System(Strict):
     name: str = Field(min_length=1)
     owner: str = Field(min_length=1)
-    classification: Classification = Classification.UNCLASSIFIED
+    classification: Classification = Classification.INTERNAL
 
 
 class Component(Strict):
@@ -89,6 +99,8 @@ class Egress(Strict):
     data_tier: DataTier = DataTier.PUBLIC
     approved_vendors: list[Identifier] = []
     customer_approval_ref: str | None = None
+    ict_register_ref: str | None = None  # entry in the DORA register of information (Art. 28(3))
+    processing_region: ProcessingRegion | None = None
     require_pq_transport: bool = True
 
 

@@ -2,15 +2,28 @@
 
 - Status: proposed (Week 1), awaiting owner review
 - Date: 2026-09-26
-- Related: ROADMAP.md Week 6 (signer), Week 17 (`cnsa2` profile), CLAUDE.md rule 6
+- Market: DORA (EU financial sector). The US version of this ADR is on branch `week-01-foundations`.
+- Related: ROADMAP.md Week 6 (signer), Week 17 (production profile), CLAUDE.md rule 6
 
 ## Context
 
-Every evidence record changeproof emits is signed. Between now and 2035 the algorithms that are
-acceptable for those signatures will change at least twice: classical (ECDSA P-384) to hybrid
-(classical + ML-DSA-87) to post-quantum only, with LMS for release signing. Evidence has long
-retention, so records signed today must stay verifiable after an algorithm is distrusted, and must
-be re-signable without being altered.
+Every evidence record changeproof emits is signed. EU financial entities face two drivers that
+make the signing algorithm a moving target:
+
+- **DORA.** The RTS on the ICT risk management framework (Commission Delegated Regulation (EU)
+  2024/1774) Art. 6(4) requires the encryption policy to provide "for updating or changing, where
+  necessary, the cryptographic technology on the basis of developments in cryptanalysis", and
+  Recital 9 names "threats from quantum advancements". Art. 7 covers key management through the
+  full key lifecycle.
+- **EU PQC roadmap.** The Coordinated Implementation Roadmap published by the NIS Cooperation
+  Group on 23 June 2025 asks Member States to start the transition by end of 2026, to protect
+  high-risk systems with PQC no later than end of 2030, and to finish as far as feasible by 2035.
+  Finance counts among the vital sectors that roadmap puts first.
+
+So the algorithms acceptable for evidence signatures will change at least twice: classical
+(ECDSA P-384) to hybrid (classical + ML-DSA-87) to post-quantum only. Evidence has long retention
+(DORA keeps ICT records for years and supervisors can ask for them), so records signed today must
+stay verifiable after an algorithm is distrusted, and must be re-signable without being altered.
 
 If algorithm names leak into schemas, predicates or business logic, each transition becomes a
 schema migration across every stored record. That is the failure this ADR prevents.
@@ -53,11 +66,20 @@ schema migration across every stored record. That is the failure this ADR preven
    verifiable. A re-signing log records which records were countersigned, when and with what.
    **Planned** (Week 6, and the Week 17 archive job).
 
-7. **Profiles are named policies.** `crypto.profile` (`cnsa2`, `nist-pqc`, `hybrid`,
-   `classical-legacy`) selects which algorithm IDs the signer registry will accept for signing
-   and for verification. The config stores the name; the registry owns the rule set. One rule
-   already applies at config time: under `cnsa2`, `egress.require_pq_transport` must stay true
-   (`tests/test_config.py::test_cnsa2_profile_requires_pq_transport`).
+7. **Profiles are named policies.** `crypto.profile` (`hybrid`, `nist-pqc`, `classical-legacy`)
+   selects which algorithm IDs the signer registry will accept for signing and for verification.
+   `hybrid` is the default because national agencies in the EU (for example Germany's BSI and
+   France's ANSSI) advise hybrid classical + PQ schemes during the transition; recheck their
+   current guidance before Week 6. The config stores the name; the registry owns the rule set.
+   One rule already applies at config time: under `hybrid` and `nist-pqc`,
+   `egress.require_pq_transport` must stay true
+   (`tests/test_config.py::test_hybrid_profile_requires_pq_transport`,
+   `tests/test_egress.py::test_pq_profiles_keep_pq_transport`).
+
+8. **Crypto inventory findings carry a migration category and deadline, not a US category.**
+   `crypto-inventory/v0.1` findings record `migration_category` (e.g. `eu-pqc-roadmap:high-risk`)
+   and `migration_deadline`, filled from the active profile. This feeds the DORA Art. 6(4) duty to
+   show cryptography is updated as cryptanalysis develops.
 
 ## Consequences
 
@@ -67,8 +89,9 @@ schema migration across every stored record. That is the failure this ADR preven
   which forbids them in code, not in configuration.
 - Hybrid envelopes are larger (ML-DSA-87 signatures are about 4.6 KB). Week 6 benchmarks size and
   speed.
-- FIPS 140-3 validated modules can replace the open-source PQ library behind the same interface
-  when available (Week 17).
+- Certified modules can replace the open-source PQ library behind the same interface when
+  available. For EU buyers that means Common Criteria or national certification (for example BSI)
+  rather than, or as well as, FIPS 140-3 (Week 17).
 
 ## Alternatives considered
 
