@@ -27,6 +27,13 @@ Read it before starting any week.
 8. **Core schemas stay stable.** A new adapter, crypto algorithm or solver backend must never require
    a change to core schemas.
 
+## Markets
+- One build. Market rules live only in `src/changeproof/markets.py` as `MarketProfile` data and are
+  picked with `market:` in the config (`general` default, `eu-dora`, `us-defense`; ADR 004).
+  Code reads the active profile and never branches on a market name. Never fork a branch per market.
+- `eu-dora` is the first market to sell to. When a week needs an example, fixture or framework
+  mapping, do the `eu-dora` one first, and keep the other profiles' tests passing.
+
 ## Testing
 - `uv run pytest` must pass with networking disabled. The suite includes a test that the engine
   makes zero network calls in its default configuration.
@@ -36,6 +43,8 @@ Read it before starting any week.
 - One roadmap week = one git branch = one PR (branch name `week-NN-<short-topic>`).
 - Stop at each week's exit check. Record exit-check results in `docs/weekly/WEEK-NN.md`
   (what was done, exit-check evidence, open issues).
+- Each week branches from the previous week's branch and its PR targets that branch until the
+  previous PR is merged, then retargets to `main`. One report per week: `docs/weekly/WEEK-NN.md`.
 - Wait for the owner's approval before starting the next week.
 - Do not start Part B (Weeks 16–21) or any parking-lot item unless the owner asks.
 
