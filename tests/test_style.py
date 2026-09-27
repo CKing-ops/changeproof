@@ -9,7 +9,7 @@ CHECKED = [ROOT / "src", ROOT / "scripts", ROOT / "spike"]
 
 def python_files():
     for base in CHECKED:
-        yield from (p for p in base.rglob("*.py") if "_build" not in p.parts)
+        yield from (p for p in base.rglob("*.py") if not {"_build", "_generated"} & set(p.parts))
 
 
 def is_stub(fn: ast.FunctionDef) -> bool:
