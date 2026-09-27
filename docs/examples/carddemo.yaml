@@ -1,0 +1,28 @@
+# Component layout used for the CardDemo corpus runs (scripts/graph_corpus_run.py).
+# CardDemo ships a base application and three optional extensions; each is its own component,
+# so the graph can mark links and shared data between them. The longest matching path wins.
+version: 0.1
+market: eu-dora
+system:
+  name: carddemo
+  owner: ict-risk-office
+  classification: internal
+components:
+  - id: carddemo-base
+    path: app
+    language: cobol
+    criticality: high
+  - id: authorization
+    path: app/app-authorization-ims-db2-mq
+    language: cobol
+  - id: transaction-type
+    path: app/app-transaction-type-db2
+    language: cobol
+  - id: vsam-mq
+    path: app/app-vsam-mq
+    language: cobol
+crypto:
+  profile: hybrid
+  signing: [ml-dsa-87, ecdsa-p384]
+  release_signing: lms-sha256-192
+  hash: sha-384

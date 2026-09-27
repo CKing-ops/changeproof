@@ -21,6 +21,7 @@ installed metadata.
 | rpds-py | 2026.6.3 | MIT |
 | attrs | 26.1.0 | MIT |
 | antlr4-python3-runtime (Week 2) | 4.13.2 | BSD-3-Clause |
+| networkx (Week 3) | 3.7 | BSD-3-Clause |
 
 ## Vendored generated code (shipped)
 

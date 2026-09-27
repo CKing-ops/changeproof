@@ -40,6 +40,7 @@ class CopyStatement:
     resolved: str | None
     replacing: list[tuple[str, str]] = field(default_factory=list)
     problem: str | None = None
+    end_line: int | None = None  # last line of a statement that spans lines
 
 
 @dataclass(frozen=True)
@@ -186,7 +187,10 @@ def expand_copies(lines: list[Line], library: CopybookLibrary, copies: list[Copy
             body = expand_copies(read_fixed_format(path, library.root), library, copies, stack + (name.upper(),))
             for old, new in pairs:
                 body = apply_replacing(body, old, new)
-        copies.append(CopyStatement(name.upper(), at.file, at.line, resolved, pairs, problem))
+        last_line = lines[last].end_line or lines[last].line  # RENAME: LAST SOURCE LINE OF THE STATEMENT
+        spans = lines[last].file == at.file and last_line > at.line
+        copies.append(CopyStatement(name.upper(), at.file, at.line, resolved, pairs, problem,
+                                    last_line if spans else None))
         prefix = lines[first].text[: start - starts[first]]
         suffix = lines[last].text[end - starts[last]:]
         spliced = [replace(at, text=prefix)] if prefix.strip() else []

@@ -1,0 +1,124 @@
+{
+ "programs": 44,
+ "jcl_members": 48,
+ "csd_members": 4,
+ "nodes": {
+  "cics-file": 8,
+  "copybook": 61,
+  "dataset": 93,
+  "file": 54,
+  "job": 46,
+  "mapset": 21,
+  "paragraph": 903,
+  "proc": 1,
+  "program": 44,
+  "step": 121,
+  "table": 3,
+  "transaction": 25,
+  "unresolved": 38
+ },
+ "edges": {
+  "binds": 44,
+  "calls": 97,
+  "cics-dataset": 8,
+  "cics-file": 58,
+  "contains": 1024,
+  "dd": 213,
+  "declares": 54,
+  "goes-to": 200,
+  "includes": 357,
+  "performs": 1202,
+  "reads-table": 5,
+  "runs": 118,
+  "runs-proc": 3,
+  "starts": 25,
+  "starts-transaction": 24,
+  "uses-screen": 47,
+  "writes-table": 10
+ },
+ "edges_total": 3489,
+ "edges_with_provenance": 3489,
+ "edges_failing_check": [],
+ "edges_crossing_components": {
+  "contains: transaction-type -> carddemo-base": 4,
+  "includes: authorization -> carddemo-base": 17,
+  "includes: transaction-type -> carddemo-base": 18,
+  "includes: vsam-mq -> carddemo-base": 1,
+  "performs: transaction-type -> carddemo-base": 2
+ },
+ "shared_resources": {
+  "cics-file:ACCTDAT": [
+   "authorization",
+   "carddemo-base",
+   "vsam-mq"
+  ],
+  "cics-file:CCXREF": [
+   "authorization",
+   "carddemo-base"
+  ],
+  "cics-file:CUSTDAT": [
+   "authorization",
+   "carddemo-base"
+  ],
+  "cics-file:CXACAIX": [
+   "authorization",
+   "carddemo-base"
+  ],
+  "dataset:AWS.M2.CARDDEMO.ACCTDATA.VSAM.KSDS": [
+   "authorization",
+   "carddemo-base",
+   "vsam-mq"
+  ],
+  "dataset:AWS.M2.CARDDEMO.CARDXREF.VSAM.AIX.PATH": [
+   "authorization",
+   "carddemo-base"
+  ],
+  "dataset:AWS.M2.CARDDEMO.CARDXREF.VSAM.KSDS": [
+   "authorization",
+   "carddemo-base"
+  ],
+  "dataset:AWS.M2.CARDDEMO.CUSTDATA.VSAM.KSDS": [
+   "authorization",
+   "carddemo-base"
+  ],
+  "dataset:AWS.M2.CARDDEMO.LOADLIB": [
+   "carddemo-base",
+   "transaction-type"
+  ]
+ },
+ "unresolved": {
+  "calls: dynamic target with no VALUE": 28,
+  "calls: program not in the analyzed code": 46,
+  "includes: copybook not found": 71,
+  "runs: program not in the analyzed code": 106,
+  "starts: program not in the analyzed code": 1,
+  "uses-screen: dynamic target with no VALUE": 5
+ },
+ "unresolved_examples": [
+  "paragraph:CBACT01C.1300-POPUL-ACCT-RECORD -calls-> unresolved:program:COBDATFT at app/cbl/CBACT01C.cbl:231",
+  "paragraph:CBACT01C.9999-ABEND-PROGRAM -calls-> unresolved:program:CEE3ABD at app/cbl/CBACT01C.cbl:410",
+  "paragraph:CBACT02C.9999-ABEND-PROGRAM -calls-> unresolved:program:CEE3ABD at app/cbl/CBACT02C.cbl:158",
+  "paragraph:CBACT03C.9999-ABEND-PROGRAM -calls-> unresolved:program:CEE3ABD at app/cbl/CBACT03C.cbl:158",
+  "paragraph:CBACT04C.9999-ABEND-PROGRAM -calls-> unresolved:program:CEE3ABD at app/cbl/CBACT04C.cbl:632",
+  "paragraph:CBCUS01C.Z-ABEND-PROGRAM -calls-> unresolved:program:CEE3ABD at app/cbl/CBCUS01C.cbl:158",
+  "paragraph:CBEXPORT.9999-ABEND-PROGRAM -calls-> unresolved:program:CEE3ABD at app/cbl/CBEXPORT.cbl:579",
+  "paragraph:CBIMPORT.9999-ABEND-PROGRAM -calls-> unresolved:program:CEE3ABD at app/cbl/CBIMPORT.cbl:484",
+  "paragraph:CBSTM03A.9999-ABEND-PROGRAM -calls-> unresolved:program:CEE3ABD at app/cbl/CBSTM03A.CBL:923",
+  "paragraph:CBTRN01C.Z-ABEND-PROGRAM -calls-> unresolved:program:CEE3ABD at app/cbl/CBTRN01C.cbl:473",
+  "paragraph:CBTRN02C.9999-ABEND-PROGRAM -calls-> unresolved:program:CEE3ABD at app/cbl/CBTRN02C.cbl:711",
+  "paragraph:CBTRN03C.9999-ABEND-PROGRAM -calls-> unresolved:program:CEE3ABD at app/cbl/CBTRN03C.cbl:630",
+  "paragraph:COACCT01.2100-OPEN-ERROR-QUEUE -calls-> unresolved:program:MQOPEN at app/app-vsam-mq/cbl/COACCT01.cbl:302-307",
+  "paragraph:COACCT01.2300-OPEN-INPUT-QUEUE -calls-> unresolved:program:MQOPEN at app/app-vsam-mq/cbl/COACCT01.cbl:233-238",
+  "paragraph:COACCT01.2400-OPEN-OUTPUT-QUEUE -calls-> unresolved:program:MQOPEN at app/app-vsam-mq/cbl/COACCT01.cbl:267-272",
+  "paragraph:COACCT01.3000-GET-REQUEST -calls-> unresolved:program:MQGET at app/app-vsam-mq/cbl/COACCT01.cbl:352-360",
+  "paragraph:COACCT01.4100-PUT-REPLY -calls-> unresolved:program:MQPUT at app/app-vsam-mq/cbl/COACCT01.cbl:479-486",
+  "paragraph:COACCT01.5000-CLOSE-INPUT-QUEUE -calls-> unresolved:program:MQCLOSE at app/app-vsam-mq/cbl/COACCT01.cbl:557-561",
+  "paragraph:COACCT01.5100-CLOSE-OUTPUT-QUEUE -calls-> unresolved:program:MQCLOSE at app/app-vsam-mq/cbl/COACCT01.cbl:579-583",
+  "paragraph:COACCT01.5200-CLOSE-ERROR-QUEUE -calls-> unresolved:program:MQCLOSE at app/app-vsam-mq/cbl/COACCT01.cbl:602-606",
+  "paragraph:COACCT01.9000-ERROR -calls-> unresolved:program:MQPUT at app/app-vsam-mq/cbl/COACCT01.cbl:516-523",
+  "program:COBSWAIT -calls-> unresolved:program:MVSWAIT at app/cbl/COBSWAIT.cbl:38",
+  "paragraph:CODATE01.2100-OPEN-ERROR-QUEUE -calls-> unresolved:program:MQOPEN at app/app-vsam-mq/cbl/CODATE01.cbl:251-256",
+  "paragraph:CODATE01.2300-OPEN-INPUT-QUEUE -calls-> unresolved:program:MQOPEN at app/app-vsam-mq/cbl/CODATE01.cbl:182-187",
+  "paragraph:CODATE01.2400-OPEN-OUTPUT-QUEUE -calls-> unresolved:program:MQOPEN at app/app-vsam-mq/cbl/CODATE01.cbl:216-221"
+ ]
+}
