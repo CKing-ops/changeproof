@@ -81,8 +81,8 @@ addition above, 44 programs and 48 JCL members gave 1,369 nodes and 3,385 edges.
 performs, 1,024 contains, 357 includes, 213 DD, 200 GO TO, 118 runs and 97 calls. There are 44
 file-to-dataset bindings, which link 44 program files to the datasets their jobs give them.
 
-251 of the original edges are unresolved, and every one points at IBM-supplied code, which is
-outside the corpus:
+251 of the original edges are unresolved. 223 point at IBM-supplied code, which is outside the
+corpus. The other 28 are dynamic calls inside CardDemo whose target is only set at run time:
 
 | Reason | Count | Most common targets |
 |---|---|---|
