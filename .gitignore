@@ -4,4 +4,3 @@ __pycache__/
 .pytest_cache/
 /corpus/nist/
 /spike/_build/
-/spike/results/*.jsonl
