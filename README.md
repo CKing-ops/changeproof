@@ -1,6 +1,7 @@
 # changeproof
 
 Semantic change evidence engine. See `ROADMAP.md` for the build plan and `CLAUDE.md` for working rules.
+Market: universal (`general`) is the main path and EU DORA (`eu-dora`) the strong second.
 
 ## Status
 
@@ -25,7 +26,7 @@ Weeks 1-4 (planned capabilities are labeled; proven ones cite their test):
 - `changeproof change <commit or range>` prints who/what/when/where/how/why records from a local git
   repository, with requester, implementer and approver kept apart, an emergency flag and ticket IDs
   copied from the commit message (`tests/test_change.py`, `scripts/change_exit_check.py`).
-- Adapters for languages other than COBOL: **planned** (not yet scheduled; see `docs/adr/004-market-profiles.md`).
+- Adapters for languages other than COBOL: **planned** (Java in Week 11; see `ROADMAP.md`).
 - Impact, equivalence and crypto-inventory evidence: **planned** (Weeks 5, 9, 16).
 
 ## Development
