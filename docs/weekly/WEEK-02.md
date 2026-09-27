@@ -1,7 +1,7 @@
 # Week 2: intermediate representation (COBOL adapter)
 
-- Market: universal build (`week-01-universal`), selling to DORA first
-- Branch: `week-02-cobol-ir`, built on `week-01-universal`
+- Market: universal build, selling to DORA first
+- Branch: `week-02-cobol-ir`, on `main` after the universal Week 1 merged (#3)
 - Date: 2026-09-27
 - Status: exit check met; waiting for owner review
 
@@ -100,6 +100,6 @@ point at the copybook rather than at the program that copied it.
 
 ## Decisions needed from the owner
 
-1. Approve Week 2 and the merge order: PR #3 (universal Week 1) first, then this PR.
+1. Approve Week 2.
 2. IR cache key: wait for the Week 6 signer interface to supply the hash (recommended), or allow
    a non-evidence hash for caching only as a written exception to rule 6.
