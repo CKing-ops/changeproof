@@ -1,8 +1,8 @@
-"""Week 3 exit check on real code: builds the CardDemo dependency graph and checks every edge.
+"""Builds the CardDemo dependency graph, with field-level data flow, and checks every edge (Weeks 3 and 4).
 
     uv run python scripts/graph_corpus_run.py
 
-Writes docs/weekly/week03-carddemo-graph.json (counts and problems) and, git-ignored,
+Writes docs/weekly/week04-carddemo-graph.json (counts and problems) and, git-ignored,
 corpus/carddemo-graph.sqlite for querying.
 """
 
@@ -25,7 +25,7 @@ COPYBOOK_DIRS = sorted(  # RENAME: CARDDEMO FOLDERS SEARCHED FOR COPYBOOKS AND D
     p.relative_to(CORPUS).as_posix() for p in CORPUS.glob("app/**/*") if p.is_dir() and p.name in ("cpy", "cpy-bms", "dcl")
 )
 CONFIG = ROOT / "docs" / "examples" / "carddemo.yaml"  # RENAME: COMPONENT LAYOUT USED FOR CARDDEMO
-REPORT = ROOT / "docs" / "weekly" / "week03-carddemo-graph.json"
+REPORT = ROOT / "docs" / "weekly" / "week04-carddemo-graph.json"
 DATABASE = ROOT / "corpus" / "carddemo-graph.sqlite"
 
 

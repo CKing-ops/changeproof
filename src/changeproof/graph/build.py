@@ -104,10 +104,25 @@ class GraphBuilder:
             return (same or paragraphs)[0].id
         return next((e.id for e in facts if e.kind == "section" and e.name == name), None)
 
-    # PURPOSE: VALUE LITERAL OF A DATA ITEM, SO A DATA-NAME TARGET CAN BE RESOLVED STATICALLY
-    def value_of(self, program: str, data_name: str) -> str | None:
-        return next((e.attributes["value"].strip().upper() for e in self.facts[program]
-                     if e.kind == "data" and e.name == data_name and "value" in e.attributes), None)
+    # PURPOSE: LITERALS A DATA ITEM CAN HOLD, FROM ITS VALUE CLAUSE AND FROM MOVES, AS (VALUE, SOURCE FACT ID)
+    def values_of(self, program: str, data_name: str) -> list[tuple[str, str]]:
+        found = {}  # RENAME: LITERAL TO THE FIRST FACT THAT PUTS IT IN THE DATA ITEM
+        for e in self.facts[program]:
+            if e.kind == "data" and e.name == data_name and "value" in e.attributes:
+                found.setdefault(e.attributes["value"].strip().upper(), e.id)
+            elif e.kind == "flow" and "literal" in e.attributes and \
+                    any(t.split()[0] == data_name for t in e.attributes["targets"]):
+                found.setdefault(e.attributes["literal"].strip().upper(), e.id)
+        return list(found.items())
+
+    # PURPOSE: FINDS THE DATA ITEM A NAME LIKE "FIELD OF GROUP" REFERS TO, OR THE REASON IT CANNOT
+    def data_item(self, program: str, ref: str) -> tuple[str | None, str]:
+        name, *qualifiers = ref.split(" OF ")
+        matches = [e.id for e in self.facts[program] if e.kind == "data" and e.name == name
+                   and set(qualifiers) <= set(e.id.split(":", 1)[1].split(".")[1:-1])]
+        if len(matches) == 1:
+            return matches[0], ""
+        return None, f"ambiguous: {len(matches)} data items have this name" if matches else "no such data item"
 
     # PURPOSE: TURNS ONE PROGRAM'S IR FACTS INTO NODES AND EDGES
     def add_program(self, program: str) -> None:
@@ -138,6 +153,31 @@ class GraphBuilder:
                         self.edge(f"{e.id}>{mode}>{table}", src, table_id, f"{mode}-table", e.provenance)
                 case "exec-cics":
                     self.add_cics(program, e, src)
+                case "data" if e.name != "FILLER":
+                    self.node(e.id, "data", e.name, e.provenance,
+                              {k: v for k, v in e.attributes.items() if k in ("level", "section", "parent", "picture")})
+                case "flow":
+                    self.add_flow(program, e)
+
+    # PURPOSE: ADDS A FLOWS-TO EDGE FROM EACH FIELD OR FILE A STATEMENT READS TO EACH FIELD IT WRITES
+    def add_flow(self, program: str, e: Entity) -> None:
+        sources = [self.data_item(program, ref) + (ref,) for ref in e.attributes["sources"]]
+        if "file" in e.attributes:
+            file_id = f"file:{program}.{e.attributes['file']}"
+            known = any(f.id == file_id for f in self.facts[program])
+            sources.append((file_id if known else None, "no such file", e.attributes["file"]))
+        targets = [self.data_item(program, ref) + (ref,) for ref in e.attributes["targets"]]
+        extra = {"verb": e.attributes["verb"]} | ({"corresponding": True} if e.attributes.get("corresponding") else {})
+        for src, src_problem, src_ref in sources:
+            for dst, dst_problem, dst_ref in targets:
+                key = f"{e.id}>{src_ref}>{dst_ref}"
+                if src and dst:
+                    self.edge(key, src, dst, "flows-to", e.provenance, **extra)
+                    continue
+                src = src or self.node(f"unresolved:data:{src_ref}", "unresolved", src_ref, e.provenance)
+                dst = dst or self.node(f"unresolved:data:{dst_ref}", "unresolved", dst_ref, e.provenance)
+                self.edges[key] = Edge(key=key, src=src, dst=dst, kind="flows-to", provenance=e.provenance,
+                                       resolved=False, attributes={"reason": src_problem or dst_problem} | extra)
 
     # PURPOSE: ADDS A PERFORM OR GO TO EDGE, WITH THE THRU END RESOLVED TOO
     def add_jump(self, program: str, e: Entity, src: str) -> None:
@@ -156,14 +196,29 @@ class GraphBuilder:
 
     # PURPOSE: ADDS A CALL EDGE TO ANOTHER PROGRAM, OR AN UNRESOLVED ONE WITH ITS REASON
     def add_call(self, program: str, e: Entity, src: str) -> None:
-        target, via = e.attributes["target"], "call"
+        target = e.attributes["target"]
         if e.attributes["dynamic"] and "target_from" not in e.attributes:
-            self.unresolved(e.id, src, f"dynamic:{target}", "calls", e.provenance, "dynamic target with no VALUE", via=via)
-        elif target in self.programs:
-            self.edge(e.id, src, f"program:{target}", "calls", e.provenance, via=via)
+            self.add_dynamic(program, e, src, target, "call")
         else:
-            self.unresolved(e.id, src, f"program:{target}", "calls", e.provenance, "program not in the analyzed code",
-                            via=via)
+            self.call_edge(e.id, src, target, e.provenance, "call")
+
+    # PURPOSE: ADDS ONE CALL EDGE PER LITERAL THE TARGET DATA ITEM CAN HOLD, OR AN UNRESOLVED EDGE IF NONE
+    def add_dynamic(self, program: str, e: Entity, src: str, data_name: str, via: str) -> None:
+        candidates = self.values_of(program, data_name)
+        if not candidates:
+            self.unresolved(e.id, src, f"dynamic:{data_name}", "calls", e.provenance,
+                            "dynamic target with no VALUE or MOVE of a literal", via=via)
+        for value, fact in candidates:
+            key = e.id if len(candidates) == 1 else f"{e.id}>{value}"
+            self.call_edge(key, src, value, e.provenance, via, target_from=fact)
+
+    # PURPOSE: ADDS A CALLS EDGE, OR AN UNRESOLVED ONE WHEN THE PROGRAM IS NOT IN THE ANALYZED CODE
+    def call_edge(self, key: str, src: str, target: str, where: Provenance, via: str, **extra) -> None:
+        if target in self.programs:
+            self.edge(key, src, f"program:{target}", "calls", where, via=via, **extra)
+        else:
+            self.unresolved(key, src, f"program:{target}", "calls", where, "program not in the analyzed code",
+                            via=via, **extra)
 
     # PURPOSE: ADDS AN INCLUDES EDGE FROM THE PROGRAM TO THE COPYBOOK IT COPIES
     def add_copybook(self, e: Entity, home: str) -> None:
@@ -180,16 +235,11 @@ class GraphBuilder:
     def add_cics(self, program: str, e: Entity, src: str) -> None:
         command = e.attributes["command"]
         if command in ("LINK", "XCTL"):
-            target = e.attributes.get("program") or self.value_of(program, e.attributes.get("program_ref", ""))
             via = f"cics-{command.lower()}"
-            if target is None:
-                self.unresolved(e.id, src, f"dynamic:{e.attributes.get('program_ref')}", "calls", e.provenance,
-                                "dynamic target with no VALUE", via=via)
-            elif target in self.programs:
-                self.edge(e.id, src, f"program:{target}", "calls", e.provenance, via=via)
-            else:
-                self.unresolved(e.id, src, f"program:{target}", "calls", e.provenance,
-                                "program not in the analyzed code", via=via)
+            if "program" in e.attributes:
+                self.call_edge(e.id, src, e.attributes["program"], e.provenance, via)
+            elif "program_ref" in e.attributes:
+                self.add_dynamic(program, e, src, e.attributes["program_ref"], via)
         elif command in CICS_FILE_COMMANDS and ("file" in e.attributes or "file_ref" in e.attributes):
             self.cics_target(program, e, src, "file", "cics-file", "cics-file", command=command)
         elif command in SCREEN_COMMANDS and ("mapset" in e.attributes or "mapset_ref" in e.attributes
@@ -200,16 +250,19 @@ class GraphBuilder:
         elif command in TRANSACTION_COMMANDS and ("transid" in e.attributes or "transid_ref" in e.attributes):
             self.cics_target(program, e, src, "transid", "transaction", "starts-transaction", command=command)
 
-    # PURPOSE: LINKS A CICS COMMAND TO THE RESOURCE ITS OPTION NAMES, RESOLVING A DATA NAME THROUGH ITS VALUE
+    # PURPOSE: LINKS A CICS COMMAND TO THE RESOURCE ITS OPTION NAMES, ONE EDGE PER LITERAL A DATA NAME CAN HOLD
     def cics_target(self, program: str, e: Entity, src: str, option: str, kind: str, edge_kind: str,
                     **attributes) -> None:
-        name = e.attributes.get(option) or self.value_of(program, e.attributes[f"{option}_ref"])
-        if name is None:
+        names = [(e.attributes[option], None)] if option in e.attributes \
+            else self.values_of(program, e.attributes[f"{option}_ref"])
+        if not names:
             self.unresolved(e.id, src, f"dynamic:{e.attributes[f'{option}_ref']}", edge_kind, e.provenance,
-                            "dynamic target with no VALUE", **attributes)
-            return
-        target = self.node(f"{kind}:{name}", kind, name, e.provenance)
-        self.edge(e.id, src, target, edge_kind, e.provenance, **attributes)
+                            "dynamic target with no VALUE or MOVE of a literal", **attributes)
+        for name, fact in names:
+            target = self.node(f"{kind}:{name}", kind, name, e.provenance)
+            key = e.id if len(names) == 1 else f"{e.id}>{name}"
+            extra = {"target_from": fact} if fact else {}
+            self.edge(key, src, target, edge_kind, e.provenance, **attributes, **extra)
 
     # PURPOSE: ADDS CSD TRANSACTIONS, FILES AND MAPSETS, SO THEIR DEFINITIONS ARE WHERE THE NODES POINT
     def add_csd(self, definitions: list[CsdDefinition]) -> None:

@@ -30,6 +30,95 @@ CICS_OPERAND_RE = {
 }
 
 
+
+# PURPOSE: SPLITS A DATA-FLOW STATEMENT INTO (VERB, SENDING PARTS, RECEIVING PARTS), OR NONE FOR OTHER NODES
+def flow_parts(node: ParserRuleContext) -> tuple[str, list, list] | None:
+    match node:
+        case P.MoveToStatementContext():
+            return "MOVE", [node.moveToSendingArea()], node.identifier()
+        case P.MoveCorrespondingToStatementContext():
+            return "MOVE", [node.moveCorrespondingToSendingArea()], node.identifier()
+        case P.ComputeStatementContext():
+            return "COMPUTE", [node.arithmeticExpression()], node.computeStore()
+        case P.AddToStatementContext():
+            return "ADD", node.addFrom(), node.addTo()
+        case P.AddToGivingStatementContext():
+            return "ADD", node.addFrom() + node.addToGiving(), node.addGiving()
+        case P.AddCorrespondingStatementContext():
+            return "ADD", [node.identifier()], [node.addTo()]
+        case P.SubtractFromStatementContext():
+            return "SUBTRACT", node.subtractSubtrahend(), node.subtractMinuend()
+        case P.SubtractFromGivingStatementContext():
+            return "SUBTRACT", node.subtractSubtrahend() + [node.subtractMinuendGiving()], node.subtractGiving()
+        case P.SubtractCorrespondingStatementContext():
+            return "SUBTRACT", [node.qualifiedDataName()], [node.subtractMinuendCorresponding()]
+        case P.MultiplyStatementContext():
+            first = node.identifier() or node.literal()
+            if regular := node.multiplyRegular():
+                return "MULTIPLY", [first], regular.multiplyRegularOperand()
+            giving = node.multiplyGiving()
+            return "MULTIPLY", [first, giving.multiplyGivingOperand()], giving.multiplyGivingResult()
+        case P.DivideStatementContext():
+            return divide_parts(node)
+        case P.ReadStatementContext() if node.readInto():
+            return "READ", [], [node.readInto().identifier()]
+        case P.WriteStatementContext() if node.writeFromPhrase():
+            return "WRITE", [node.writeFromPhrase()], [node.recordName()]
+        case P.RewriteStatementContext() if node.rewriteFrom():
+            return "REWRITE", [node.rewriteFrom()], [node.recordName()]
+        case P.StringStatementContext():
+            return "STRING", [s for p in node.stringSendingPhrase() for s in p.stringSending()], \
+                [node.stringIntoPhrase().identifier()]
+        case P.UnstringStatementContext():
+            return "UNSTRING", [node.unstringSendingPhrase().identifier()], \
+                [i.identifier() for i in node.unstringIntoPhrase().unstringInto()]
+    return None
+
+
+# PURPOSE: SENDING AND RECEIVING PARTS OF THE FOUR DIVIDE FORMATS, REMAINDER INCLUDED
+def divide_parts(node: P.DivideStatementContext) -> tuple[str, list, list]:
+    first = node.identifier() or node.literal()
+    remainder = [node.divideRemainder().identifier()] if node.divideRemainder() else []
+    if into := node.divideIntoStatement():
+        return "DIVIDE", [first], into.divideInto() + remainder
+    other = node.divideIntoGivingStatement() or node.divideByGivingStatement()
+    giving = other.divideGivingPhrase().divideGiving() if other.divideGivingPhrase() else []
+    return "DIVIDE", [first, other.identifier() or other.literal()], giving + remainder
+
+
+# PURPOSE: DATA NAMES A STATEMENT PART REFERS TO, AS "NAME" OR "NAME OF GROUP"; SUBSCRIPTS ARE NOT FOLLOWED
+def data_refs(ctx: ParserRuleContext) -> list[str]:
+    found = []
+    stack = [ctx]
+    while stack:
+        node = stack.pop()
+        if not isinstance(node, ParserRuleContext):
+            continue
+        if isinstance(node, P.IdentifierContext) and node.specialRegister():
+            continue
+        if isinstance(node, P.QualifiedDataNameContext):
+            found.append(qualified_name(node))
+            continue
+        stack.extend(reversed(node.children or []))
+    return found
+
+
+# PURPOSE: RENDERS A QUALIFIED DATA NAME AS "NAME OF GROUP OF RECORD"
+def qualified_name(node: P.QualifiedDataNameContext) -> str:
+    format1 = node.qualifiedDataNameFormat1()
+    if format1 is None:
+        return node.getText().upper()
+    parts = [(format1.dataName() or format1.conditionName()).getText().upper()]
+    for qualifier in format1.qualifiedInData():
+        if data := qualifier.inData():
+            parts.append(data.dataName().getText().upper())
+        else:
+            parts.append(qualifier.inTable().tableCall().qualifiedDataName().getText().upper())
+    if in_file := format1.inFile():
+        parts.append(in_file.fileName().getText().upper())
+    return " OF ".join(parts)
+
+
 class Builder:
     # PURPOSE: HOLDS THE SOURCE, TOKENS AND RUNNING STATE WHILE ONE MODULE IS WALKED
     def __init__(self, source: Source, tokens) -> None:
@@ -54,10 +143,10 @@ class Builder:
             end = last.end_line or last.line
         return Provenance(file=first.file, line=first.line, end_line=end if end != first.line else None)
 
-    # PURPOSE: DEFAULT-CHANNEL TOKEN TEXT OF A CONTEXT, SPACE-SEPARATED
+    # PURPOSE: DEFAULT-CHANNEL TOKEN TEXT OF A CONTEXT, SPACE-SEPARATED, SO LINE LAYOUT DOES NOT COUNT
     def text(self, ctx: ParserRuleContext) -> str:
-        return " ".join(t.text for t in self.tokens.tokens[ctx.start.tokenIndex:ctx.stop.tokenIndex + 1]
-                        if t.channel == 0)
+        return " ".join(t.text.strip() for t in self.tokens.tokens[ctx.start.tokenIndex:ctx.stop.tokenIndex + 1]
+                        if t.channel == 0 and t.text.strip())
 
     # PURPOSE: ADDS AN ENTITY, NUMBERING IDS THAT WOULD OTHERWISE REPEAT
     def add(self, kind: str, qualified: str, name: str, provenance: Provenance, attributes: dict,
@@ -119,6 +208,8 @@ class Builder:
             case P.GoToDependingOnStatementContext():
                 for target in node.procedureName():
                     self.add_jump("goto", target, node)
+            case _ if parts := flow_parts(node):
+                self.add_flow(node, *parts)
 
     # PURPOSE: CLOSES THE SECTION OR PARAGRAPH SCOPE ON THE WAY BACK UP
     def leave(self, node: ParserRuleContext) -> None:
@@ -221,6 +312,23 @@ class Builder:
         if self.paragraph_id:
             attributes["paragraph"] = self.paragraph_id
         self.add(kind, f"{self.owner()}.{name}", name, self.span(node), attributes, numbered=True)
+
+    # PURPOSE: RECORDS WHICH FIELDS A STATEMENT READS AND WHICH IT WRITES, NAMED AFTER ITS FIRST TARGET
+    def add_flow(self, node: ParserRuleContext, verb: str, sending: list, receiving: list) -> None:
+        targets = [name for part in receiving for name in data_refs(part)]
+        if not targets:
+            return
+        attributes = {"verb": verb, "sources": [name for part in sending for name in data_refs(part)],
+                      "targets": targets, "text": self.text(node)}
+        if isinstance(node, P.ReadStatementContext):
+            attributes["file"] = node.fileName().getText().upper()
+        if isinstance(node, P.MoveCorrespondingToStatementContext):
+            attributes["corresponding"] = True
+        if isinstance(node, P.MoveToStatementContext) and (literal := sending[0].literal()) is not None:
+            attributes["literal"] = literal.getText().strip("'\"")
+        if self.paragraph_id:
+            attributes["paragraph"] = self.paragraph_id
+        self.add("flow", f"{self.owner()}.{targets[0].split()[0]}", verb, self.span(node), attributes, numbered=True)
 
     # PURPOSE: ADDS ENTITIES FOR COPY STATEMENTS AND EXEC BLOCKS, WHICH THE PREPROCESSOR HELD
     def add_preprocessed(self) -> None:
