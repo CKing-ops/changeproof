@@ -121,6 +121,7 @@ def mask_fixed_format(text: str) -> str:
     proc_start = re.search(r"\bPROCEDURE\s+DIVISION\b", joined, re.IGNORECASE)
     chars = list(joined)
 
+    # PURPOSE: SPACES OUT A SPAN WHILE KEEPING LINE BREAKS
     def blank(start: int, end: int) -> None:
         for i in range(start, end):
             if chars[i] != "\n":
