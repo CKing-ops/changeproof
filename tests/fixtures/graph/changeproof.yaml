@@ -1,0 +1,18 @@
+version: 0.1
+market: eu-dora
+system:
+  name: test-payments
+  owner: ict-risk-office
+  classification: confidential
+components:
+  - id: batch-core
+    path: src
+    language: cobol
+    criticality: high
+    data_stores: [ACCOUNTS]
+    relied_on_by: [sepa-gateway]
+crypto:
+  profile: hybrid
+  signing: [ml-dsa-87, ecdsa-p384]
+  release_signing: lms-sha256-192
+  hash: sha-384

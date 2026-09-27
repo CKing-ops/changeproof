@@ -4,3 +4,4 @@ __pycache__/
 .pytest_cache/
 /corpus/nist/
 /spike/_build/
+/corpus/carddemo-graph.sqlite

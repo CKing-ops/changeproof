@@ -21,7 +21,10 @@ DATA_SECTIONS = {  # RENAME: PARSE-TREE SECTION TYPE TO THE SECTION NAME STORED 
     P.LocalStorageSectionContext: "local-storage",
     P.LinkageSectionContext: "linkage",
 }
-CICS_PROGRAM_RE = re.compile(r"\bPROGRAM\s*\(\s*(?:'([^']*)'|\"([^\"]*)\"|([\w-]+))\s*\)", re.IGNORECASE)
+CICS_OPERAND_RE = {  # RENAME: CICS OPTION NAME TO THE ATTRIBUTE IT FILLS (LITERAL) OR ITS _REF (DATA NAME)
+    "program": re.compile(r"\bPROGRAM\s*\(\s*(?:'([^']*)'|\"([^\"]*)\"|([\w-]+))\s*\)", re.IGNORECASE),
+    "file": re.compile(r"\b(?:FILE|DATASET)\s*\(\s*(?:'([^']*)'|\"([^\"]*)\"|([\w-]+))\s*\)", re.IGNORECASE),
+}
 
 
 class Builder:
@@ -106,6 +109,13 @@ class Builder:
                 self.enter_file(node)
             case P.CallStatementContext():
                 self.enter_call(node)
+            case P.PerformProcedureStatementContext():
+                self.enter_perform(node)
+            case P.GoToStatementSimpleContext():
+                self.add_jump("goto", node.procedureName(), node)
+            case P.GoToDependingOnStatementContext():
+                for target in node.procedureName():
+                    self.add_jump("goto", target, node)
 
     # PURPOSE: CLOSES THE SECTION OR PARAGRAPH SCOPE ON THE WAY BACK UP
     def leave(self, node: ParserRuleContext) -> None:
@@ -144,9 +154,11 @@ class Builder:
                 attributes["picture"] = pic[0].pictureString().getText().upper()
             if value := node.dataValueClause():
                 literal = re.search(r"'([^']*)'|\"([^\"]*)\"", self.text(value[0]))
+        if literal:
+            attributes["value"] = next(g for g in literal.groups() if g is not None)
         entity_id = self.add("data", f"{parent_path}.{name}", name, self.span(node), attributes)
         if literal:
-            self.values[name] = (next(g for g in literal.groups() if g is not None), entity_id)
+            self.values[name] = (attributes["value"], entity_id)
         if level not in (66, 77):
             self.levels.append((level, entity_id.split(":", 1)[1], entity_id))
 
@@ -190,10 +202,27 @@ class Builder:
         self.add("call", f"{self.owner()}.{target}", written.upper().strip("'\""), self.span(node),
                  attributes | paragraph, numbered=True)
 
+    # PURPOSE: RECORDS A PERFORM OF A PARAGRAPH OR SECTION, WITH ITS THRU END IF ANY
+    def enter_perform(self, node: P.PerformProcedureStatementContext) -> None:
+        targets = node.procedureName()
+        thru = {"thru": (targets[1].paragraphName() or targets[1].sectionName()).getText().upper()} if len(targets) > 1 else {}
+        self.add_jump("perform", targets[0], node, thru)
+
+    # PURPOSE: ADDS A PERFORM OR GO TO ENTITY NAMING ITS TARGET AS WRITTEN
+    def add_jump(self, kind: str, target: P.ProcedureNameContext, node: ParserRuleContext, extra: dict | None = None) -> None:
+        para = target.paragraphName()
+        name = (para or target.sectionName()).getText().upper()
+        attributes = {"target": name} | (extra or {})
+        if para and target.inSection():
+            attributes["in_section"] = target.inSection().sectionName().getText().upper()
+        if self.paragraph_id:
+            attributes["paragraph"] = self.paragraph_id
+        self.add(kind, f"{self.owner()}.{name}", name, self.span(node), attributes, numbered=True)
+
     # PURPOSE: ADDS ENTITIES FOR COPY STATEMENTS AND EXEC BLOCKS, WHICH THE PREPROCESSOR HELD
     def add_preprocessed(self) -> None:
         for copy in self.source.copies:
-            where = Provenance(file=copy.file, line=copy.line)
+            where = Provenance(file=copy.file, line=copy.line, end_line=copy.end_line)
             self.add("copybook", f"{self.program}.{copy.name}", copy.name, where,
                      {"resolved": copy.resolved, "problem": copy.problem,
                       "replacing": [list(pair) for pair in copy.replacing]}, numbered=True)
@@ -205,8 +234,14 @@ class Builder:
             attributes = {"text": block.text, "command": block.text.split(" ", 1)[0].upper() if block.text else ""}
             if paragraph:
                 attributes["paragraph"] = paragraph
-            if block.kind == "CICS" and (m := CICS_PROGRAM_RE.search(block.text)):
-                attributes["program"] = next(g for g in m.groups() if g is not None).upper()
+            if block.kind == "CICS":
+                for option, pattern in CICS_OPERAND_RE.items():
+                    if m := pattern.search(block.text):
+                        literal = m.group(1) if m.group(1) is not None else m.group(2)
+                        if literal is not None:
+                            attributes[option] = literal.strip().upper()
+                        else:
+                            attributes[f"{option}_ref"] = m.group(3).upper()
             self.add(f"exec-{block.kind.lower()}", owner, block.kind, where, attributes, numbered=True)
             if block.kind == "SQL":
                 for function, category in classify_sql(block.text):

@@ -80,7 +80,7 @@ def test_file_and_copy_statements(by_id):
     pay_file = by_id["file:PAYCALC.PAY-FILE"]
     assert (at(pay_file), pay_file.attributes["assign"]) == ("src/PAYCALC.cbl:8", "PAYIN")
     rule = by_id["copybook:PAYCALC.PAYRULE#1"]
-    assert at(rule) == "src/PAYCALC.cbl:32"
+    assert at(rule) == "src/PAYCALC.cbl:32-33"
     assert rule.attributes == {"resolved": "copy/PAYRULE.cpy", "problem": None,
                                "replacing": [[":PFX:", "WS"], ["BONUS-RATE", "WS-RATE (1)"]]}
 
@@ -156,3 +156,20 @@ def test_diff_ignores_moved_lines_and_catches_a_picture_change(adapter, module, 
 def test_run_is_planned_for_week_8(adapter, module):
     with pytest.raises(NotImplementedError, match="Week 8"):
         adapter.run(module, {})
+
+
+def test_perform_is_a_fact_with_its_statement_line(by_id):
+    perform = by_id["perform:PAYCALC.MAIN-PARA.CALC-PARA#1"]
+    assert at(perform) == "src/PAYCALC.cbl:25"
+    assert perform.attributes == {"target": "CALC-PARA", "paragraph": "paragraph:PAYCALC.MAIN-PARA"}
+
+
+def test_perform_thru_and_go_to(adapter):
+    root = Path(__file__).resolve().parent / "fixtures" / "graph"
+    module = CobolAdapter(copybook_dirs=["copy"]).parse(root / "src" / "BATCH1.cbl", root)
+    facts = {e.id: e for e in module.entities}
+    thru = facts["perform:BATCH1.MAIN-PARA.OPEN-PARA#1"]
+    assert (at(thru), thru.attributes["thru"]) == ("src/BATCH1.cbl:20", "OPEN-EXIT")
+    assert at(facts["perform:BATCH1.MAIN-PARA.READ-PARA#1"]) == "src/BATCH1.cbl:21"
+    go = facts["goto:BATCH1.MAIN-PARA.END-PARA#1"]
+    assert (at(go), go.attributes["target"]) == ("src/BATCH1.cbl:25", "END-PARA")
