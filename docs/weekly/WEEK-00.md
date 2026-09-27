@@ -34,9 +34,10 @@ against the original before they go into anything external.
    priorities say the primary root cause of unplanned downtime in banks often lies in ICT system
    changes, and that operational and ICT risk get the worst average SREP scores.
    Source: [ECB supervisory priorities 2026-28](https://www.bankingsupervision.europa.eu/framework/priorities/html/ssm.supervisory_priorities202511.en.html).
-2. **The review covers more than 30 banks** through a questionnaire, supporting evidence and
-   follow-up requests. Deficiencies it names include insufficient documentation and audit trails,
-   and poor alignment between defined process and practice.
+2. **KPMG reports that the review covers more than 30 banks** through a questionnaire,
+   supporting evidence and follow-up requests (KPMG's figure, not the ECB's; **unverified**, not yet
+   checked against KPMG's page). KPMG names deficiencies including insufficient documentation and
+   audit trails, and poor alignment between defined process and practice.
    Source: [KPMG ECB Office, ICT change management](https://kpmg.com/xx/en/our-insights/ecb-office/kpmg-european-central-bank-office-fs/ict-change-management.html).
 3. **The ECB's 2026 IT Risk Questionnaire asks every significant bank** how many changes to
    critical systems caused issues, and for their top three root causes. The listed options

@@ -82,8 +82,9 @@ The preprocessor becomes Week 2 adapter code, not throwaway spike code. It must 
 
 ## Consequences
 
-- **Speed is the cost.** The Python ANTLR runtime is about 750 times slower than tree-sitter here:
-  about 100 lines per CPU-second, against more than 75,000. A full first parse of a 20-million-line
+- **Speed is the cost.** The Python ANTLR runtime is about 750 times slower than tree-sitter here
+  in total run time over the corpus (the median per-file ratio is about 530 times): about 100
+  lines per CPU-second, against more than 75,000. A full first parse of a 20-million-line
   estate would take about 55 CPU hours. Per-change analysis only reparses changed files and their
   dependents, so Week 2 will cache IR by content hash. If that is still too slow, the same grammar
   can be generated for ANTLR's C++ target (BSD-3) and loaded from Python. One wrapper for that,
