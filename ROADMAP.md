@@ -167,7 +167,7 @@ frameworks: [nist-ssdf, nist-800-53-cm, nist-800-53-sc, swft, cnsa2]
 
 ## Week 5 — Impact engine + framework mapping
 - [ ] `changeproof impact <range>` with confidence tiers, reliant systems/partners, and a flag when a change touches crypto entities.
-- [ ] `docs/framework-mapping.md`, one section per market profile: DORA and its RTS on ICT risk management (Art. 17 change management) first; SOC 2 CC8.1 and ISO/IEC 27001 Annex A 8.25/8.28/8.29/8.32; NIST 800-53 CM-3/CM-4/SC-12/SC-13, SSDF, SWFT, CNSA 2.0.
+- [ ] `docs/framework-mapping.md`, one section per market profile: DORA and its RTS on ICT risk management (Art. 17 change management) first; SOC 2 CC8.1 and ISO/IEC 27001 Annex A 8.25/8.28/8.29/8.32; NIST 800-53 CM-3/CM-4/SC-12/SC-13, SSDF, SWFT, CNSA 2.0. The DORA section also maps impact and equivalence evidence to the change-failure root causes the ECB IT Risk Questionnaire asks about (unexpected interdependencies, inadequate test coverage).
 - **Exit check:** recall ≥95% on seeded changes.
 
 ## Week 6 — Crypto-agile signed attestations (PQ core, not optional)
