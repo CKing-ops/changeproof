@@ -3,10 +3,10 @@
 - Market: `eu-dora` first (owner decision, 2026-09-27)
 - Branch: `week-00-dora`
 - Date: 2026-09-27
-- Status: **desk research done, conversations not started.** The desk evidence below points
-  strongly toward DORA, but the exit check counts interviews, so it stays open until the tracker
-  is filled. Week 5 can be framed on the desk evidence now; the kill gate is re-scored when the
-  interviews are in.
+- Status: **desk re-check passes on proxy evidence; conversations not started.** Public
+  supervisor findings and industry surveys stand in for the interviews (scorecard below). The
+  proxy does not trigger the kill gate, so Weeks 3-5 continue on DORA. The real exit check still
+  counts interviews and is re-scored when the tracker is filled.
 
 ## Exit check
 
@@ -16,7 +16,7 @@
 | Name change-impact or PQC evidence as a gap | ≥ 4 of 12 | not run | tracker `names_gap`, `pqc_gap` |
 | Auditor interest | ≥ 1 | not run | tracker `auditor_interest` |
 | Funding or entry route identified | 1-2 | 2 candidates, not yet checked for fit | below |
-| Desk evidence of demand (added, not a roadmap check) | public sources | strong, see below | links below |
+| Proxy re-check from public research (added, not a roadmap check) | kill gate not triggered | **not triggered**: 3 of 5 criteria supported, 2 partly | proxy scorecard below |
 
 Kill gate: fewer than 4 of 12 name the gap, or no auditor interest → re-scope before Week 5
 (fallback `general` or `us-defense`).
@@ -65,8 +65,52 @@ except IR provenance (Week 2, PR #4).
   question for the interviews is whether its output is used as audit evidence today.
 
 Gap, inferred from these two: nobody found here produces a per-change, signed record joining
-code-level impact to proof that behaviour outside the change was preserved. Tools not checked:
-CAST Imaging, OpenText (Micro Focus) Enterprise Analyzer, ServiceNow change management.
+code-level impact to proof that behaviour outside the change was preserved. The re-check below
+adds CAST, OpenText and ServiceNow.
+
+### Proxy scorecard (re-check, 2026-09-27)
+
+Each interview criterion is matched to the closest public evidence. "Supported" means a
+supervisor, auditor or survey of the same buyers states it; it does not mean a buyer said it to
+us. The interviews confirm or overturn these.
+
+| Interview criterion | Closest public evidence | Proxy result | Interviews must still confirm |
+|---|---|---|---|
+| Change-impact evidence is a real gap (`names_gap`) | ECB names ICT changes as the main cause of unplanned downtime and runs a targeted change-management review (demand 1-2); ITRQ 2026 lists "unexpected interdependencies" as a change-failure cause (demand 3) | **Supported** (supervisor side) | that banks feel it as their gap, not only the supervisor's |
+| Behaviour outside the change is not proven (`names_gap`, equivalence half) | ITRQ 2026 lists "inadequate test coverage" and "misalignment between test and production" (demand 3); first DORA audits found testing programmes omitting critical systems (demand 4) | **Supported** | whether they would accept a tool's equivalence proof |
+| Auditors care about evidence quality (`auditor_interest`) | EY: audits shifted from policies to whether controls work in practice (demand 4); KPMG: insufficient documentation and audit trails (demand 2) | **Supported** (need), not interest in us | that an auditor would rely on a signed artifact |
+| PQC-migration evidence (`pqc_gap`) | EU roadmap: start by end of 2026, critical infrastructure by end of 2030; absent from the ECB's 2026-28 priorities read here | **Partly** | whether any bank has budget for it before 2028 |
+| Legacy COBOL and AI-written changes raise the need | Kyndryl 2025 (500 leaders): 94% say regulation strongly influences modernisation, 70% struggle to find talent, 88% deploying or planning GenAI on the mainframe. BMC 2025 financial services: 81% already use GenAI, 47% for automated testing | **Partly**: surveys are global and vendor-run | whether AI-written COBOL changes need separate evidence |
+
+Proxy kill gate: the roadmap's gate fails on fewer than 4 of 12 naming the gap or zero auditor
+interest. The public evidence names the gap from both the supervisor and auditor sides, so the
+proxy does not fail. The weak spots are PQC (partly) and auditor willingness to rely on a tool
+(unknown). Both are why the interviews still matter before Week 13 (assessor review).
+
+Survey sources: [Kyndryl 2025 State of Mainframe Modernization](https://www.kyndryl.com/us/en/campaign/state-of-mainframe-modernization),
+[BMC 2025 Mainframe Survey, financial services](https://www.bmc.com/blogs/mainframe-survey-financial-services-key-takeaways/).
+Both are vendor surveys, so treat the percentages as indicative.
+
+### Competitors re-checked: CAST, OpenText, ServiceNow
+
+| Tool | What it does (per the source read) | Signed per-change evidence | Behavioural equivalence | Source |
+|---|---|---|---|---|
+| CAST Imaging for Mainframe | maps dependencies between programs, transactions, data stores and batch jobs; positioned for modernisation planning | not mentioned | not mentioned | [product page](https://mainframemodernization.org/products/cast-imaging-mainframe/) |
+| OpenText Enterprise Analyzer | parses COBOL, PL/I, Natural, JCL, CICS BMS; call graphs, data flow and impact analysis reports; positioned for modernisation planning | not mentioned | not mentioned | [product page](https://mainframemodernization.org/products/opentext-enterprise-analyzer/) |
+| ServiceNow Change Management | computes change risk from conditions on change-record fields (Risk Calculator) or an optional risk assessment; widely used for DORA workflows | process record, not code evidence | no | [ServiceNow docs](https://www.servicenow.com/docs/bundle/zurich-it-service-management/page/product/change-management/concept/change-risk-conflict-analysis.html), [community guide](https://www.servicenow.com/community/developer-articles/getting-started-with-servicenow-change-request-risk-calculation/ta-p/2362172) |
+| IBM ADDI (from the first pass) | COBOL impact analysis, can run in CI/CD | not described | not described | above |
+| Kosli (from the first pass) | SDLC process evidence, bank customers | process, not code | no | above |
+
+Reading across (inferred): CAST, OpenText and IBM are code-analysis tools sold for modernisation.
+ServiceNow and Kosli hold the process record auditors see. None of the sources read shows a
+per-change, signed record that joins code-level impact to proof of preserved behaviour, and none
+ties its output to DORA Art. 17 or the ITRQ root causes. That join is changeproof's position,
+and it fits the roadmap's "complement, don't compete" strategy: impact and equivalence
+attestations that a ServiceNow change request or Kosli can reference. Product pages summarise;
+none of these vendors' full documentation was read.
+
+Implication for the build: code-analysis rivals already map programs, transactions, data stores,
+batch jobs, JCL and CICS. Matching that graph is table stakes for Week 3, not a differentiator.
 
 ### What this means for Week 5 (planned)
 
@@ -74,7 +118,19 @@ CAST Imaging, OpenText (Micro Focus) Enterprise Analyzer, ServiceNow change mana
   root-cause categories (interdependencies, test coverage) as a DORA-profile section.
 - The `general` profile (SOC 2 CC8.1, ISO/IEC 27001 A.8.32) stays in the same document, so the
   universal build keeps one mapping per market.
-- Week 5 builds on Weeks 3 (dependency graphs) and 4 (diff to entities), which are not started.
+- Week 5 builds on Weeks 3 (dependency graphs) and 4 (diff to entities).
+
+### What this suggests for Weeks 3 and 4 (planned, for the owner to approve)
+
+- **Week 3:** the graph should cover what CAST and OpenText already show (programs, CICS
+  transactions, Db2 tables, files, batch jobs), and mark edges that cross from one configured
+  component to another. "Unexpected interdependencies between applications" is the ITRQ root
+  cause the impact evidence answers.
+- **Week 4:** the change record should keep requester, implementer and approver as separate
+  identities (Art. 17(1)(b) independence), carry an emergency-change flag (ITRQ counts emergency
+  changes), and link the change-request ID from a ServiceNow-style ticket in the commit trailer
+  for the *why* (purpose, scope, expected outcome, Art. 17(1)(d)). The engine links these fields
+  and never invents them.
 
 ## What is in the kit
 
