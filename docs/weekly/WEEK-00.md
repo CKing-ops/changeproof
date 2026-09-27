@@ -176,8 +176,8 @@ research and a weak fit.
 
 - Eligibility: EU grants need an EU legal entity. Whether the owner has or wants one is a
   business decision for the owner.
-- ROADMAP.md and CLAUDE.md now make DORA the first market (owner approval, 2026-09-27), including
-  the DORA version of these Week 0 interviews.
+- ROADMAP.md and CLAUDE.md now make universal (`general`) the main path and `eu-dora` the strong
+  second (owner decisions, 2026-09-27), and keep the DORA version of these Week 0 interviews.
 
 ## Next steps for the owner
 
