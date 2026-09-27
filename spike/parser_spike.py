@@ -13,18 +13,53 @@ import re
 import signal
 import sys
 import time
+from functools import cache
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 BUILD = ROOT / "spike" / "_build"
 RESULTS = ROOT / "spike" / "results"
-TIMEOUT_S = 120  # RENAME: PER-FILE PARSE BUDGET IN SECONDS
+TIMEOUT_S = 300  # RENAME: PER-FILE PARSE BUDGET IN SECONDS
 
 CORPORA = {  # RENAME: CORPUS NAME TO PROGRAM GLOB
     "carddemo": (ROOT / "corpus" / "carddemo", "**/*.[cC][bB][lL]"),
     "nist": (ROOT / "corpus" / "nist" / "cobol", "*.CBL"),
 }
+COPY_DIRS = {  # RENAME: CORPUS NAME TO COPYBOOK FOLDERS SEARCHED BY COPY
+    "carddemo": sorted((ROOT / "corpus" / "carddemo").glob("**/cpy*")),
+    "nist": [ROOT / "corpus" / "nist" / "clbry"],
+}
+COPY_NAME_RE = re.compile(r"(?<![\w-])COPY\s+['\"]?([\w-]+)", re.IGNORECASE)
+
+
+# PURPOSE: MAPS UPPERCASE COPYBOOK NAMES TO FILES FOR THE CORPUS A PROGRAM BELONGS TO
+@cache
+def copybook_index(program: str) -> dict[str, Path]:
+    corpus = next(name for name, (base, _) in CORPORA.items() if Path(program).is_relative_to(base))
+    return {f.stem.upper(): f for d in COPY_DIRS[corpus] for f in d.iterdir() if f.is_file()}
+
+
+# PURPOSE: INSERTS EACH COPYBOOK'S LINES AFTER ITS COPY STATEMENT (NO REPLACING, NO PROVENANCE)
+def inline_copybooks(text: str, index: dict[str, Path], depth: int = 0) -> str:
+    out = []  # RENAME: OUTPUT LINES WITH COPYBOOKS SPLICED IN
+    pending = None  # RENAME: COPYBOOK NAME WAITING FOR ITS STATEMENT TO END
+    for line in text.splitlines():
+        out.append(line)
+        if len(line) > 6 and line[6] in "*/":
+            continue
+        area = line[7:72]
+        if pending is None and (m := COPY_NAME_RE.search(area)):
+            pending = m.group(1).upper()
+            if "REPLACING" not in area.upper():
+                area = ""  # statement ends on this line with or without a period
+        if pending and (not area or "." in area):
+            if pending in index and depth < 5:
+                nested = index[pending].read_text(encoding="latin-1")
+                out.extend(inline_copybooks(nested, index, depth + 1).splitlines())
+            pending = None
+    return "\n".join(out) + "\n"
+
 
 
 # PURPOSE: LOADS THE COMPILED TREE-SITTER-COBOL LIBRARY AS A PARSER
@@ -43,8 +78,8 @@ def tree_sitter_parser():
 # PURPOSE: PARSES ONE FILE WITH TREE-SITTER AND RETURNS ERROR COUNT AND FIRST ERROR LINE
 def parse_tree_sitter(path: str) -> dict:
     parser = tree_sitter_parser()
-    text = Path(path).read_text(encoding="latin-1")
-    tree = parser.parse(mask_exec_blocks(text).encode("latin-1"))
+    text = inline_copybooks(Path(path).read_text(encoding="latin-1"), copybook_index(path))
+    tree = parser.parse(mask_fixed_format(text).encode("latin-1"))
     errors = []  # RENAME: 1-BASED LINES OF ERROR OR MISSING NODES
     stack = [tree.root_node]
     while stack:
@@ -56,8 +91,13 @@ def parse_tree_sitter(path: str) -> dict:
     return {"errors": len(errors), "first_error_line": min(errors, default=None)}
 
 
-EXEC_RE = re.compile(r"\bEXEC\s+(SQL|CICS|DLI)\b(.*?)\bEND-EXEC\b", re.IGNORECASE | re.DOTALL)
-COPY_RE = re.compile(r"\bCOPY\s+[\w-]+(?:\s+(?:OF|IN)\s+[\w-]+)?(?:\s+REPLACING\b.*?)?\s*\.", re.IGNORECASE | re.DOTALL)
+EXEC_RE = re.compile(r"(?<![\w-])EXEC\s+(SQL|CICS|DLI)\b.*?\bEND-EXEC\b", re.IGNORECASE | re.DOTALL)
+COPY_RE = re.compile(
+    r"(?<![\w-])COPY\s+(?:'[^'\n]*'|\"[^\"\n]*\"|[\w-]+)(?:\s+(?:OF|IN)\s+[\w-]+)?"
+    r"(?:\s+REPLACING\b.*?\.(?=\s)|\s*\.)?",
+    re.IGNORECASE | re.DOTALL,
+)
+SEPARATOR_RE = re.compile(r"'[^'\n]*'?|\"[^\"\n]*\"?|[,;](?=[ \n])")
 PROCESS_RE = re.compile(r"^\s*(CBL|PROCESS)\b", re.IGNORECASE)
 
 
@@ -69,8 +109,10 @@ ID_DIVISION_RE = re.compile(r"^\s*(IDENTIFICATION|ID)\s+DIVISION\b", re.IGNORECA
 ID_PARAGRAPH_RE = re.compile(r"^\s*(PROGRAM-ID|AUTHOR|INSTALLATION|DATE-WRITTEN|DATE-COMPILED|SECURITY|REMARKS)\s*\.", re.IGNORECASE)
 
 
-# PURPOSE: BLANKS EXEC ... END-EXEC IN COLUMNS 8-72, LEAVING CONTINUE IN THE PROCEDURE DIVISION
-def mask_exec_blocks(text: str) -> str:
+# PURPOSE: APPLIES THE SHARED PREPROCESSING IN COLUMNS 8-72 WITHOUT MOVING ANY LINE OR COLUMN
+def mask_fixed_format(text: str) -> str:
+    # EXEC blocks become CONTINUE (procedure division) or blanks; COPY statements are blanked
+    # (Week 2 inlines copybooks instead); separator commas and semicolons become spaces.
     lines = text.splitlines()
     areas = [  # RENAME: CODE AREA (COLUMNS 8-72) PER LINE, EMPTY FOR COMMENT LINES
         "" if len(line) > 6 and line[6] in "*/" else line[7:72].ljust(65) for line in lines
@@ -78,12 +120,21 @@ def mask_exec_blocks(text: str) -> str:
     joined = "\n".join(areas)
     proc_start = re.search(r"\bPROCEDURE\s+DIVISION\b", joined, re.IGNORECASE)
     chars = list(joined)
-    for m in EXEC_RE.finditer(joined):
-        for i in range(m.start(), m.end()):
+
+    def blank(start: int, end: int) -> None:
+        for i in range(start, end):
             if chars[i] != "\n":
                 chars[i] = " "
+
+    for m in EXEC_RE.finditer(joined):
+        blank(m.start(), m.end())
         if proc_start and m.start() > proc_start.start():
             chars[m.start():m.start() + 8] = "CONTINUE"
+    for m in COPY_RE.finditer(joined):
+        blank(m.start(), m.end())
+    for m in SEPARATOR_RE.finditer("".join(chars)):
+        if m.group() in (",", ";"):
+            chars[m.start()] = " "
     masked = "".join(chars).split("\n")
     return "\n".join(
         line if not areas[i] else line[:7].ljust(7) + masked[i] + line[72:]
@@ -128,19 +179,9 @@ def tag_comment_entries(lines: list[str]) -> list[str]:
     return lines
 
 
-# PURPOSE: MIMICS THE PROLEAP PREPROCESSOR ENOUGH FOR THE ANTLR GRAMMAR TO ACCEPT EXEC AND COPY
+# PURPOSE: GIVES ANTLR THE SAME MASKED SOURCE AS TREE-SITTER, IN THE FREE FORM ITS GRAMMAR EXPECTS
 def preprocess_for_antlr(text: str) -> str:
-    body = "\n".join(normalize_fixed_format(text))
-    body = COPY_RE.sub(lambda m: re.sub(r"[^\n]", " ", m.group(0)), body)
-
-    # PURPOSE: PREFIXES EACH LINE OF AN EXEC BLOCK WITH THE GRAMMAR'S TAG
-    def tag_exec(m: re.Match) -> str:
-        tag = "*>EXECCICS" if m.group(1).upper() == "CICS" else "*>EXECSQL"
-        tagged = [f"{tag} {part.strip()}" for part in m.group(0).split("\n")]
-        tagged[-1] += "}"
-        return "\n".join(tagged)
-
-    return EXEC_RE.sub(tag_exec, body) + "\n"
+    return "\n".join(normalize_fixed_format(mask_fixed_format(text))) + "\n"
 
 
 # PURPOSE: PARSES ONE FILE WITH THE GENERATED ANTLR PARSER AND COUNTS SYNTAX ERRORS
@@ -160,7 +201,8 @@ def parse_antlr(path: str) -> dict:
         def syntaxError(self, recognizer, offending, line, column, msg, e):
             self.lines.append(line)
 
-    text = preprocess_for_antlr(Path(path).read_text(encoding="latin-1"))
+    source = inline_copybooks(Path(path).read_text(encoding="latin-1"), copybook_index(path))
+    text = preprocess_for_antlr(source)
     collect = Collect()
     lexer = Cobol85Lexer(InputStream(text))
     lexer.removeErrorListeners()

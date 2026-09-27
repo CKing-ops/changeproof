@@ -35,11 +35,48 @@ def extract_newcob(blob: bytes) -> str:
         return member.read().decode("latin-1")
 
 
-# PURPOSE: KEEPS CCVS OPTIONAL-FEATURE LINES BY BLANKING THEIR COLUMN-7 SELECTOR LETTER
-def enable_optional_line(line: str) -> str:
-    # EXEC85 normally decides per letter; for parse testing every optional line is kept.
+# Implementor values for CCVS "X-card" placeholders (XXXXXnnn in columns 12-19). Values are ours;
+# only their syntactic kind matters for parsing. Unlisted numbers become a quoted literal.
+X_CARDS = {  # RENAME: X-CARD NUMBER TO SUBSTITUTED SOURCE TEXT
+    **{n: f'"CPQUEUE{n}"' for n in range(30, 42)},
+    42: '"CPTERM1"',
+    43: '"CPTERM2"',
+    47: '"."',
+    48: '"copylib"',
+    51: "SWITCH-1",
+    52: "SWITCH-2",
+    53: "MULTIPLE FILE TFIL",
+    55: '"PRINTER"',
+    56: "SYSOUT",
+    57: "SYSIN",
+    63: '" $$()*+,-./0123456789;<=>ABCDEFGHIJKLMNOPQRSTUVWXYZ"',
+    64: '"ZYXWVUTSRQPONMLKJIHGFEDCBA>=<;9876543210/.-,+*)($$ "',
+    65: "1000",
+    67: "1000",
+    68: "64000",
+    69: "SYSIN",
+    70: "STANDARD-1",
+    73: "FORMFEED",
+    74: "CPLABELID",
+    81: '"12345678"',
+    82: "CHANGEPROOF-HOST",
+    83: "CHANGEPROOF-HOST",
+    84: "STANDARD",
+    86: "PIC X(8)",
+    90: '"A"',
+    91: '"D"',
+}
+
+
+# PURPOSE: APPLIES THE CCVS EXECUTIVE'S DEFAULT EXPANSION TO ONE SOURCE LINE
+def expand_line(line: str) -> str:
+    # With no *OPT cards selected, EXEC85 turns every optional line (a letter in column 7) into a comment.
     if len(line) > 6 and line[6].isalpha() and line[6] not in "Dd":
-        return line[:6] + " " + line[7:]
+        line = line[:6] + "*" + line[7:]
+    elif line[11:15] == "XXXX" and line[16:19].isdigit():
+        number = int(line[16:19])  # RENAME: X-CARD NUMBER
+        full_stop = "." if line[19:20] == "." else ""
+        line = line[:11] + X_CARDS.get(number, f'"XXXXX{number:03}"') + full_stop
     return line
 
 
@@ -51,12 +88,12 @@ def split_members(text: str, out_dir: Path) -> dict[str, int]:
         if line.startswith("*HEADER,"):
             _, kind, name = line[:72].rstrip().split(",", 2)
             layout = MEMBER_DIRS.get(kind)
-            current = (*layout, name.strip(), []) if layout else None
+            current = (*layout, name.strip().replace(",", "_"), []) if layout else None
         elif line.startswith("*END-OF,"):
             if current:
                 folder, suffix, name, lines = current
                 if folder == "cobol":
-                    lines = [enable_optional_line(line) for line in lines]
+                    lines = [expand_line(line) for line in lines]
                 target = out_dir / folder / f"{name}{suffix}"
                 target.parent.mkdir(parents=True, exist_ok=True)
                 target.write_text("\n".join(lines) + "\n", encoding="latin-1")
