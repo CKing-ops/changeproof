@@ -43,12 +43,17 @@ installed metadata.
 | antlr4-python3-runtime | 4.13.2 | BSD-3-Clause |
 | ANTLR tool jar (code generation, build time only) | 4.13.2 | BSD-3-Clause |
 | Cobol85.g4 grammar | grammars-v4 `e199816b` | MIT (Ulrich Wolffgang / ProLeap) |
+| tree-sitter-java | 0.23.5 | MIT |
+| tree-sitter-python | 0.25.0 | MIT |
+| tree-sitter-javascript | 0.25.0 | MIT |
 
 ## Corpus
 
 | Set | Source | License | In repo? |
 |---|---|---|---|
 | AWS CardDemo | aws-samples/aws-mainframe-modernization-carddemo `59cc6c2f` | Apache-2.0 (LICENSE and NOTICE kept) | yes, `corpus/carddemo/` |
+| Apache Commons Lang 3.17.0 (Java sample for `spike/mainstream_spike.py`) | apache/commons-lang `29ccc766` | Apache-2.0 | no, fetched by `spike/build.sh` |
+| Python standard library and npm 10.9.7 JavaScript (read in place for the same spike) | local Python 3.12 and Node 22 installs | PSF-2.0; Artistic-2.0 (npm) and its dependencies' licenses | no, read where installed; only counts are recorded |
 | NIST CCVS85 COBOL test suite | `newcob.val` via the GnuCOBOL project's download mirror | US government work, public domain | no, fetched by `scripts/fetch_corpus.py` |
 
 The GnuCOBOL compiler and its test tooling (`expand.pl` and friends) are GPL. None of it is in this

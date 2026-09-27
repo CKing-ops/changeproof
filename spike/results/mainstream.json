@@ -1,0 +1,29 @@
+[
+  {
+    "language": "java",
+    "files": 500,
+    "clean": 500,
+    "rate": 100.0,
+    "lines": 182246,
+    "seconds": 0.5,
+    "lines_per_s": 362695
+  },
+  {
+    "language": "python",
+    "files": 517,
+    "clean": 517,
+    "rate": 100.0,
+    "lines": 273800,
+    "seconds": 0.86,
+    "lines_per_s": 318536
+  },
+  {
+    "language": "javascript",
+    "files": 1054,
+    "clean": 1053,
+    "rate": 99.9,
+    "lines": 147752,
+    "seconds": 0.55,
+    "lines_per_s": 269792
+  }
+]
