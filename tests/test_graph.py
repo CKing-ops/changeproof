@@ -75,7 +75,8 @@ def test_jcl_edges_bind_program_files_to_datasets(graph):
 def test_unresolved_edges_are_reported_with_a_reason(graph):
     found = sorted((e.dst, e.attributes["reason"], str(e.provenance)) for e in graph.unresolved)
     assert found == [
-        ("unresolved:dynamic:WS-ANY-PGM", "dynamic target with no VALUE", "src/BATCH1.cbl:23"),
+        ("unresolved:dynamic:WS-ANY-PGM", "dynamic target with no VALUE or MOVE of a literal",
+         "src/BATCH1.cbl:23"),
         ("unresolved:paragraph:MISSING-PARA", "no such paragraph or section", "src/BATCH1.cbl:39"),
         ("unresolved:proc:NIGHTLY", "procedure not in the analyzed code", "jcl/RUNBATCH.jcl:13"),
         ("unresolved:program:IEFBR14", "program not in the analyzed code", "jcl/RUNBATCH.jcl:12"),
