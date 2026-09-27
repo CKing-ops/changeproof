@@ -1,6 +1,6 @@
 # ADR 003: Data egress
 
-- Status: proposed (Week 1, universal version), awaiting owner review
+- Status: accepted by the owner on 2026-09-27 (Week 1, universal version)
 - Date: 2026-09-27
 - Markets: all profiles in ADR 004. The rules below are the same for every market except where a
   row names a profile. The DORA context is kept because `eu-dora` is the strictest profile.

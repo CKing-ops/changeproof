@@ -1,6 +1,6 @@
 # ADR 004: Market profiles
 
-- Status: proposed (Week 1, universal version), awaiting owner review
+- Status: accepted by the owner on 2026-09-27 (Week 1, universal version)
 - Date: 2026-09-27
 - Related: ADR 002 (crypto agility), ADR 003 (data egress), `src/changeproof/markets.py`,
   `spike/mainstream_spike.py`

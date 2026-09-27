@@ -1,9 +1,11 @@
-# Week 1 (universal version): one build, market rules as profiles
+# Week 1: one build, market rules as profiles
 
 - Market: any software company by default (`general`), with `us-defense` and `eu-dora` as profiles
 - Branch: `week-01-universal`, built from the DORA branch `week-01-dora`
 - Date: 2026-09-27
-- Status: exit check run; parse rate met; ADRs waiting for owner review
+- Status: exit check met; ADRs 001 to 004 accepted by the owner on 2026-09-27
+- Alternatives: the single-market US (PR #1) and DORA (PR #2) builds were closed unmerged. Their
+  reports are kept in `week-01-alternatives/`.
 
 ## Exit check
 
@@ -11,7 +13,7 @@
 |---|---|---|---|
 | Corpus parses | ≥ 90% | **Met with ANTLR4 Cobol85: 481/503 (95.6%)**. Shared with PRs #1 and #2 because the parser does not depend on the market | `spike/results/summary.md`, `docs/adr/001-parser.md` |
 | Sample config validates | validates | **Met** for all three markets | `tests/test_config.py::test_roadmap_sample_config_validates`, `::test_each_market_sample_validates` |
-| ADRs reviewed | owner review | **Waiting on owner** | `docs/adr/001-parser.md` to `004-market-profiles.md` |
+| ADRs reviewed | owner review | **Met: accepted 2026-09-27** | `docs/adr/001-parser.md` to `004-market-profiles.md` |
 
 The whole test suite passes: 119 tests with sockets blocked, and again inside a network namespace
 with no interfaces.
@@ -73,8 +75,10 @@ we sell first", since all three run on the same code.
   inferred and was not checked further.
 - The COBOL parser open issues are unchanged: ANTLR speed, `REPLACING`, and recursion depth.
 
-## Decisions needed from the owner
+## Owner decisions (2026-09-27)
 
-1. Choose the base for Week 2: this universal branch (recommended), US (PR #1) or DORA (PR #2).
-2. Choose the first market to sell to. DORA is recommended.
-3. Review and approve ADRs 001 to 004.
+1. Week 2 builds on this universal branch. PRs #1 and #2 were closed without merging.
+2. DORA (`eu-dora`) is the first market to sell to. Matching ROADMAP.md and CLAUDE.md changes are
+   drafted and await owner approval.
+3. ADRs 001 to 004 are accepted.
+4. `MyPackages.py`, left over on `main` from before this project, is removed.
