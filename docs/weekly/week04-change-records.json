@@ -1,0 +1,3482 @@
+[
+ {
+  "who": {
+   "implementer": {
+    "name": "Ana Novak",
+    "email": "ana.novak@bank.example",
+    "provenance": {
+     "file": "git-commit/3586412f00991606f7e574986db6de2dde4d4961",
+     "line": 2,
+     "end_line": null
+    }
+   },
+   "committer": {
+    "name": "Ana Novak",
+    "email": "ana.novak@bank.example",
+    "provenance": {
+     "file": "git-commit/3586412f00991606f7e574986db6de2dde4d4961",
+     "line": 3,
+     "end_line": null
+    }
+   },
+   "requester": {
+    "name": "Lena Weber",
+    "email": "lena.weber@bank.example",
+    "provenance": {
+     "file": "git-commit/3586412f00991606f7e574986db6de2dde4d4961",
+     "line": 8,
+     "end_line": null
+    }
+   },
+   "approvers": [
+    {
+     "name": "Marc Dubois",
+     "email": "marc.dubois@bank.example",
+     "provenance": {
+      "file": "git-commit/3586412f00991606f7e574986db6de2dde4d4961",
+      "line": 9,
+      "end_line": null
+     }
+    }
+   ],
+   "reviewers": [],
+   "independent": true
+  },
+  "when": {
+   "authored": {
+    "at": "2026-09-01T09:30:00+02:00",
+    "provenance": {
+     "file": "git-commit/3586412f00991606f7e574986db6de2dde4d4961",
+     "line": 2,
+     "end_line": null
+    }
+   },
+   "committed": {
+    "at": "2026-09-01T09:30:00+02:00",
+    "provenance": {
+     "file": "git-commit/3586412f00991606f7e574986db6de2dde4d4961",
+     "line": 3,
+     "end_line": null
+    }
+   }
+  },
+  "where": {
+   "repository": "sepa",
+   "system": "test-payments",
+   "commit": "3586412f00991606f7e574986db6de2dde4d4961",
+   "parents": [],
+   "files": [
+    "changeproof.yaml",
+    "copy/ACCTWS.cpy",
+    "jcl/RUNBATCH.jcl",
+    "src/BATCH1.cbl",
+    "src/FLOWS.cbl",
+    "src/SUBPGM.cbl"
+   ],
+   "components": [
+    "batch-core",
+    "batch-schedule"
+   ],
+   "ci": {}
+  },
+  "what": {
+   "entities": [
+    {
+     "change": "added",
+     "entity": {
+      "id": "job:RUNBATCH",
+      "kind": "jcl-job",
+      "name": "RUNBATCH",
+      "provenance": {
+       "file": "jcl/RUNBATCH.jcl",
+       "line": 1,
+       "end_line": 2
+      },
+      "attributes": {}
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "jcl-step:RUNBATCH.STEP01",
+      "kind": "jcl-step",
+      "name": "STEP01",
+      "provenance": {
+       "file": "jcl/RUNBATCH.jcl",
+       "line": 4,
+       "end_line": null
+      },
+      "attributes": {
+       "program": "BATCH1",
+       "proc": null
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "jcl-dd:RUNBATCH.STEP01.ACCTIN",
+      "kind": "jcl-dd",
+      "name": "ACCTIN",
+      "provenance": {
+       "file": "jcl/RUNBATCH.jcl",
+       "line": 5,
+       "end_line": 6
+      },
+      "attributes": {
+       "dataset": "TEST.ACCT.DATA",
+       "disp": "SHR"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "jcl-dd:RUNBATCH.STEP01.RPTOUT",
+      "kind": "jcl-dd",
+      "name": "RPTOUT",
+      "provenance": {
+       "file": "jcl/RUNBATCH.jcl",
+       "line": 7,
+       "end_line": null
+      },
+      "attributes": {
+       "dataset": "TEST.RPT.OUT",
+       "disp": "(NEW,CATLG)"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "jcl-dd:RUNBATCH.STEP01.SYSOUT",
+      "kind": "jcl-dd",
+      "name": "SYSOUT",
+      "provenance": {
+       "file": "jcl/RUNBATCH.jcl",
+       "line": 8,
+       "end_line": null
+      },
+      "attributes": {
+       "dataset": null,
+       "disp": null
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "jcl-dd:RUNBATCH.STEP01.SYSIN",
+      "kind": "jcl-dd",
+      "name": "SYSIN",
+      "provenance": {
+       "file": "jcl/RUNBATCH.jcl",
+       "line": 9,
+       "end_line": null
+      },
+      "attributes": {
+       "dataset": null,
+       "disp": null
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "jcl-step:RUNBATCH.STEP02",
+      "kind": "jcl-step",
+      "name": "STEP02",
+      "provenance": {
+       "file": "jcl/RUNBATCH.jcl",
+       "line": 12,
+       "end_line": null
+      },
+      "attributes": {
+       "program": "IEFBR14",
+       "proc": null
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "jcl-step:RUNBATCH.STEP03",
+      "kind": "jcl-step",
+      "name": "STEP03",
+      "provenance": {
+       "file": "jcl/RUNBATCH.jcl",
+       "line": 13,
+       "end_line": null
+      },
+      "attributes": {
+       "program": null,
+       "proc": "NIGHTLY"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "data:BATCH1.WS-FLAGS",
+      "kind": "data",
+      "name": "WS-FLAGS",
+      "provenance": {
+       "file": "copy/ACCTWS.cpy",
+       "line": 1,
+       "end_line": null
+      },
+      "attributes": {
+       "level": "01",
+       "section": "working-storage",
+       "text": "01 WS-FLAGS ."
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "data:BATCH1.WS-FLAGS.WS-EOF-FLAG",
+      "kind": "data",
+      "name": "WS-EOF-FLAG",
+      "provenance": {
+       "file": "copy/ACCTWS.cpy",
+       "line": 2,
+       "end_line": null
+      },
+      "attributes": {
+       "level": "05",
+       "section": "working-storage",
+       "text": "05 WS-EOF-FLAG PIC X VALUE 'N' .",
+       "parent": "data:BATCH1.WS-FLAGS",
+       "picture": "X",
+       "value": "N"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "condition:BATCH1.WS-FLAGS.WS-EOF-FLAG.WS-EOF",
+      "kind": "condition",
+      "name": "WS-EOF",
+      "provenance": {
+       "file": "copy/ACCTWS.cpy",
+       "line": 3,
+       "end_line": null
+      },
+      "attributes": {
+       "text": "88 WS-EOF VALUE 'Y' .",
+       "parent": "data:BATCH1.WS-FLAGS.WS-EOF-FLAG"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "data:BATCH1.WS-COUNT",
+      "kind": "data",
+      "name": "WS-COUNT",
+      "provenance": {
+       "file": "copy/ACCTWS.cpy",
+       "line": 4,
+       "end_line": null
+      },
+      "attributes": {
+       "level": "01",
+       "section": "working-storage",
+       "text": "01 WS-COUNT PIC 9 ( 5 ) .",
+       "picture": "9(5)"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "data:BATCH1.WS-BAL",
+      "kind": "data",
+      "name": "WS-BAL",
+      "provenance": {
+       "file": "copy/ACCTWS.cpy",
+       "line": 5,
+       "end_line": null
+      },
+      "attributes": {
+       "level": "01",
+       "section": "working-storage",
+       "text": "01 WS-BAL PIC S9 ( 9 ) V99 COMP-3 .",
+       "picture": "S9(9)V99"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "program:BATCH1",
+      "kind": "program",
+      "name": "BATCH1",
+      "provenance": {
+       "file": "src/BATCH1.cbl",
+       "line": 1,
+       "end_line": 42
+      },
+      "attributes": {}
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "file:BATCH1.ACCT-IN",
+      "kind": "file",
+      "name": "ACCT-IN",
+      "provenance": {
+       "file": "src/BATCH1.cbl",
+       "line": 6,
+       "end_line": null
+      },
+      "attributes": {
+       "text": "SELECT ACCT-IN ASSIGN TO ACCTIN",
+       "assign": "ACCTIN"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "file:BATCH1.RPT-OUT",
+      "kind": "file",
+      "name": "RPT-OUT",
+      "provenance": {
+       "file": "src/BATCH1.cbl",
+       "line": 7,
+       "end_line": null
+      },
+      "attributes": {
+       "text": "SELECT RPT-OUT ASSIGN TO RPTOUT",
+       "assign": "RPTOUT"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "data:BATCH1.ACCT-REC",
+      "kind": "data",
+      "name": "ACCT-REC",
+      "provenance": {
+       "file": "src/BATCH1.cbl",
+       "line": 11,
+       "end_line": null
+      },
+      "attributes": {
+       "level": "01",
+       "section": "file",
+       "text": "01 ACCT-REC PIC X ( 80 ) .",
+       "picture": "X(80)"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "data:BATCH1.RPT-REC",
+      "kind": "data",
+      "name": "RPT-REC",
+      "provenance": {
+       "file": "src/BATCH1.cbl",
+       "line": 13,
+       "end_line": null
+      },
+      "attributes": {
+       "level": "01",
+       "section": "file",
+       "text": "01 RPT-REC PIC X ( 80 ) .",
+       "picture": "X(80)"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "copybook:BATCH1.ACCTWS#1",
+      "kind": "copybook",
+      "name": "ACCTWS",
+      "provenance": {
+       "file": "src/BATCH1.cbl",
+       "line": 15,
+       "end_line": null
+      },
+      "attributes": {
+       "resolved": "copy/ACCTWS.cpy",
+       "problem": null,
+       "replacing": []
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "data:BATCH1.WS-NEXT-PGM",
+      "kind": "data",
+      "name": "WS-NEXT-PGM",
+      "provenance": {
+       "file": "src/BATCH1.cbl",
+       "line": 16,
+       "end_line": null
+      },
+      "attributes": {
+       "level": "01",
+       "section": "working-storage",
+       "text": "01 WS-NEXT-PGM PIC X ( 8 ) VALUE 'SUBPGM' .",
+       "picture": "X(8)",
+       "value": "SUBPGM"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "data:BATCH1.WS-ANY-PGM",
+      "kind": "data",
+      "name": "WS-ANY-PGM",
+      "provenance": {
+       "file": "src/BATCH1.cbl",
+       "line": 17,
+       "end_line": null
+      },
+      "attributes": {
+       "level": "01",
+       "section": "working-storage",
+       "text": "01 WS-ANY-PGM PIC X ( 8 ) .",
+       "picture": "X(8)"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "paragraph:BATCH1.MAIN-PARA",
+      "kind": "paragraph",
+      "name": "MAIN-PARA",
+      "provenance": {
+       "file": "src/BATCH1.cbl",
+       "line": 19,
+       "end_line": 25
+      },
+      "attributes": {
+       "text": "MAIN-PARA . PERFORM OPEN-PARA THRU OPEN-EXIT PERFORM READ-PARA UNTIL WS-EOF CALL WS-NEXT-PGM USING WS-COUNT CALL WS-ANY-PGM CALL 'NOSUCHPG' GO TO END-PARA ."
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "perform:BATCH1.MAIN-PARA.OPEN-PARA#1",
+      "kind": "perform",
+      "name": "OPEN-PARA",
+      "provenance": {
+       "file": "src/BATCH1.cbl",
+       "line": 20,
+       "end_line": null
+      },
+      "attributes": {
+       "target": "OPEN-PARA",
+       "thru": "OPEN-EXIT",
+       "paragraph": "paragraph:BATCH1.MAIN-PARA"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "perform:BATCH1.MAIN-PARA.READ-PARA#1",
+      "kind": "perform",
+      "name": "READ-PARA",
+      "provenance": {
+       "file": "src/BATCH1.cbl",
+       "line": 21,
+       "end_line": null
+      },
+      "attributes": {
+       "target": "READ-PARA",
+       "paragraph": "paragraph:BATCH1.MAIN-PARA"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "call:BATCH1.MAIN-PARA.SUBPGM#1",
+      "kind": "call",
+      "name": "WS-NEXT-PGM",
+      "provenance": {
+       "file": "src/BATCH1.cbl",
+       "line": 22,
+       "end_line": null
+      },
+      "attributes": {
+       "target": "SUBPGM",
+       "dynamic": true,
+       "target_from": "data:BATCH1.WS-NEXT-PGM",
+       "paragraph": "paragraph:BATCH1.MAIN-PARA"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "call:BATCH1.MAIN-PARA.WS-ANY-PGM#1",
+      "kind": "call",
+      "name": "WS-ANY-PGM",
+      "provenance": {
+       "file": "src/BATCH1.cbl",
+       "line": 23,
+       "end_line": null
+      },
+      "attributes": {
+       "target": "WS-ANY-PGM",
+       "dynamic": true,
+       "paragraph": "paragraph:BATCH1.MAIN-PARA"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "call:BATCH1.MAIN-PARA.NOSUCHPG#1",
+      "kind": "call",
+      "name": "NOSUCHPG",
+      "provenance": {
+       "file": "src/BATCH1.cbl",
+       "line": 24,
+       "end_line": null
+      },
+      "attributes": {
+       "target": "NOSUCHPG",
+       "dynamic": false,
+       "paragraph": "paragraph:BATCH1.MAIN-PARA"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "goto:BATCH1.MAIN-PARA.END-PARA#1",
+      "kind": "goto",
+      "name": "END-PARA",
+      "provenance": {
+       "file": "src/BATCH1.cbl",
+       "line": 25,
+       "end_line": null
+      },
+      "attributes": {
+       "target": "END-PARA",
+       "paragraph": "paragraph:BATCH1.MAIN-PARA"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "paragraph:BATCH1.OPEN-PARA",
+      "kind": "paragraph",
+      "name": "OPEN-PARA",
+      "provenance": {
+       "file": "src/BATCH1.cbl",
+       "line": 26,
+       "end_line": 27
+      },
+      "attributes": {
+       "text": "OPEN-PARA . OPEN INPUT ACCT-IN OUTPUT RPT-OUT ."
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "paragraph:BATCH1.OPEN-EXIT",
+      "kind": "paragraph",
+      "name": "OPEN-EXIT",
+      "provenance": {
+       "file": "src/BATCH1.cbl",
+       "line": 28,
+       "end_line": 29
+      },
+      "attributes": {
+       "text": "OPEN-EXIT . EXIT ."
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "paragraph:BATCH1.READ-PARA",
+      "kind": "paragraph",
+      "name": "READ-PARA",
+      "provenance": {
+       "file": "src/BATCH1.cbl",
+       "line": 30,
+       "end_line": 39
+      },
+      "attributes": {
+       "text": "READ-PARA . READ ACCT-IN AT END SET WS-EOF TO TRUE END-READ CONTINUE CONTINUE PERFORM MISSING-PARA ."
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "exec-sql:BATCH1.READ-PARA#1",
+      "kind": "exec-sql",
+      "name": "SQL",
+      "provenance": {
+       "file": "src/BATCH1.cbl",
+       "line": 32,
+       "end_line": 35
+      },
+      "attributes": {
+       "text": "SELECT BAL INTO :WS-BAL FROM ACCOUNTS A JOIN CUSTOMERS C ON A.CUST = C.ID",
+       "command": "SELECT",
+       "paragraph": "paragraph:BATCH1.READ-PARA"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "exec-sql:BATCH1.READ-PARA#2",
+      "kind": "exec-sql",
+      "name": "SQL",
+      "provenance": {
+       "file": "src/BATCH1.cbl",
+       "line": 36,
+       "end_line": 38
+      },
+      "attributes": {
+       "text": "UPDATE ACCOUNTS SET BAL = 0",
+       "command": "UPDATE",
+       "paragraph": "paragraph:BATCH1.READ-PARA"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "perform:BATCH1.READ-PARA.MISSING-PARA#1",
+      "kind": "perform",
+      "name": "MISSING-PARA",
+      "provenance": {
+       "file": "src/BATCH1.cbl",
+       "line": 39,
+       "end_line": null
+      },
+      "attributes": {
+       "target": "MISSING-PARA",
+       "paragraph": "paragraph:BATCH1.READ-PARA"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "paragraph:BATCH1.END-PARA",
+      "kind": "paragraph",
+      "name": "END-PARA",
+      "provenance": {
+       "file": "src/BATCH1.cbl",
+       "line": 40,
+       "end_line": 42
+      },
+      "attributes": {
+       "text": "END-PARA . CLOSE ACCT-IN RPT-OUT STOP RUN ."
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "program:FLOWS",
+      "kind": "program",
+      "name": "FLOWS",
+      "provenance": {
+       "file": "src/FLOWS.cbl",
+       "line": 1,
+       "end_line": 38
+      },
+      "attributes": {}
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "file:FLOWS.TXN-IN",
+      "kind": "file",
+      "name": "TXN-IN",
+      "provenance": {
+       "file": "src/FLOWS.cbl",
+       "line": 7,
+       "end_line": null
+      },
+      "attributes": {
+       "text": "SELECT TXN-IN ASSIGN TO TXNIN",
+       "assign": "TXNIN"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "file:FLOWS.RPT-OUT",
+      "kind": "file",
+      "name": "RPT-OUT",
+      "provenance": {
+       "file": "src/FLOWS.cbl",
+       "line": 8,
+       "end_line": null
+      },
+      "attributes": {
+       "text": "SELECT RPT-OUT ASSIGN TO RPTOUT",
+       "assign": "RPTOUT"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "data:FLOWS.TXN-REC",
+      "kind": "data",
+      "name": "TXN-REC",
+      "provenance": {
+       "file": "src/FLOWS.cbl",
+       "line": 12,
+       "end_line": null
+      },
+      "attributes": {
+       "level": "01",
+       "section": "file",
+       "text": "01 TXN-REC PIC X ( 80 ) .",
+       "picture": "X(80)"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "data:FLOWS.RPT-REC",
+      "kind": "data",
+      "name": "RPT-REC",
+      "provenance": {
+       "file": "src/FLOWS.cbl",
+       "line": 14,
+       "end_line": null
+      },
+      "attributes": {
+       "level": "01",
+       "section": "file",
+       "text": "01 RPT-REC PIC X ( 80 ) .",
+       "picture": "X(80)"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "data:FLOWS.WS-TXN",
+      "kind": "data",
+      "name": "WS-TXN",
+      "provenance": {
+       "file": "src/FLOWS.cbl",
+       "line": 16,
+       "end_line": null
+      },
+      "attributes": {
+       "level": "01",
+       "section": "working-storage",
+       "text": "01 WS-TXN ."
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "data:FLOWS.WS-TXN.WS-AMOUNT",
+      "kind": "data",
+      "name": "WS-AMOUNT",
+      "provenance": {
+       "file": "src/FLOWS.cbl",
+       "line": 17,
+       "end_line": null
+      },
+      "attributes": {
+       "level": "05",
+       "section": "working-storage",
+       "text": "05 WS-AMOUNT PIC S9 ( 7 ) V99 .",
+       "parent": "data:FLOWS.WS-TXN",
+       "picture": "S9(7)V99"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "data:FLOWS.WS-TXN.WS-FEE",
+      "kind": "data",
+      "name": "WS-FEE",
+      "provenance": {
+       "file": "src/FLOWS.cbl",
+       "line": 18,
+       "end_line": null
+      },
+      "attributes": {
+       "level": "05",
+       "section": "working-storage",
+       "text": "05 WS-FEE PIC S9 ( 5 ) V99 .",
+       "parent": "data:FLOWS.WS-TXN",
+       "picture": "S9(5)V99"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "data:FLOWS.WS-TOTALS",
+      "kind": "data",
+      "name": "WS-TOTALS",
+      "provenance": {
+       "file": "src/FLOWS.cbl",
+       "line": 19,
+       "end_line": null
+      },
+      "attributes": {
+       "level": "01",
+       "section": "working-storage",
+       "text": "01 WS-TOTALS ."
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "data:FLOWS.WS-TOTALS.WS-AMOUNT",
+      "kind": "data",
+      "name": "WS-AMOUNT",
+      "provenance": {
+       "file": "src/FLOWS.cbl",
+       "line": 20,
+       "end_line": null
+      },
+      "attributes": {
+       "level": "05",
+       "section": "working-storage",
+       "text": "05 WS-AMOUNT PIC S9 ( 9 ) V99 .",
+       "parent": "data:FLOWS.WS-TOTALS",
+       "picture": "S9(9)V99"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "data:FLOWS.WS-TOTALS.WS-NET",
+      "kind": "data",
+      "name": "WS-NET",
+      "provenance": {
+       "file": "src/FLOWS.cbl",
+       "line": 21,
+       "end_line": null
+      },
+      "attributes": {
+       "level": "05",
+       "section": "working-storage",
+       "text": "05 WS-NET PIC S9 ( 9 ) V99 .",
+       "parent": "data:FLOWS.WS-TOTALS",
+       "picture": "S9(9)V99"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "data:FLOWS.WS-RATE",
+      "kind": "data",
+      "name": "WS-RATE",
+      "provenance": {
+       "file": "src/FLOWS.cbl",
+       "line": 22,
+       "end_line": null
+      },
+      "attributes": {
+       "level": "01",
+       "section": "working-storage",
+       "text": "01 WS-RATE PIC V9 ( 4 ) VALUE .0150 .",
+       "picture": "V9(4)"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "data:FLOWS.WS-LINE",
+      "kind": "data",
+      "name": "WS-LINE",
+      "provenance": {
+       "file": "src/FLOWS.cbl",
+       "line": 23,
+       "end_line": null
+      },
+      "attributes": {
+       "level": "01",
+       "section": "working-storage",
+       "text": "01 WS-LINE PIC X ( 80 ) .",
+       "picture": "X(80)"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "data:FLOWS.WS-TARGET-PGM",
+      "kind": "data",
+      "name": "WS-TARGET-PGM",
+      "provenance": {
+       "file": "src/FLOWS.cbl",
+       "line": 24,
+       "end_line": null
+      },
+      "attributes": {
+       "level": "01",
+       "section": "working-storage",
+       "text": "01 WS-TARGET-PGM PIC X ( 8 ) .",
+       "picture": "X(8)"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "paragraph:FLOWS.MAIN-PARA",
+      "kind": "paragraph",
+      "name": "MAIN-PARA",
+      "provenance": {
+       "file": "src/FLOWS.cbl",
+       "line": 26,
+       "end_line": 38
+      },
+      "attributes": {
+       "text": "MAIN-PARA . READ TXN-IN INTO WS-TXN COMPUTE WS-FEE OF WS-TXN = WS-AMOUNT OF WS-TXN * WS-RATE ADD WS-AMOUNT OF WS-TXN TO WS-AMOUNT OF WS-TOTALS SUBTRACT WS-FEE FROM WS-AMOUNT OF WS-TXN GIVING WS-NET MOVE WS-NET TO WS-LINE WRITE RPT-REC FROM WS-LINE MOVE 'SUBPGM' TO WS-TARGET-PGM CALL WS-TARGET-PGM USING WS-NET MOVE WS-AMOUNT TO WS-LINE STOP RUN ."
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "flow:FLOWS.MAIN-PARA.WS-TXN#1",
+      "kind": "flow",
+      "name": "READ",
+      "provenance": {
+       "file": "src/FLOWS.cbl",
+       "line": 27,
+       "end_line": null
+      },
+      "attributes": {
+       "verb": "READ",
+       "sources": [],
+       "targets": [
+        "WS-TXN"
+       ],
+       "text": "READ TXN-IN INTO WS-TXN",
+       "file": "TXN-IN",
+       "paragraph": "paragraph:FLOWS.MAIN-PARA"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "flow:FLOWS.MAIN-PARA.WS-FEE#1",
+      "kind": "flow",
+      "name": "COMPUTE",
+      "provenance": {
+       "file": "src/FLOWS.cbl",
+       "line": 28,
+       "end_line": 29
+      },
+      "attributes": {
+       "verb": "COMPUTE",
+       "sources": [
+        "WS-AMOUNT OF WS-TXN",
+        "WS-RATE"
+       ],
+       "targets": [
+        "WS-FEE OF WS-TXN"
+       ],
+       "text": "COMPUTE WS-FEE OF WS-TXN = WS-AMOUNT OF WS-TXN * WS-RATE",
+       "paragraph": "paragraph:FLOWS.MAIN-PARA"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "flow:FLOWS.MAIN-PARA.WS-AMOUNT#1",
+      "kind": "flow",
+      "name": "ADD",
+      "provenance": {
+       "file": "src/FLOWS.cbl",
+       "line": 30,
+       "end_line": null
+      },
+      "attributes": {
+       "verb": "ADD",
+       "sources": [
+        "WS-AMOUNT OF WS-TXN"
+       ],
+       "targets": [
+        "WS-AMOUNT OF WS-TOTALS"
+       ],
+       "text": "WS-AMOUNT OF WS-TXN TO WS-AMOUNT OF WS-TOTALS",
+       "paragraph": "paragraph:FLOWS.MAIN-PARA"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "flow:FLOWS.MAIN-PARA.WS-NET#1",
+      "kind": "flow",
+      "name": "SUBTRACT",
+      "provenance": {
+       "file": "src/FLOWS.cbl",
+       "line": 31,
+       "end_line": 32
+      },
+      "attributes": {
+       "verb": "SUBTRACT",
+       "sources": [
+        "WS-FEE",
+        "WS-AMOUNT OF WS-TXN"
+       ],
+       "targets": [
+        "WS-NET"
+       ],
+       "text": "WS-FEE FROM WS-AMOUNT OF WS-TXN GIVING WS-NET",
+       "paragraph": "paragraph:FLOWS.MAIN-PARA"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "flow:FLOWS.MAIN-PARA.WS-LINE#1",
+      "kind": "flow",
+      "name": "MOVE",
+      "provenance": {
+       "file": "src/FLOWS.cbl",
+       "line": 33,
+       "end_line": null
+      },
+      "attributes": {
+       "verb": "MOVE",
+       "sources": [
+        "WS-NET"
+       ],
+       "targets": [
+        "WS-LINE"
+       ],
+       "text": "WS-NET TO WS-LINE",
+       "paragraph": "paragraph:FLOWS.MAIN-PARA"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "flow:FLOWS.MAIN-PARA.RPT-REC#1",
+      "kind": "flow",
+      "name": "WRITE",
+      "provenance": {
+       "file": "src/FLOWS.cbl",
+       "line": 34,
+       "end_line": null
+      },
+      "attributes": {
+       "verb": "WRITE",
+       "sources": [
+        "WS-LINE"
+       ],
+       "targets": [
+        "RPT-REC"
+       ],
+       "text": "WRITE RPT-REC FROM WS-LINE",
+       "paragraph": "paragraph:FLOWS.MAIN-PARA"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "flow:FLOWS.MAIN-PARA.WS-TARGET-PGM#1",
+      "kind": "flow",
+      "name": "MOVE",
+      "provenance": {
+       "file": "src/FLOWS.cbl",
+       "line": 35,
+       "end_line": null
+      },
+      "attributes": {
+       "verb": "MOVE",
+       "sources": [],
+       "targets": [
+        "WS-TARGET-PGM"
+       ],
+       "text": "'SUBPGM' TO WS-TARGET-PGM",
+       "literal": "SUBPGM",
+       "paragraph": "paragraph:FLOWS.MAIN-PARA"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "call:FLOWS.MAIN-PARA.WS-TARGET-PGM#1",
+      "kind": "call",
+      "name": "WS-TARGET-PGM",
+      "provenance": {
+       "file": "src/FLOWS.cbl",
+       "line": 36,
+       "end_line": null
+      },
+      "attributes": {
+       "target": "WS-TARGET-PGM",
+       "dynamic": true,
+       "paragraph": "paragraph:FLOWS.MAIN-PARA"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "flow:FLOWS.MAIN-PARA.WS-LINE#2",
+      "kind": "flow",
+      "name": "MOVE",
+      "provenance": {
+       "file": "src/FLOWS.cbl",
+       "line": 37,
+       "end_line": null
+      },
+      "attributes": {
+       "verb": "MOVE",
+       "sources": [
+        "WS-AMOUNT"
+       ],
+       "targets": [
+        "WS-LINE"
+       ],
+       "text": "WS-AMOUNT TO WS-LINE",
+       "paragraph": "paragraph:FLOWS.MAIN-PARA"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "program:SUBPGM",
+      "kind": "program",
+      "name": "SUBPGM",
+      "provenance": {
+       "file": "src/SUBPGM.cbl",
+       "line": 1,
+       "end_line": 16
+      },
+      "attributes": {}
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "data:SUBPGM.WS-X",
+      "kind": "data",
+      "name": "WS-X",
+      "provenance": {
+       "file": "src/SUBPGM.cbl",
+       "line": 5,
+       "end_line": null
+      },
+      "attributes": {
+       "level": "01",
+       "section": "working-storage",
+       "text": "01 WS-X PIC X .",
+       "picture": "X"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "data:SUBPGM.LK-COUNT",
+      "kind": "data",
+      "name": "LK-COUNT",
+      "provenance": {
+       "file": "src/SUBPGM.cbl",
+       "line": 7,
+       "end_line": null
+      },
+      "attributes": {
+       "level": "01",
+       "section": "linkage",
+       "text": "01 LK-COUNT PIC 9 ( 5 ) .",
+       "picture": "9(5)"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "paragraph:SUBPGM.MAIN-PARA",
+      "kind": "paragraph",
+      "name": "MAIN-PARA",
+      "provenance": {
+       "file": "src/SUBPGM.cbl",
+       "line": 9,
+       "end_line": 16
+      },
+      "attributes": {
+       "text": "MAIN-PARA . CONTINUE CONTINUE CALL 'CSNBOWH' USING WS-X CONTINUE CONTINUE GOBACK ."
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "exec-cics:SUBPGM.MAIN-PARA#1",
+      "kind": "exec-cics",
+      "name": "CICS",
+      "provenance": {
+       "file": "src/SUBPGM.cbl",
+       "line": 10,
+       "end_line": null
+      },
+      "attributes": {
+       "text": "XCTL PROGRAM('BATCH1')",
+       "command": "XCTL",
+       "paragraph": "paragraph:SUBPGM.MAIN-PARA",
+       "program": "BATCH1"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "exec-cics:SUBPGM.MAIN-PARA#2",
+      "kind": "exec-cics",
+      "name": "CICS",
+      "provenance": {
+       "file": "src/SUBPGM.cbl",
+       "line": 11,
+       "end_line": 12
+      },
+      "attributes": {
+       "text": "READ DATASET('ACCTDAT') INTO(WS-X) RIDFLD(LK-COUNT)",
+       "command": "READ",
+       "paragraph": "paragraph:SUBPGM.MAIN-PARA",
+       "file": "ACCTDAT"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "crypto-call:SUBPGM.MAIN-PARA.CSNBOWH#1",
+      "kind": "crypto-call",
+      "name": "CSNBOWH",
+      "provenance": {
+       "file": "src/SUBPGM.cbl",
+       "line": 13,
+       "end_line": null
+      },
+      "attributes": {
+       "service": "CSNBOWH",
+       "category": "hash",
+       "via": "call",
+       "dynamic": false,
+       "paragraph": "paragraph:SUBPGM.MAIN-PARA"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "exec-cics:SUBPGM.MAIN-PARA#3",
+      "kind": "exec-cics",
+      "name": "CICS",
+      "provenance": {
+       "file": "src/SUBPGM.cbl",
+       "line": 14,
+       "end_line": null
+      },
+      "attributes": {
+       "text": "SEND MAP('SUBSCR') MAPSET('SUBMAP')",
+       "command": "SEND",
+       "paragraph": "paragraph:SUBPGM.MAIN-PARA",
+       "map": "SUBSCR",
+       "mapset": "SUBMAP"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "exec-cics:SUBPGM.MAIN-PARA#4",
+      "kind": "exec-cics",
+      "name": "CICS",
+      "provenance": {
+       "file": "src/SUBPGM.cbl",
+       "line": 15,
+       "end_line": null
+      },
+      "attributes": {
+       "text": "RETURN TRANSID('TB01')",
+       "command": "RETURN",
+       "paragraph": "paragraph:SUBPGM.MAIN-PARA",
+       "transid": "TB01"
+      }
+     },
+     "previous": null
+    }
+   ],
+   "analyzed": [
+    "copy/ACCTWS.cpy",
+    "jcl/RUNBATCH.jcl",
+    "src/BATCH1.cbl",
+    "src/FLOWS.cbl",
+    "src/SUBPGM.cbl"
+   ],
+   "not_analyzed": {
+    "changeproof.yaml": "no adapter for this file type"
+   },
+   "problems": {}
+  },
+  "how": {
+   "files": [
+    {
+     "path": "changeproof.yaml",
+     "previous_path": null,
+     "status": "A",
+     "binary": false,
+     "insertions": 24,
+     "deletions": 0,
+     "hunks": [
+      [
+       null,
+       {
+        "file": "changeproof.yaml",
+        "line": 1,
+        "end_line": 24
+       }
+      ]
+     ]
+    },
+    {
+     "path": "copy/ACCTWS.cpy",
+     "previous_path": null,
+     "status": "A",
+     "binary": false,
+     "insertions": 5,
+     "deletions": 0,
+     "hunks": [
+      [
+       null,
+       {
+        "file": "copy/ACCTWS.cpy",
+        "line": 1,
+        "end_line": 5
+       }
+      ]
+     ]
+    },
+    {
+     "path": "jcl/RUNBATCH.jcl",
+     "previous_path": null,
+     "status": "A",
+     "binary": false,
+     "insertions": 13,
+     "deletions": 0,
+     "hunks": [
+      [
+       null,
+       {
+        "file": "jcl/RUNBATCH.jcl",
+        "line": 1,
+        "end_line": 13
+       }
+      ]
+     ]
+    },
+    {
+     "path": "src/BATCH1.cbl",
+     "previous_path": null,
+     "status": "A",
+     "binary": false,
+     "insertions": 42,
+     "deletions": 0,
+     "hunks": [
+      [
+       null,
+       {
+        "file": "src/BATCH1.cbl",
+        "line": 1,
+        "end_line": 42
+       }
+      ]
+     ]
+    },
+    {
+     "path": "src/FLOWS.cbl",
+     "previous_path": null,
+     "status": "A",
+     "binary": false,
+     "insertions": 38,
+     "deletions": 0,
+     "hunks": [
+      [
+       null,
+       {
+        "file": "src/FLOWS.cbl",
+        "line": 1,
+        "end_line": 38
+       }
+      ]
+     ]
+    },
+    {
+     "path": "src/SUBPGM.cbl",
+     "previous_path": null,
+     "status": "A",
+     "binary": false,
+     "insertions": 16,
+     "deletions": 0,
+     "hunks": [
+      [
+       null,
+       {
+        "file": "src/SUBPGM.cbl",
+        "line": 1,
+        "end_line": 16
+       }
+      ]
+     ]
+    }
+   ],
+   "insertions": 138,
+   "deletions": 0
+  },
+  "why": {
+   "subject": "Import the SEPA batch programs",
+   "provenance": {
+    "file": "git-commit/3586412f00991606f7e574986db6de2dde4d4961",
+    "line": 5,
+    "end_line": null
+   },
+   "tickets": [
+    {
+     "id": "CHG0030001",
+     "system": "servicenow",
+     "type": "change",
+     "found_in": "trailer",
+     "provenance": {
+      "file": "git-commit/3586412f00991606f7e574986db6de2dde4d4961",
+      "line": 7,
+      "end_line": null
+     }
+    }
+   ],
+   "change_request": "CHG0030001",
+   "change_type": "normal",
+   "emergency": false,
+   "trailers": [
+    {
+     "key": "Change-Request",
+     "value": "CHG0030001",
+     "provenance": {
+      "file": "git-commit/3586412f00991606f7e574986db6de2dde4d4961",
+      "line": 7,
+      "end_line": null
+     }
+    },
+    {
+     "key": "Requested-by",
+     "value": "Lena Weber <lena.weber@bank.example>",
+     "provenance": {
+      "file": "git-commit/3586412f00991606f7e574986db6de2dde4d4961",
+      "line": 8,
+      "end_line": null
+     }
+    },
+    {
+     "key": "Approved-by",
+     "value": "Marc Dubois <marc.dubois@bank.example>",
+     "provenance": {
+      "file": "git-commit/3586412f00991606f7e574986db6de2dde4d4961",
+      "line": 9,
+      "end_line": null
+     }
+    },
+    {
+     "key": "Change-Type",
+     "value": "normal",
+     "provenance": {
+      "file": "git-commit/3586412f00991606f7e574986db6de2dde4d4961",
+      "line": 10,
+      "end_line": null
+     }
+    }
+   ]
+  },
+  "gaps": [],
+  "open_items": []
+ },
+ {
+  "who": {
+   "implementer": {
+    "name": "Ana Novak",
+    "email": "ana.novak@bank.example",
+    "provenance": {
+     "file": "git-commit/dd9bd5ded7ce0e6684ece39ed5efe2dfed85f13c",
+     "line": 3,
+     "end_line": null
+    }
+   },
+   "committer": {
+    "name": "Ana Novak",
+    "email": "ana.novak@bank.example",
+    "provenance": {
+     "file": "git-commit/dd9bd5ded7ce0e6684ece39ed5efe2dfed85f13c",
+     "line": 4,
+     "end_line": null
+    }
+   },
+   "requester": {
+    "name": "Lena Weber",
+    "email": "lena.weber@bank.example",
+    "provenance": {
+     "file": "git-commit/dd9bd5ded7ce0e6684ece39ed5efe2dfed85f13c",
+     "line": 10,
+     "end_line": null
+    }
+   },
+   "approvers": [
+    {
+     "name": "Marc Dubois",
+     "email": "marc.dubois@bank.example",
+     "provenance": {
+      "file": "git-commit/dd9bd5ded7ce0e6684ece39ed5efe2dfed85f13c",
+      "line": 11,
+      "end_line": null
+     }
+    }
+   ],
+   "reviewers": [],
+   "independent": true
+  },
+  "when": {
+   "authored": {
+    "at": "2026-09-02T09:30:00+02:00",
+    "provenance": {
+     "file": "git-commit/dd9bd5ded7ce0e6684ece39ed5efe2dfed85f13c",
+     "line": 3,
+     "end_line": null
+    }
+   },
+   "committed": {
+    "at": "2026-09-02T09:30:00+02:00",
+    "provenance": {
+     "file": "git-commit/dd9bd5ded7ce0e6684ece39ed5efe2dfed85f13c",
+     "line": 4,
+     "end_line": null
+    }
+   }
+  },
+  "where": {
+   "repository": "sepa",
+   "system": "test-payments",
+   "commit": "dd9bd5ded7ce0e6684ece39ed5efe2dfed85f13c",
+   "parents": [
+    "3586412f00991606f7e574986db6de2dde4d4961"
+   ],
+   "files": [
+    "src/FLOWS.cbl"
+   ],
+   "components": [
+    "batch-core"
+   ],
+   "ci": {}
+  },
+  "what": {
+   "entities": [
+    {
+     "change": "modified",
+     "entity": {
+      "id": "paragraph:FLOWS.MAIN-PARA",
+      "kind": "paragraph",
+      "name": "MAIN-PARA",
+      "provenance": {
+       "file": "src/FLOWS.cbl",
+       "line": 26,
+       "end_line": 38
+      },
+      "attributes": {
+       "text": "MAIN-PARA . READ TXN-IN INTO WS-TXN COMPUTE WS-FEE OF WS-TXN ROUNDED = WS-AMOUNT OF WS-TXN * WS-RATE ADD WS-AMOUNT OF WS-TXN TO WS-AMOUNT OF WS-TOTALS SUBTRACT WS-FEE FROM WS-AMOUNT OF WS-TXN GIVING WS-NET MOVE WS-NET TO WS-LINE WRITE RPT-REC FROM WS-LINE MOVE 'SUBPGM' TO WS-TARGET-PGM CALL WS-TARGET-PGM USING WS-NET MOVE WS-AMOUNT TO WS-LINE STOP RUN ."
+      }
+     },
+     "previous": {
+      "id": "paragraph:FLOWS.MAIN-PARA",
+      "kind": "paragraph",
+      "name": "MAIN-PARA",
+      "provenance": {
+       "file": "src/FLOWS.cbl",
+       "line": 26,
+       "end_line": 38
+      },
+      "attributes": {
+       "text": "MAIN-PARA . READ TXN-IN INTO WS-TXN COMPUTE WS-FEE OF WS-TXN = WS-AMOUNT OF WS-TXN * WS-RATE ADD WS-AMOUNT OF WS-TXN TO WS-AMOUNT OF WS-TOTALS SUBTRACT WS-FEE FROM WS-AMOUNT OF WS-TXN GIVING WS-NET MOVE WS-NET TO WS-LINE WRITE RPT-REC FROM WS-LINE MOVE 'SUBPGM' TO WS-TARGET-PGM CALL WS-TARGET-PGM USING WS-NET MOVE WS-AMOUNT TO WS-LINE STOP RUN ."
+      }
+     }
+    },
+    {
+     "change": "modified",
+     "entity": {
+      "id": "flow:FLOWS.MAIN-PARA.WS-FEE#1",
+      "kind": "flow",
+      "name": "COMPUTE",
+      "provenance": {
+       "file": "src/FLOWS.cbl",
+       "line": 28,
+       "end_line": 29
+      },
+      "attributes": {
+       "verb": "COMPUTE",
+       "sources": [
+        "WS-AMOUNT OF WS-TXN",
+        "WS-RATE"
+       ],
+       "targets": [
+        "WS-FEE OF WS-TXN"
+       ],
+       "text": "COMPUTE WS-FEE OF WS-TXN ROUNDED = WS-AMOUNT OF WS-TXN * WS-RATE",
+       "paragraph": "paragraph:FLOWS.MAIN-PARA"
+      }
+     },
+     "previous": {
+      "id": "flow:FLOWS.MAIN-PARA.WS-FEE#1",
+      "kind": "flow",
+      "name": "COMPUTE",
+      "provenance": {
+       "file": "src/FLOWS.cbl",
+       "line": 28,
+       "end_line": 29
+      },
+      "attributes": {
+       "verb": "COMPUTE",
+       "sources": [
+        "WS-AMOUNT OF WS-TXN",
+        "WS-RATE"
+       ],
+       "targets": [
+        "WS-FEE OF WS-TXN"
+       ],
+       "text": "COMPUTE WS-FEE OF WS-TXN = WS-AMOUNT OF WS-TXN * WS-RATE",
+       "paragraph": "paragraph:FLOWS.MAIN-PARA"
+      }
+     }
+    }
+   ],
+   "analyzed": [
+    "src/FLOWS.cbl"
+   ],
+   "not_analyzed": {},
+   "problems": {}
+  },
+  "how": {
+   "files": [
+    {
+     "path": "src/FLOWS.cbl",
+     "previous_path": null,
+     "status": "M",
+     "binary": false,
+     "insertions": 1,
+     "deletions": 1,
+     "hunks": [
+      [
+       {
+        "file": "src/FLOWS.cbl",
+        "line": 28,
+        "end_line": 28
+       },
+       {
+        "file": "src/FLOWS.cbl",
+        "line": 28,
+        "end_line": 28
+       }
+      ]
+     ]
+    }
+   ],
+   "insertions": 1,
+   "deletions": 1
+  },
+  "why": {
+   "subject": "PAY-101: Round the SEPA fee before netting",
+   "provenance": {
+    "file": "git-commit/dd9bd5ded7ce0e6684ece39ed5efe2dfed85f13c",
+    "line": 6,
+    "end_line": null
+   },
+   "tickets": [
+    {
+     "id": "PAY-101",
+     "system": "jira",
+     "type": "issue",
+     "found_in": "subject",
+     "provenance": {
+      "file": "git-commit/dd9bd5ded7ce0e6684ece39ed5efe2dfed85f13c",
+      "line": 6,
+      "end_line": null
+     }
+    }
+   ],
+   "change_request": null,
+   "change_type": "normal",
+   "emergency": false,
+   "trailers": [
+    {
+     "key": "Requested-by",
+     "value": "Lena Weber <lena.weber@bank.example>",
+     "provenance": {
+      "file": "git-commit/dd9bd5ded7ce0e6684ece39ed5efe2dfed85f13c",
+      "line": 10,
+      "end_line": null
+     }
+    },
+    {
+     "key": "Approved-by",
+     "value": "Marc Dubois <marc.dubois@bank.example>",
+     "provenance": {
+      "file": "git-commit/dd9bd5ded7ce0e6684ece39ed5efe2dfed85f13c",
+      "line": 11,
+      "end_line": null
+     }
+    },
+    {
+     "key": "Change-Type",
+     "value": "normal",
+     "provenance": {
+      "file": "git-commit/dd9bd5ded7ce0e6684ece39ed5efe2dfed85f13c",
+      "line": 12,
+      "end_line": null
+     }
+    }
+   ]
+  },
+  "gaps": [],
+  "open_items": [
+   "no change request number"
+  ]
+ },
+ {
+  "who": {
+   "implementer": {
+    "name": "Tomas Horvat",
+    "email": "tomas.horvat@bank.example",
+    "provenance": {
+     "file": "git-commit/760749d485604cbf2cbfe9445fd4b23b81411ad4",
+     "line": 3,
+     "end_line": null
+    }
+   },
+   "committer": {
+    "name": "Release Bot",
+    "email": "release-bot@bank.example",
+    "provenance": {
+     "file": "git-commit/760749d485604cbf2cbfe9445fd4b23b81411ad4",
+     "line": 4,
+     "end_line": null
+    }
+   },
+   "requester": {
+    "name": "Lena Weber",
+    "email": "lena.weber@bank.example",
+    "provenance": {
+     "file": "git-commit/760749d485604cbf2cbfe9445fd4b23b81411ad4",
+     "line": 9,
+     "end_line": null
+    }
+   },
+   "approvers": [
+    {
+     "name": "Marc Dubois",
+     "email": "marc.dubois@bank.example",
+     "provenance": {
+      "file": "git-commit/760749d485604cbf2cbfe9445fd4b23b81411ad4",
+      "line": 10,
+      "end_line": null
+     }
+    }
+   ],
+   "reviewers": [],
+   "independent": true
+  },
+  "when": {
+   "authored": {
+    "at": "2026-09-03T09:30:00+02:00",
+    "provenance": {
+     "file": "git-commit/760749d485604cbf2cbfe9445fd4b23b81411ad4",
+     "line": 3,
+     "end_line": null
+    }
+   },
+   "committed": {
+    "at": "2026-09-03T09:30:00+02:00",
+    "provenance": {
+     "file": "git-commit/760749d485604cbf2cbfe9445fd4b23b81411ad4",
+     "line": 4,
+     "end_line": null
+    }
+   }
+  },
+  "where": {
+   "repository": "sepa",
+   "system": "test-payments",
+   "commit": "760749d485604cbf2cbfe9445fd4b23b81411ad4",
+   "parents": [
+    "dd9bd5ded7ce0e6684ece39ed5efe2dfed85f13c"
+   ],
+   "files": [
+    "copy/ACCTWS.cpy"
+   ],
+   "components": [],
+   "ci": {}
+  },
+  "what": {
+   "entities": [
+    {
+     "change": "added",
+     "entity": {
+      "id": "data:BATCH1.WS-LIMIT",
+      "kind": "data",
+      "name": "WS-LIMIT",
+      "provenance": {
+       "file": "copy/ACCTWS.cpy",
+       "line": 5,
+       "end_line": null
+      },
+      "attributes": {
+       "level": "01",
+       "section": "working-storage",
+       "text": "01 WS-LIMIT PIC S9 ( 9 ) V99 COMP-3 .",
+       "picture": "S9(9)V99"
+      }
+     },
+     "previous": null
+    }
+   ],
+   "analyzed": [
+    "copy/ACCTWS.cpy",
+    "src/BATCH1.cbl"
+   ],
+   "not_analyzed": {},
+   "problems": {}
+  },
+  "how": {
+   "files": [
+    {
+     "path": "copy/ACCTWS.cpy",
+     "previous_path": null,
+     "status": "M",
+     "binary": false,
+     "insertions": 2,
+     "deletions": 1,
+     "hunks": [
+      [
+       {
+        "file": "copy/ACCTWS.cpy",
+        "line": 5,
+        "end_line": 5
+       },
+       {
+        "file": "copy/ACCTWS.cpy",
+        "line": 5,
+        "end_line": 6
+       }
+      ]
+     ]
+    }
+   ],
+   "insertions": 2,
+   "deletions": 1
+  },
+  "why": {
+   "subject": "Add the overdraft limit to the account layout",
+   "provenance": {
+    "file": "git-commit/760749d485604cbf2cbfe9445fd4b23b81411ad4",
+    "line": 6,
+    "end_line": null
+   },
+   "tickets": [
+    {
+     "id": "CHG0030002",
+     "system": "servicenow",
+     "type": "change",
+     "found_in": "trailer",
+     "provenance": {
+      "file": "git-commit/760749d485604cbf2cbfe9445fd4b23b81411ad4",
+      "line": 8,
+      "end_line": null
+     }
+    }
+   ],
+   "change_request": "CHG0030002",
+   "change_type": "normal",
+   "emergency": false,
+   "trailers": [
+    {
+     "key": "Change-Request",
+     "value": "CHG0030002",
+     "provenance": {
+      "file": "git-commit/760749d485604cbf2cbfe9445fd4b23b81411ad4",
+      "line": 8,
+      "end_line": null
+     }
+    },
+    {
+     "key": "Requested-by",
+     "value": "Lena Weber <lena.weber@bank.example>",
+     "provenance": {
+      "file": "git-commit/760749d485604cbf2cbfe9445fd4b23b81411ad4",
+      "line": 9,
+      "end_line": null
+     }
+    },
+    {
+     "key": "Approved-by",
+     "value": "Marc Dubois <marc.dubois@bank.example>",
+     "provenance": {
+      "file": "git-commit/760749d485604cbf2cbfe9445fd4b23b81411ad4",
+      "line": 10,
+      "end_line": null
+     }
+    },
+    {
+     "key": "Change-Type",
+     "value": "normal",
+     "provenance": {
+      "file": "git-commit/760749d485604cbf2cbfe9445fd4b23b81411ad4",
+      "line": 11,
+      "end_line": null
+     }
+    }
+   ]
+  },
+  "gaps": [],
+  "open_items": []
+ },
+ {
+  "who": {
+   "implementer": {
+    "name": "Tomas Horvat",
+    "email": "tomas.horvat@bank.example",
+    "provenance": {
+     "file": "git-commit/2bc84dc8a1730f34fc9afbf27ec0af0bea85caaf",
+     "line": 3,
+     "end_line": null
+    }
+   },
+   "committer": {
+    "name": "Tomas Horvat",
+    "email": "tomas.horvat@bank.example",
+    "provenance": {
+     "file": "git-commit/2bc84dc8a1730f34fc9afbf27ec0af0bea85caaf",
+     "line": 4,
+     "end_line": null
+    }
+   },
+   "requester": {
+    "name": "Lena Weber",
+    "email": "lena.weber@bank.example",
+    "provenance": {
+     "file": "git-commit/2bc84dc8a1730f34fc9afbf27ec0af0bea85caaf",
+     "line": 8,
+     "end_line": null
+    }
+   },
+   "approvers": [
+    {
+     "name": "Ana Novak",
+     "email": "ana.novak@bank.example",
+     "provenance": {
+      "file": "git-commit/2bc84dc8a1730f34fc9afbf27ec0af0bea85caaf",
+      "line": 9,
+      "end_line": null
+     }
+    }
+   ],
+   "reviewers": [],
+   "independent": true
+  },
+  "when": {
+   "authored": {
+    "at": "2026-09-04T09:30:00+02:00",
+    "provenance": {
+     "file": "git-commit/2bc84dc8a1730f34fc9afbf27ec0af0bea85caaf",
+     "line": 3,
+     "end_line": null
+    }
+   },
+   "committed": {
+    "at": "2026-09-04T09:30:00+02:00",
+    "provenance": {
+     "file": "git-commit/2bc84dc8a1730f34fc9afbf27ec0af0bea85caaf",
+     "line": 4,
+     "end_line": null
+    }
+   }
+  },
+  "where": {
+   "repository": "sepa",
+   "system": "test-payments",
+   "commit": "2bc84dc8a1730f34fc9afbf27ec0af0bea85caaf",
+   "parents": [
+    "760749d485604cbf2cbfe9445fd4b23b81411ad4"
+   ],
+   "files": [
+    "src/BATCH1.cbl"
+   ],
+   "components": [
+    "batch-core"
+   ],
+   "ci": {}
+  },
+  "what": {
+   "entities": [
+    {
+     "change": "modified",
+     "entity": {
+      "id": "paragraph:BATCH1.READ-PARA",
+      "kind": "paragraph",
+      "name": "READ-PARA",
+      "provenance": {
+       "file": "src/BATCH1.cbl",
+       "line": 30,
+       "end_line": 40
+      },
+      "attributes": {
+       "text": "READ-PARA . READ ACCT-IN AT END SET WS-EOF TO TRUE END-READ CONTINUE CONTINUE PERFORM MISSING-PARA PERFORM AUDIT-PARA ."
+      }
+     },
+     "previous": {
+      "id": "paragraph:BATCH1.READ-PARA",
+      "kind": "paragraph",
+      "name": "READ-PARA",
+      "provenance": {
+       "file": "src/BATCH1.cbl",
+       "line": 30,
+       "end_line": 39
+      },
+      "attributes": {
+       "text": "READ-PARA . READ ACCT-IN AT END SET WS-EOF TO TRUE END-READ CONTINUE CONTINUE PERFORM MISSING-PARA ."
+      }
+     }
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "perform:BATCH1.READ-PARA.AUDIT-PARA#1",
+      "kind": "perform",
+      "name": "AUDIT-PARA",
+      "provenance": {
+       "file": "src/BATCH1.cbl",
+       "line": 40,
+       "end_line": null
+      },
+      "attributes": {
+       "target": "AUDIT-PARA",
+       "paragraph": "paragraph:BATCH1.READ-PARA"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "paragraph:BATCH1.AUDIT-PARA",
+      "kind": "paragraph",
+      "name": "AUDIT-PARA",
+      "provenance": {
+       "file": "src/BATCH1.cbl",
+       "line": 44,
+       "end_line": 45
+      },
+      "attributes": {
+       "text": "AUDIT-PARA . ADD 1 TO WS-COUNT ."
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "flow:BATCH1.AUDIT-PARA.WS-COUNT#1",
+      "kind": "flow",
+      "name": "ADD",
+      "provenance": {
+       "file": "src/BATCH1.cbl",
+       "line": 45,
+       "end_line": null
+      },
+      "attributes": {
+       "verb": "ADD",
+       "sources": [],
+       "targets": [
+        "WS-COUNT"
+       ],
+       "text": "1 TO WS-COUNT",
+       "paragraph": "paragraph:BATCH1.AUDIT-PARA"
+      }
+     },
+     "previous": null
+    }
+   ],
+   "analyzed": [
+    "src/BATCH1.cbl"
+   ],
+   "not_analyzed": {},
+   "problems": {}
+  },
+  "how": {
+   "files": [
+    {
+     "path": "src/BATCH1.cbl",
+     "previous_path": null,
+     "status": "M",
+     "binary": false,
+     "insertions": 4,
+     "deletions": 1,
+     "hunks": [
+      [
+       {
+        "file": "src/BATCH1.cbl",
+        "line": 39,
+        "end_line": 39
+       },
+       {
+        "file": "src/BATCH1.cbl",
+        "line": 39,
+        "end_line": 40
+       }
+      ],
+      [
+       null,
+       {
+        "file": "src/BATCH1.cbl",
+        "line": 44,
+        "end_line": 45
+       }
+      ]
+     ]
+    }
+   ],
+   "insertions": 4,
+   "deletions": 1
+  },
+  "why": {
+   "subject": "[PAY-102] Count each account read for the audit total",
+   "provenance": {
+    "file": "git-commit/2bc84dc8a1730f34fc9afbf27ec0af0bea85caaf",
+    "line": 6,
+    "end_line": null
+   },
+   "tickets": [
+    {
+     "id": "PAY-102",
+     "system": "jira",
+     "type": "issue",
+     "found_in": "subject",
+     "provenance": {
+      "file": "git-commit/2bc84dc8a1730f34fc9afbf27ec0af0bea85caaf",
+      "line": 6,
+      "end_line": null
+     }
+    }
+   ],
+   "change_request": null,
+   "change_type": "normal",
+   "emergency": false,
+   "trailers": [
+    {
+     "key": "Requested-by",
+     "value": "Lena Weber <lena.weber@bank.example>",
+     "provenance": {
+      "file": "git-commit/2bc84dc8a1730f34fc9afbf27ec0af0bea85caaf",
+      "line": 8,
+      "end_line": null
+     }
+    },
+    {
+     "key": "Approved-by",
+     "value": "Ana Novak <ana.novak@bank.example>",
+     "provenance": {
+      "file": "git-commit/2bc84dc8a1730f34fc9afbf27ec0af0bea85caaf",
+      "line": 9,
+      "end_line": null
+     }
+    },
+    {
+     "key": "Change-Type",
+     "value": "normal",
+     "provenance": {
+      "file": "git-commit/2bc84dc8a1730f34fc9afbf27ec0af0bea85caaf",
+      "line": 10,
+      "end_line": null
+     }
+    }
+   ]
+  },
+  "gaps": [],
+  "open_items": [
+   "no change request number"
+  ]
+ },
+ {
+  "who": {
+   "implementer": {
+    "name": "Tomas Horvat",
+    "email": "tomas.horvat@bank.example",
+    "provenance": {
+     "file": "git-commit/7e73de291301354a0e628c7313a1d74ad18bfe39",
+     "line": 3,
+     "end_line": null
+    }
+   },
+   "committer": {
+    "name": "Tomas Horvat",
+    "email": "tomas.horvat@bank.example",
+    "provenance": {
+     "file": "git-commit/7e73de291301354a0e628c7313a1d74ad18bfe39",
+     "line": 4,
+     "end_line": null
+    }
+   },
+   "requester": null,
+   "approvers": [
+    {
+     "name": "Marc Dubois",
+     "email": "marc.dubois@bank.example",
+     "provenance": {
+      "file": "git-commit/7e73de291301354a0e628c7313a1d74ad18bfe39",
+      "line": 9,
+      "end_line": null
+     }
+    }
+   ],
+   "reviewers": [],
+   "independent": true
+  },
+  "when": {
+   "authored": {
+    "at": "2026-09-05T09:30:00+02:00",
+    "provenance": {
+     "file": "git-commit/7e73de291301354a0e628c7313a1d74ad18bfe39",
+     "line": 3,
+     "end_line": null
+    }
+   },
+   "committed": {
+    "at": "2026-09-05T09:30:00+02:00",
+    "provenance": {
+     "file": "git-commit/7e73de291301354a0e628c7313a1d74ad18bfe39",
+     "line": 4,
+     "end_line": null
+    }
+   }
+  },
+  "where": {
+   "repository": "sepa",
+   "system": "test-payments",
+   "commit": "7e73de291301354a0e628c7313a1d74ad18bfe39",
+   "parents": [
+    "2bc84dc8a1730f34fc9afbf27ec0af0bea85caaf"
+   ],
+   "files": [
+    "src/SUBPGM.cbl",
+    "src/online/SUBPGM.cbl"
+   ],
+   "components": [
+    "batch-core"
+   ],
+   "ci": {}
+  },
+  "what": {
+   "entities": [],
+   "analyzed": [
+    "src/SUBPGM.cbl",
+    "src/online/SUBPGM.cbl"
+   ],
+   "not_analyzed": {},
+   "problems": {}
+  },
+  "how": {
+   "files": [
+    {
+     "path": "src/online/SUBPGM.cbl",
+     "previous_path": "src/SUBPGM.cbl",
+     "status": "R",
+     "binary": false,
+     "insertions": 0,
+     "deletions": 0,
+     "hunks": []
+    }
+   ],
+   "insertions": 0,
+   "deletions": 0
+  },
+  "why": {
+   "subject": "Move the account lookup under src/online",
+   "provenance": {
+    "file": "git-commit/7e73de291301354a0e628c7313a1d74ad18bfe39",
+    "line": 6,
+    "end_line": null
+   },
+   "tickets": [
+    {
+     "id": "CHG0030003",
+     "system": "servicenow",
+     "type": "change",
+     "found_in": "trailer",
+     "provenance": {
+      "file": "git-commit/7e73de291301354a0e628c7313a1d74ad18bfe39",
+      "line": 8,
+      "end_line": null
+     }
+    }
+   ],
+   "change_request": "CHG0030003",
+   "change_type": "standard",
+   "emergency": false,
+   "trailers": [
+    {
+     "key": "Refs",
+     "value": "CHG0030003",
+     "provenance": {
+      "file": "git-commit/7e73de291301354a0e628c7313a1d74ad18bfe39",
+      "line": 8,
+      "end_line": null
+     }
+    },
+    {
+     "key": "Approved-by",
+     "value": "Marc Dubois <marc.dubois@bank.example>",
+     "provenance": {
+      "file": "git-commit/7e73de291301354a0e628c7313a1d74ad18bfe39",
+      "line": 9,
+      "end_line": null
+     }
+    },
+    {
+     "key": "Change-Type",
+     "value": "standard",
+     "provenance": {
+      "file": "git-commit/7e73de291301354a0e628c7313a1d74ad18bfe39",
+      "line": 10,
+      "end_line": null
+     }
+    }
+   ]
+  },
+  "gaps": [],
+  "open_items": [
+   "no requester recorded"
+  ]
+ },
+ {
+  "who": {
+   "implementer": {
+    "name": "Ana Novak",
+    "email": "ana.novak@bank.example",
+    "provenance": {
+     "file": "git-commit/e59ebcc5d6c13e81c8362c4b5758ee7e4862faa4",
+     "line": 3,
+     "end_line": null
+    }
+   },
+   "committer": {
+    "name": "Ana Novak",
+    "email": "ana.novak@bank.example",
+    "provenance": {
+     "file": "git-commit/e59ebcc5d6c13e81c8362c4b5758ee7e4862faa4",
+     "line": 4,
+     "end_line": null
+    }
+   },
+   "requester": {
+    "name": "Lena Weber",
+    "email": "lena.weber@bank.example",
+    "provenance": {
+     "file": "git-commit/e59ebcc5d6c13e81c8362c4b5758ee7e4862faa4",
+     "line": 9,
+     "end_line": null
+    }
+   },
+   "approvers": [
+    {
+     "name": "Marc Dubois",
+     "email": "marc.dubois@bank.example",
+     "provenance": {
+      "file": "git-commit/e59ebcc5d6c13e81c8362c4b5758ee7e4862faa4",
+      "line": 10,
+      "end_line": null
+     }
+    }
+   ],
+   "reviewers": [],
+   "independent": true
+  },
+  "when": {
+   "authored": {
+    "at": "2026-09-06T09:30:00+02:00",
+    "provenance": {
+     "file": "git-commit/e59ebcc5d6c13e81c8362c4b5758ee7e4862faa4",
+     "line": 3,
+     "end_line": null
+    }
+   },
+   "committed": {
+    "at": "2026-09-06T09:30:00+02:00",
+    "provenance": {
+     "file": "git-commit/e59ebcc5d6c13e81c8362c4b5758ee7e4862faa4",
+     "line": 4,
+     "end_line": null
+    }
+   }
+  },
+  "where": {
+   "repository": "sepa",
+   "system": "test-payments",
+   "commit": "e59ebcc5d6c13e81c8362c4b5758ee7e4862faa4",
+   "parents": [
+    "7e73de291301354a0e628c7313a1d74ad18bfe39"
+   ],
+   "files": [
+    "jcl/RUNBATCH.jcl"
+   ],
+   "components": [
+    "batch-schedule"
+   ],
+   "ci": {}
+  },
+  "what": {
+   "entities": [
+    {
+     "change": "modified",
+     "entity": {
+      "id": "jcl-dd:RUNBATCH.STEP01.ACCTIN",
+      "kind": "jcl-dd",
+      "name": "ACCTIN",
+      "provenance": {
+       "file": "jcl/RUNBATCH.jcl",
+       "line": 5,
+       "end_line": 6
+      },
+      "attributes": {
+       "dataset": "TEST.ACCT.DATA.V2",
+       "disp": "SHR"
+      }
+     },
+     "previous": {
+      "id": "jcl-dd:RUNBATCH.STEP01.ACCTIN",
+      "kind": "jcl-dd",
+      "name": "ACCTIN",
+      "provenance": {
+       "file": "jcl/RUNBATCH.jcl",
+       "line": 5,
+       "end_line": 6
+      },
+      "attributes": {
+       "dataset": "TEST.ACCT.DATA",
+       "disp": "SHR"
+      }
+     }
+    }
+   ],
+   "analyzed": [
+    "jcl/RUNBATCH.jcl"
+   ],
+   "not_analyzed": {},
+   "problems": {}
+  },
+  "how": {
+   "files": [
+    {
+     "path": "jcl/RUNBATCH.jcl",
+     "previous_path": null,
+     "status": "M",
+     "binary": false,
+     "insertions": 1,
+     "deletions": 1,
+     "hunks": [
+      [
+       {
+        "file": "jcl/RUNBATCH.jcl",
+        "line": 5,
+        "end_line": 5
+       },
+       {
+        "file": "jcl/RUNBATCH.jcl",
+        "line": 5,
+        "end_line": 5
+       }
+      ]
+     ]
+    }
+   ],
+   "insertions": 1,
+   "deletions": 1
+  },
+  "why": {
+   "subject": "Point the nightly run at the version 2 account file",
+   "provenance": {
+    "file": "git-commit/e59ebcc5d6c13e81c8362c4b5758ee7e4862faa4",
+    "line": 6,
+    "end_line": null
+   },
+   "tickets": [
+    {
+     "id": "CHG0030004",
+     "system": "servicenow",
+     "type": "change",
+     "found_in": "trailer",
+     "provenance": {
+      "file": "git-commit/e59ebcc5d6c13e81c8362c4b5758ee7e4862faa4",
+      "line": 8,
+      "end_line": null
+     }
+    }
+   ],
+   "change_request": "CHG0030004",
+   "change_type": "normal",
+   "emergency": false,
+   "trailers": [
+    {
+     "key": "Change-Request",
+     "value": "CHG0030004",
+     "provenance": {
+      "file": "git-commit/e59ebcc5d6c13e81c8362c4b5758ee7e4862faa4",
+      "line": 8,
+      "end_line": null
+     }
+    },
+    {
+     "key": "Requested-by",
+     "value": "Lena Weber <lena.weber@bank.example>",
+     "provenance": {
+      "file": "git-commit/e59ebcc5d6c13e81c8362c4b5758ee7e4862faa4",
+      "line": 9,
+      "end_line": null
+     }
+    },
+    {
+     "key": "Approved-by",
+     "value": "Marc Dubois <marc.dubois@bank.example>",
+     "provenance": {
+      "file": "git-commit/e59ebcc5d6c13e81c8362c4b5758ee7e4862faa4",
+      "line": 10,
+      "end_line": null
+     }
+    },
+    {
+     "key": "Change-Type",
+     "value": "normal",
+     "provenance": {
+      "file": "git-commit/e59ebcc5d6c13e81c8362c4b5758ee7e4862faa4",
+      "line": 11,
+      "end_line": null
+     }
+    }
+   ]
+  },
+  "gaps": [],
+  "open_items": []
+ },
+ {
+  "who": {
+   "implementer": {
+    "name": "Tomas Horvat",
+    "email": "tomas.horvat@bank.example",
+    "provenance": {
+     "file": "git-commit/7f8c06a22be927eefaf3dd022909d76da65551a5",
+     "line": 3,
+     "end_line": null
+    }
+   },
+   "committer": {
+    "name": "Tomas Horvat",
+    "email": "tomas.horvat@bank.example",
+    "provenance": {
+     "file": "git-commit/7f8c06a22be927eefaf3dd022909d76da65551a5",
+     "line": 4,
+     "end_line": null
+    }
+   },
+   "requester": {
+    "name": "Lena Weber",
+    "email": "lena.weber@bank.example",
+    "provenance": {
+     "file": "git-commit/7f8c06a22be927eefaf3dd022909d76da65551a5",
+     "line": 11,
+     "end_line": null
+    }
+   },
+   "approvers": [
+    {
+     "name": "Marc Dubois",
+     "email": "marc.dubois@bank.example",
+     "provenance": {
+      "file": "git-commit/7f8c06a22be927eefaf3dd022909d76da65551a5",
+      "line": 12,
+      "end_line": null
+     }
+    }
+   ],
+   "reviewers": [],
+   "independent": true
+  },
+  "when": {
+   "authored": {
+    "at": "2026-09-07T09:30:00+02:00",
+    "provenance": {
+     "file": "git-commit/7f8c06a22be927eefaf3dd022909d76da65551a5",
+     "line": 3,
+     "end_line": null
+    }
+   },
+   "committed": {
+    "at": "2026-09-07T09:30:00+02:00",
+    "provenance": {
+     "file": "git-commit/7f8c06a22be927eefaf3dd022909d76da65551a5",
+     "line": 4,
+     "end_line": null
+    }
+   }
+  },
+  "where": {
+   "repository": "sepa",
+   "system": "test-payments",
+   "commit": "7f8c06a22be927eefaf3dd022909d76da65551a5",
+   "parents": [
+    "e59ebcc5d6c13e81c8362c4b5758ee7e4862faa4"
+   ],
+   "files": [
+    "src/BATCH1.cbl"
+   ],
+   "components": [
+    "batch-core"
+   ],
+   "ci": {}
+  },
+  "what": {
+   "entities": [
+    {
+     "change": "modified",
+     "entity": {
+      "id": "paragraph:BATCH1.READ-PARA",
+      "kind": "paragraph",
+      "name": "READ-PARA",
+      "provenance": {
+       "file": "src/BATCH1.cbl",
+       "line": 30,
+       "end_line": 39
+      },
+      "attributes": {
+       "text": "READ-PARA . READ ACCT-IN AT END SET WS-EOF TO TRUE END-READ CONTINUE CONTINUE PERFORM MISSING-PARA ."
+      }
+     },
+     "previous": {
+      "id": "paragraph:BATCH1.READ-PARA",
+      "kind": "paragraph",
+      "name": "READ-PARA",
+      "provenance": {
+       "file": "src/BATCH1.cbl",
+       "line": 30,
+       "end_line": 40
+      },
+      "attributes": {
+       "text": "READ-PARA . READ ACCT-IN AT END SET WS-EOF TO TRUE END-READ CONTINUE CONTINUE PERFORM MISSING-PARA PERFORM AUDIT-PARA ."
+      }
+     }
+    },
+    {
+     "change": "removed",
+     "entity": {
+      "id": "perform:BATCH1.READ-PARA.AUDIT-PARA#1",
+      "kind": "perform",
+      "name": "AUDIT-PARA",
+      "provenance": {
+       "file": "src/BATCH1.cbl",
+       "line": 40,
+       "end_line": null
+      },
+      "attributes": {
+       "target": "AUDIT-PARA",
+       "paragraph": "paragraph:BATCH1.READ-PARA"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "removed",
+     "entity": {
+      "id": "paragraph:BATCH1.AUDIT-PARA",
+      "kind": "paragraph",
+      "name": "AUDIT-PARA",
+      "provenance": {
+       "file": "src/BATCH1.cbl",
+       "line": 44,
+       "end_line": 45
+      },
+      "attributes": {
+       "text": "AUDIT-PARA . ADD 1 TO WS-COUNT ."
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "removed",
+     "entity": {
+      "id": "flow:BATCH1.AUDIT-PARA.WS-COUNT#1",
+      "kind": "flow",
+      "name": "ADD",
+      "provenance": {
+       "file": "src/BATCH1.cbl",
+       "line": 45,
+       "end_line": null
+      },
+      "attributes": {
+       "verb": "ADD",
+       "sources": [],
+       "targets": [
+        "WS-COUNT"
+       ],
+       "text": "1 TO WS-COUNT",
+       "paragraph": "paragraph:BATCH1.AUDIT-PARA"
+      }
+     },
+     "previous": null
+    }
+   ],
+   "analyzed": [
+    "src/BATCH1.cbl"
+   ],
+   "not_analyzed": {},
+   "problems": {}
+  },
+  "how": {
+   "files": [
+    {
+     "path": "src/BATCH1.cbl",
+     "previous_path": null,
+     "status": "M",
+     "binary": false,
+     "insertions": 1,
+     "deletions": 4,
+     "hunks": [
+      [
+       {
+        "file": "src/BATCH1.cbl",
+        "line": 39,
+        "end_line": 40
+       },
+       {
+        "file": "src/BATCH1.cbl",
+        "line": 39,
+        "end_line": 39
+       }
+      ],
+      [
+       {
+        "file": "src/BATCH1.cbl",
+        "line": 44,
+        "end_line": 45
+       },
+       null
+      ]
+     ]
+    }
+   ],
+   "insertions": 1,
+   "deletions": 4
+  },
+  "why": {
+   "subject": "Drop the audit count again",
+   "provenance": {
+    "file": "git-commit/7f8c06a22be927eefaf3dd022909d76da65551a5",
+    "line": 6,
+    "end_line": null
+   },
+   "tickets": [
+    {
+     "id": "PAY-102",
+     "system": "jira",
+     "type": "issue",
+     "found_in": "trailer",
+     "provenance": {
+      "file": "git-commit/7f8c06a22be927eefaf3dd022909d76da65551a5",
+      "line": 10,
+      "end_line": null
+     }
+    }
+   ],
+   "change_request": null,
+   "change_type": "normal",
+   "emergency": false,
+   "trailers": [
+    {
+     "key": "Refs",
+     "value": "PAY-102",
+     "provenance": {
+      "file": "git-commit/7f8c06a22be927eefaf3dd022909d76da65551a5",
+      "line": 10,
+      "end_line": null
+     }
+    },
+    {
+     "key": "Requested-by",
+     "value": "Lena Weber <lena.weber@bank.example>",
+     "provenance": {
+      "file": "git-commit/7f8c06a22be927eefaf3dd022909d76da65551a5",
+      "line": 11,
+      "end_line": null
+     }
+    },
+    {
+     "key": "Approved-by",
+     "value": "Marc Dubois <marc.dubois@bank.example>",
+     "provenance": {
+      "file": "git-commit/7f8c06a22be927eefaf3dd022909d76da65551a5",
+      "line": 12,
+      "end_line": null
+     }
+    },
+    {
+     "key": "Change-Type",
+     "value": "normal",
+     "provenance": {
+      "file": "git-commit/7f8c06a22be927eefaf3dd022909d76da65551a5",
+      "line": 13,
+      "end_line": null
+     }
+    }
+   ]
+  },
+  "gaps": [],
+  "open_items": [
+   "no change request number"
+  ]
+ },
+ {
+  "who": {
+   "implementer": {
+    "name": "Ana Novak",
+    "email": "ana.novak@bank.example",
+    "provenance": {
+     "file": "git-commit/3d5ae881e379189696617fc087604486b785021f",
+     "line": 3,
+     "end_line": null
+    }
+   },
+   "committer": {
+    "name": "Ana Novak",
+    "email": "ana.novak@bank.example",
+    "provenance": {
+     "file": "git-commit/3d5ae881e379189696617fc087604486b785021f",
+     "line": 4,
+     "end_line": null
+    }
+   },
+   "requester": null,
+   "approvers": [],
+   "reviewers": [],
+   "independent": null
+  },
+  "when": {
+   "authored": {
+    "at": "2026-09-08T09:30:00+02:00",
+    "provenance": {
+     "file": "git-commit/3d5ae881e379189696617fc087604486b785021f",
+     "line": 3,
+     "end_line": null
+    }
+   },
+   "committed": {
+    "at": "2026-09-08T09:30:00+02:00",
+    "provenance": {
+     "file": "git-commit/3d5ae881e379189696617fc087604486b785021f",
+     "line": 4,
+     "end_line": null
+    }
+   }
+  },
+  "where": {
+   "repository": "sepa",
+   "system": "test-payments",
+   "commit": "3d5ae881e379189696617fc087604486b785021f",
+   "parents": [
+    "7f8c06a22be927eefaf3dd022909d76da65551a5"
+   ],
+   "files": [
+    "src/FLOWS.cbl"
+   ],
+   "components": [
+    "batch-core"
+   ],
+   "ci": {}
+  },
+  "what": {
+   "entities": [],
+   "analyzed": [
+    "src/FLOWS.cbl"
+   ],
+   "not_analyzed": {},
+   "problems": {}
+  },
+  "how": {
+   "files": [
+    {
+     "path": "src/FLOWS.cbl",
+     "previous_path": null,
+     "status": "M",
+     "binary": false,
+     "insertions": 1,
+     "deletions": 0,
+     "hunks": [
+      [
+       null,
+       {
+        "file": "src/FLOWS.cbl",
+        "line": 22,
+        "end_line": 22
+       }
+      ]
+     ]
+    }
+   ],
+   "insertions": 1,
+   "deletions": 0
+  },
+  "why": {
+   "subject": "Document where the fee rate comes from",
+   "provenance": {
+    "file": "git-commit/3d5ae881e379189696617fc087604486b785021f",
+    "line": 6,
+    "end_line": null
+   },
+   "tickets": [
+    {
+     "id": "CHG0030005",
+     "system": "servicenow",
+     "type": "change",
+     "found_in": "trailer",
+     "provenance": {
+      "file": "git-commit/3d5ae881e379189696617fc087604486b785021f",
+      "line": 8,
+      "end_line": null
+     }
+    }
+   ],
+   "change_request": "CHG0030005",
+   "change_type": "standard",
+   "emergency": false,
+   "trailers": [
+    {
+     "key": "Refs",
+     "value": "CHG0030005",
+     "provenance": {
+      "file": "git-commit/3d5ae881e379189696617fc087604486b785021f",
+      "line": 8,
+      "end_line": null
+     }
+    },
+    {
+     "key": "Change-Type",
+     "value": "standard",
+     "provenance": {
+      "file": "git-commit/3d5ae881e379189696617fc087604486b785021f",
+      "line": 9,
+      "end_line": null
+     }
+    }
+   ]
+  },
+  "gaps": [],
+  "open_items": [
+   "no requester recorded",
+   "no approver recorded"
+  ]
+ },
+ {
+  "who": {
+   "implementer": {
+    "name": "Ana Novak",
+    "email": "ana.novak@bank.example",
+    "provenance": {
+     "file": "git-commit/2c5502289876f37daf72b936afff9d4b38af1954",
+     "line": 3,
+     "end_line": null
+    }
+   },
+   "committer": {
+    "name": "Ana Novak",
+    "email": "ana.novak@bank.example",
+    "provenance": {
+     "file": "git-commit/2c5502289876f37daf72b936afff9d4b38af1954",
+     "line": 4,
+     "end_line": null
+    }
+   },
+   "requester": null,
+   "approvers": [
+    {
+     "name": "Ana Novak",
+     "email": "ana.novak@bank.example",
+     "provenance": {
+      "file": "git-commit/2c5502289876f37daf72b936afff9d4b38af1954",
+      "line": 10,
+      "end_line": null
+     }
+    }
+   ],
+   "reviewers": [],
+   "independent": false
+  },
+  "when": {
+   "authored": {
+    "at": "2026-09-09T09:30:00+02:00",
+    "provenance": {
+     "file": "git-commit/2c5502289876f37daf72b936afff9d4b38af1954",
+     "line": 3,
+     "end_line": null
+    }
+   },
+   "committed": {
+    "at": "2026-09-09T09:30:00+02:00",
+    "provenance": {
+     "file": "git-commit/2c5502289876f37daf72b936afff9d4b38af1954",
+     "line": 4,
+     "end_line": null
+    }
+   }
+  },
+  "where": {
+   "repository": "sepa",
+   "system": "test-payments",
+   "commit": "2c5502289876f37daf72b936afff9d4b38af1954",
+   "parents": [
+    "3d5ae881e379189696617fc087604486b785021f"
+   ],
+   "files": [
+    "src/FLOWS.cbl"
+   ],
+   "components": [
+    "batch-core"
+   ],
+   "ci": {}
+  },
+  "what": {
+   "entities": [
+    {
+     "change": "modified",
+     "entity": {
+      "id": "paragraph:FLOWS.MAIN-PARA",
+      "kind": "paragraph",
+      "name": "MAIN-PARA",
+      "provenance": {
+       "file": "src/FLOWS.cbl",
+       "line": 27,
+       "end_line": 41
+      },
+      "attributes": {
+       "text": "MAIN-PARA . READ TXN-IN INTO WS-TXN COMPUTE WS-FEE OF WS-TXN ROUNDED = WS-AMOUNT OF WS-TXN * WS-RATE IF WS-AMOUNT OF WS-TXN NOT = ZERO ADD WS-AMOUNT OF WS-TXN TO WS-AMOUNT OF WS-TOTALS END-IF SUBTRACT WS-FEE FROM WS-AMOUNT OF WS-TXN GIVING WS-NET MOVE WS-NET TO WS-LINE WRITE RPT-REC FROM WS-LINE MOVE 'SUBPGM' TO WS-TARGET-PGM CALL WS-TARGET-PGM USING WS-NET MOVE WS-AMOUNT TO WS-LINE STOP RUN ."
+      }
+     },
+     "previous": {
+      "id": "paragraph:FLOWS.MAIN-PARA",
+      "kind": "paragraph",
+      "name": "MAIN-PARA",
+      "provenance": {
+       "file": "src/FLOWS.cbl",
+       "line": 27,
+       "end_line": 39
+      },
+      "attributes": {
+       "text": "MAIN-PARA . READ TXN-IN INTO WS-TXN COMPUTE WS-FEE OF WS-TXN ROUNDED = WS-AMOUNT OF WS-TXN * WS-RATE ADD WS-AMOUNT OF WS-TXN TO WS-AMOUNT OF WS-TOTALS SUBTRACT WS-FEE FROM WS-AMOUNT OF WS-TXN GIVING WS-NET MOVE WS-NET TO WS-LINE WRITE RPT-REC FROM WS-LINE MOVE 'SUBPGM' TO WS-TARGET-PGM CALL WS-TARGET-PGM USING WS-NET MOVE WS-AMOUNT TO WS-LINE STOP RUN ."
+      }
+     }
+    }
+   ],
+   "analyzed": [
+    "src/FLOWS.cbl"
+   ],
+   "not_analyzed": {},
+   "problems": {}
+  },
+  "how": {
+   "files": [
+    {
+     "path": "src/FLOWS.cbl",
+     "previous_path": null,
+     "status": "M",
+     "binary": false,
+     "insertions": 3,
+     "deletions": 1,
+     "hunks": [
+      [
+       {
+        "file": "src/FLOWS.cbl",
+        "line": 31,
+        "end_line": 31
+       },
+       {
+        "file": "src/FLOWS.cbl",
+        "line": 31,
+        "end_line": 33
+       }
+      ]
+     ]
+    }
+   ],
+   "insertions": 3,
+   "deletions": 1
+  },
+  "why": {
+   "subject": "Skip zero-amount transactions in the totals",
+   "provenance": {
+    "file": "git-commit/2c5502289876f37daf72b936afff9d4b38af1954",
+    "line": 6,
+    "end_line": null
+   },
+   "tickets": [
+    {
+     "id": "INC0045678",
+     "system": "servicenow",
+     "type": "incident",
+     "found_in": "body",
+     "provenance": {
+      "file": "git-commit/2c5502289876f37daf72b936afff9d4b38af1954",
+      "line": 8,
+      "end_line": null
+     }
+    }
+   ],
+   "change_request": null,
+   "change_type": "emergency",
+   "emergency": true,
+   "trailers": [
+    {
+     "key": "Approved-by",
+     "value": "Ana Novak <ana.novak@bank.example>",
+     "provenance": {
+      "file": "git-commit/2c5502289876f37daf72b936afff9d4b38af1954",
+      "line": 10,
+      "end_line": null
+     }
+    },
+    {
+     "key": "Change-Type",
+     "value": "emergency",
+     "provenance": {
+      "file": "git-commit/2c5502289876f37daf72b936afff9d4b38af1954",
+      "line": 11,
+      "end_line": null
+     }
+    }
+   ]
+  },
+  "gaps": [],
+  "open_items": [
+   "no requester recorded",
+   "an approver is also the implementer",
+   "no change request number"
+  ]
+ },
+ {
+  "who": {
+   "implementer": {
+    "name": "Tomas Horvat",
+    "email": "tomas.horvat@bank.example",
+    "provenance": {
+     "file": "git-commit/364c34c2452574e67ab21b7db69f24e4e2cfabcb",
+     "line": 3,
+     "end_line": null
+    }
+   },
+   "committer": {
+    "name": "Tomas Horvat",
+    "email": "tomas.horvat@bank.example",
+    "provenance": {
+     "file": "git-commit/364c34c2452574e67ab21b7db69f24e4e2cfabcb",
+     "line": 4,
+     "end_line": null
+    }
+   },
+   "requester": null,
+   "approvers": [],
+   "reviewers": [],
+   "independent": null
+  },
+  "when": {
+   "authored": {
+    "at": "2026-09-10T09:30:00+02:00",
+    "provenance": {
+     "file": "git-commit/364c34c2452574e67ab21b7db69f24e4e2cfabcb",
+     "line": 3,
+     "end_line": null
+    }
+   },
+   "committed": {
+    "at": "2026-09-10T09:30:00+02:00",
+    "provenance": {
+     "file": "git-commit/364c34c2452574e67ab21b7db69f24e4e2cfabcb",
+     "line": 4,
+     "end_line": null
+    }
+   }
+  },
+  "where": {
+   "repository": "sepa",
+   "system": "test-payments",
+   "commit": "364c34c2452574e67ab21b7db69f24e4e2cfabcb",
+   "parents": [
+    "2c5502289876f37daf72b936afff9d4b38af1954"
+   ],
+   "files": [
+    "README.md",
+    "src/online/SUBPGM.cbl"
+   ],
+   "components": [
+    "batch-core"
+   ],
+   "ci": {}
+  },
+  "what": {
+   "entities": [
+    {
+     "change": "modified",
+     "entity": {
+      "id": "paragraph:SUBPGM.MAIN-PARA",
+      "kind": "paragraph",
+      "name": "MAIN-PARA",
+      "provenance": {
+       "file": "src/online/SUBPGM.cbl",
+       "line": 9,
+       "end_line": 16
+      },
+      "attributes": {
+       "text": "MAIN-PARA . CONTINUE CONTINUE CALL 'CSNBHMG' USING WS-X CONTINUE CONTINUE GOBACK ."
+      }
+     },
+     "previous": {
+      "id": "paragraph:SUBPGM.MAIN-PARA",
+      "kind": "paragraph",
+      "name": "MAIN-PARA",
+      "provenance": {
+       "file": "src/online/SUBPGM.cbl",
+       "line": 9,
+       "end_line": 16
+      },
+      "attributes": {
+       "text": "MAIN-PARA . CONTINUE CONTINUE CALL 'CSNBOWH' USING WS-X CONTINUE CONTINUE GOBACK ."
+      }
+     }
+    },
+    {
+     "change": "added",
+     "entity": {
+      "id": "crypto-call:SUBPGM.MAIN-PARA.CSNBHMG#1",
+      "kind": "crypto-call",
+      "name": "CSNBHMG",
+      "provenance": {
+       "file": "src/online/SUBPGM.cbl",
+       "line": 13,
+       "end_line": null
+      },
+      "attributes": {
+       "service": "CSNBHMG",
+       "category": "mac-generate",
+       "via": "call",
+       "dynamic": false,
+       "paragraph": "paragraph:SUBPGM.MAIN-PARA"
+      }
+     },
+     "previous": null
+    },
+    {
+     "change": "removed",
+     "entity": {
+      "id": "crypto-call:SUBPGM.MAIN-PARA.CSNBOWH#1",
+      "kind": "crypto-call",
+      "name": "CSNBOWH",
+      "provenance": {
+       "file": "src/online/SUBPGM.cbl",
+       "line": 13,
+       "end_line": null
+      },
+      "attributes": {
+       "service": "CSNBOWH",
+       "category": "hash",
+       "via": "call",
+       "dynamic": false,
+       "paragraph": "paragraph:SUBPGM.MAIN-PARA"
+      }
+     },
+     "previous": null
+    }
+   ],
+   "analyzed": [
+    "src/online/SUBPGM.cbl"
+   ],
+   "not_analyzed": {
+    "README.md": "no adapter for this file type"
+   },
+   "problems": {}
+  },
+  "how": {
+   "files": [
+    {
+     "path": "README.md",
+     "previous_path": null,
+     "status": "A",
+     "binary": false,
+     "insertions": 1,
+     "deletions": 0,
+     "hunks": [
+      [
+       null,
+       {
+        "file": "README.md",
+        "line": 1,
+        "end_line": 1
+       }
+      ]
+     ]
+    },
+    {
+     "path": "src/online/SUBPGM.cbl",
+     "previous_path": null,
+     "status": "M",
+     "binary": false,
+     "insertions": 1,
+     "deletions": 1,
+     "hunks": [
+      [
+       {
+        "file": "src/online/SUBPGM.cbl",
+        "line": 13,
+        "end_line": 13
+       },
+       {
+        "file": "src/online/SUBPGM.cbl",
+        "line": 13,
+        "end_line": 13
+       }
+      ]
+     ]
+    }
+   ],
+   "insertions": 2,
+   "deletions": 1
+  },
+  "why": {
+   "subject": "Switch the lookup hash to HMAC and add a readme",
+   "provenance": {
+    "file": "git-commit/364c34c2452574e67ab21b7db69f24e4e2cfabcb",
+    "line": 6,
+    "end_line": null
+   },
+   "tickets": [],
+   "change_request": null,
+   "change_type": null,
+   "emergency": null,
+   "trailers": []
+  },
+  "gaps": [],
+  "open_items": [
+   "no requester recorded",
+   "no approver recorded",
+   "no change request number",
+   "change type not recorded"
+  ]
+ }
+]
