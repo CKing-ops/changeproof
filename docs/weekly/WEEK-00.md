@@ -120,7 +120,7 @@ batch jobs, JCL and CICS. Matching that graph is table stakes for Week 3, not a 
   universal build keeps one mapping per market.
 - Week 5 builds on Weeks 3 (dependency graphs) and 4 (diff to entities).
 
-### What this suggests for Weeks 3 and 4 (planned, for the owner to approve)
+### What this adds to Weeks 3 and 4 (approved by the owner 2026-09-27, now in ROADMAP.md)
 
 - **Week 3:** the graph should cover what CAST and OpenText already show (programs, CICS
   transactions, Db2 tables, files, batch jobs), and mark edges that cross from one configured

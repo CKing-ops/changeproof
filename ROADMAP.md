@@ -159,10 +159,12 @@ frameworks: [nist-ssdf, nist-800-53-cm, nist-800-53-sc, swft, cnsa2]
 
 ## Week 3 — Dependency graphs
 - [ ] Call, PERFORM, copybook, file/table, JCL graphs (SQLite + NetworkX); unresolved edges reported; config metadata on nodes.
+- [ ] Cover what COBOL analysers already show (programs, CICS transactions, Db2 tables, files, batch jobs), and flag edges that cross from one configured component to another: the "unexpected interdependencies between applications" the ECB IT Risk Questionnaire asks about.
 - **Exit check:** every edge has provenance.
 
 ## Week 4 — Change-centric input
 - [ ] Diff → IR entities; field-level lineage; who/when/where from git/CI; why from commit trailers/tickets (ticket IDs from ServiceNow/Jira-style change records, as DORA ICT change management expects).
+- [ ] Keep requester, implementer and approver as separate identities (DORA RTS Art. 17(1)(b) independence), carry an emergency-change flag, and link the change-request ID for purpose, scope and expected outcome (Art. 17(1)(d)). All linked from existing records, never invented.
 - **Exit check:** 10 seeded commits give complete who/what/when/where/how records.
 
 ## Week 5 — Impact engine + framework mapping
