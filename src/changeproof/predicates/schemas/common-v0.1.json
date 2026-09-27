@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:changeproof:schema:common:v0.1",
+  "title": "Shared definitions for changeproof predicates v0.1",
+  "$defs": {
+    "provenance": {
+      "description": "Repo-relative file and 1-based line range the fact was read from.",
+      "type": "object",
+      "required": ["file", "line"],
+      "additionalProperties": false,
+      "properties": {
+        "file": {"type": "string", "minLength": 1, "not": {"pattern": "^/|(^|/)\\.\\.(/|$)"}},
+        "line": {"type": "integer", "minimum": 1},
+        "end_line": {"type": ["integer", "null"], "minimum": 1}
+      }
+    },
+    "entityRef": {
+      "description": "An IR entity, always with provenance.",
+      "type": "object",
+      "required": ["id", "kind", "name", "provenance"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "kind": {"type": "string", "minLength": 1},
+        "name": {"type": "string"},
+        "provenance": {"$ref": "#/$defs/provenance"}
+      }
+    },
+    "change": {
+      "description": "The code change the evidence is about.",
+      "type": "object",
+      "required": ["vcs", "base", "head"],
+      "additionalProperties": false,
+      "properties": {
+        "vcs": {"type": "string"},
+        "repository": {"type": "string"},
+        "base": {"type": "string", "minLength": 1},
+        "head": {"type": "string", "minLength": 1}
+      }
+    },
+    "why": {
+      "description": "Links to the reason for a change. The engine records these; it never writes them.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["kind", "ref", "found_in"],
+        "additionalProperties": false,
+        "properties": {
+          "kind": {"enum": ["ticket", "requirement", "approval", "other"]},
+          "ref": {"type": "string", "minLength": 1},
+          "found_in": {"type": "string", "description": "Where the link was read, e.g. a commit trailer."}
+        }
+      }
+    },
+    "engine": {
+      "type": "object",
+      "required": ["name", "version", "adapters"],
+      "properties": {
+        "name": {"const": "changeproof"},
+        "version": {"type": "string"},
+        "adapters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["language", "version"],
+            "properties": {"language": {"type": "string"}, "version": {"type": "string"}, "parser": {"type": "string"}}
+          }
+        },
+        "config_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "digest": {
+      "description": "in-toto DigestSet: algorithm ID to hex value. Algorithm IDs come from the signer interface.",
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {"type": "string", "pattern": "^[0-9a-f]+$"}
+    }
+  }
+}

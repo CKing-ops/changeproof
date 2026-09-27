@@ -1,0 +1,15 @@
+{
+  "change": {"vcs": "git", "base": "4f1c2a9", "head": "9b7e011"},
+  "impact_statement": {"sha384": "ab12"},
+  "scope": "outside-impact-set",
+  "tests": [
+    {"id": "char-CBTRN02C-0001",
+     "target": {"id": "program:CBTRN02C", "kind": "program", "name": "CBTRN02C",
+                "provenance": {"file": "corpus/carddemo/app/cbl/CBTRN02C.cbl", "line": 23}},
+     "result": "same", "baseline_output": {"sha384": "cd34"}, "candidate_output": {"sha384": "cd34"}}
+  ],
+  "summary": {"total": 1, "same": 1, "different": 0, "error": 0},
+  "verdict": "equivalent",
+  "environment": {"runner": "gnucobol-offline", "network": "disabled"},
+  "engine": {"name": "changeproof", "version": "0.1.0", "adapters": [{"language": "cobol", "version": "0.1.0"}]}
+}

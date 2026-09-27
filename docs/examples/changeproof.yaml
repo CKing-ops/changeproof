@@ -1,0 +1,37 @@
+version: 0.1
+market: general                          # general | us-defense | eu-dora
+system:
+  name: billing-platform
+  owner: platform-engineering
+  classification: confidential          # public | internal | confidential | restricted
+components:
+  - id: invoice-batch
+    path: src/cobol/invoice
+    language: cobol                      # selects the adapter
+    criticality: high
+    data_stores: [BILLDB]
+    relied_on_by: [customer-portal, finance-reporting]
+#  - id: orders-api                      # other languages need their adapter first (planned)
+#    path: services/orders
+#    language: java
+evidence:
+  produce: [impact, behavioral-equivalence, crypto-inventory]
+  outputs: [in-toto, oscal, cyclonedx-cbom, pdf]
+crypto:
+  profile: hybrid                        # hybrid | nist-pqc | cnsa2 | classical-legacy
+  signing: [ml-dsa-87, ecdsa-p384]
+  release_signing: lms-sha256-192
+  hash: sha-384
+optimization:
+  backend: classical                     # classical | quantum-sim | qpu (public/synthetic data only)
+egress:
+  allowed: false                         # default; must be explicitly enabled
+  data_tier: public                      # public | synthetic | customer
+  approved_vendors: []
+  customer_approval_ref: null            # written approval, required for customer data
+  require_pq_transport: true
+policy:
+  - rule: high-criticality-needs-two-approvers
+  - rule: equivalence-required-outside-impact-set
+  - rule: no-new-quantum-vulnerable-crypto
+frameworks: [soc2, iso-27001]

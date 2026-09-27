@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:changeproof:predicate:behavioral-equivalence:v0.1",
+  "title": "changeproof behavioral-equivalence predicate v0.1 (draft)",
+  "description": "Whether behavior outside the intended change was preserved, shown by tests run before and after.",
+  "type": "object",
+  "required": ["change", "impact_statement", "scope", "tests", "summary", "verdict", "environment", "engine"],
+  "additionalProperties": false,
+  "properties": {
+    "change": {"$ref": "urn:changeproof:schema:common:v0.1#/$defs/change"},
+    "impact_statement": {
+      "description": "Digest of the impact attestation whose impact set defines what is excluded.",
+      "$ref": "urn:changeproof:schema:common:v0.1#/$defs/digest"
+    },
+    "scope": {"enum": ["outside-impact-set", "full-suite", "selected-subset"]},
+    "tests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "target", "result", "baseline_output", "candidate_output"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"type": "string"},
+          "target": {"$ref": "urn:changeproof:schema:common:v0.1#/$defs/entityRef"},
+          "result": {"enum": ["same", "different", "error"]},
+          "baseline_output": {"$ref": "urn:changeproof:schema:common:v0.1#/$defs/digest"},
+          "candidate_output": {"$ref": "urn:changeproof:schema:common:v0.1#/$defs/digest"}
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "required": ["total", "same", "different", "error"],
+      "properties": {
+        "total": {"type": "integer", "minimum": 0},
+        "same": {"type": "integer", "minimum": 0},
+        "different": {"type": "integer", "minimum": 0},
+        "error": {"type": "integer", "minimum": 0}
+      }
+    },
+    "verdict": {"enum": ["equivalent", "not-equivalent", "inconclusive"]},
+    "environment": {
+      "type": "object",
+      "required": ["runner"],
+      "properties": {
+        "runner": {"type": "string"},
+        "image": {"$ref": "urn:changeproof:schema:common:v0.1#/$defs/digest"},
+        "network": {"const": "disabled"}
+      }
+    },
+    "engine": {"$ref": "urn:changeproof:schema:common:v0.1#/$defs/engine"}
+  }
+}

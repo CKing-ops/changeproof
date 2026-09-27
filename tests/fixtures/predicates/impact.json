@@ -1,0 +1,20 @@
+{
+  "change": {"vcs": "git", "base": "4f1c2a9", "head": "9b7e011"},
+  "who": [{"role": "author", "id": "dev@example.org", "source": "git author"}],
+  "when": {"authored_at": "2026-09-20T14:02:11Z", "committed_at": "2026-09-20T14:05:40Z"},
+  "why": [{"kind": "ticket", "ref": "PAY-1182", "found_in": "commit trailer Refs:"}],
+  "changed": [
+    {"id": "paragraph:CBACT01C/1000-ACCTFILE-GET-NEXT", "kind": "paragraph", "name": "1000-ACCTFILE-GET-NEXT",
+     "change": "modified", "provenance": {"file": "corpus/carddemo/app/cbl/CBACT01C.cbl", "line": 165, "end_line": 190}}
+  ],
+  "impacted": [
+    {"id": "program:CBACT01C", "kind": "program", "name": "CBACT01C", "confidence": "definite",
+     "provenance": {"file": "corpus/carddemo/app/cbl/CBACT01C.cbl", "line": 23},
+     "via": [{"from": "paragraph:CBACT01C/1000-ACCTFILE-GET-NEXT", "to": "program:CBACT01C", "edge": "contained-in",
+              "provenance": {"file": "corpus/carddemo/app/cbl/CBACT01C.cbl", "line": 165}}]}
+  ],
+  "reliant_systems": [{"id": "finance-reporting", "via_component": "pay-batch"}],
+  "touches_crypto": false,
+  "unresolved": [],
+  "engine": {"name": "changeproof", "version": "0.1.0", "adapters": [{"language": "cobol", "version": "0.1.0"}]}
+}

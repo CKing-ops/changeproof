@@ -1,0 +1,41 @@
+[project]
+name = "changeproof"
+version = "0.1.0"
+description = "Semantic change evidence engine"
+readme = "README.md"
+license = "LicenseRef-Proprietary"
+license-files = ["LICENSE"]
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "pydantic>=2.13,<3",
+    "pyyaml>=6.0,<7",
+    "jsonschema>=4.26,<5",
+    "referencing>=0.36,<1",
+]
+
+[project.scripts]
+changeproof = "changeproof.cli:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "pytest-socket>=0.8",
+]
+spike = [
+    "tree-sitter>=0.26,<0.27",
+    "antlr4-python3-runtime==4.13.2",
+    "tree-sitter-java==0.23.5",
+    "tree-sitter-python==0.25.0",
+    "tree-sitter-javascript==0.25.0",
+]
+
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/changeproof"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--disable-socket --allow-unix-socket -ra"

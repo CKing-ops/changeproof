@@ -1,0 +1,34 @@
+version: 0.1
+market: us-defense
+system:
+  name: logistics-core
+  owner: program-office-x
+  classification: unclassified          # unclassified | cui
+components:
+  - id: pay-batch
+    path: src/cobol/pay
+    language: cobol                      # selects the adapter
+    criticality: high
+    data_stores: [PAYDB, VSAM.PAYMAST]
+    relied_on_by: [finance-reporting, partner-feed-A]
+evidence:
+  produce: [impact, behavioral-equivalence, crypto-inventory]
+  outputs: [in-toto, oscal, cyclonedx-cbom, pdf]
+crypto:
+  profile: cnsa2                         # cnsa2 | nist-pqc | hybrid | classical-legacy
+  signing: [ml-dsa-87, ecdsa-p384]       # hybrid during transition; classical dropped by 2030
+  release_signing: lms-sha256-192        # engine's own release signing (CNSA 2.0 software signing)
+  hash: sha-384
+optimization:
+  backend: classical                     # classical | quantum-sim | qpu (public/synthetic data only)
+egress:
+  allowed: false                         # default; must be explicitly enabled
+  data_tier: public                      # public | synthetic | customer            
+  approved_vendors: []
+  customer_approval_ref: null
+  require_pq_transport: true
+policy:
+  - rule: high-criticality-needs-two-approvers
+  - rule: equivalence-required-outside-impact-set
+  - rule: no-new-quantum-vulnerable-crypto
+frameworks: [nist-ssdf, nist-800-53-cm, nist-800-53-sc, swft, cnsa2]

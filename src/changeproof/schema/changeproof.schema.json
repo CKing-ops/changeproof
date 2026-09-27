@@ -1,0 +1,382 @@
+{
+  "$defs": {
+    "Component": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Id",
+          "type": "string"
+        },
+        "path": {
+          "minLength": 1,
+          "title": "Path",
+          "type": "string"
+        },
+        "language": {
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Language",
+          "type": "string"
+        },
+        "criticality": {
+          "$ref": "#/$defs/Criticality",
+          "default": "medium"
+        },
+        "data_stores": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Data Stores",
+          "type": "array"
+        },
+        "relied_on_by": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Relied On By",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "path",
+        "language"
+      ],
+      "title": "Component",
+      "type": "object"
+    },
+    "Criticality": {
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "title": "Criticality",
+      "type": "string"
+    },
+    "Crypto": {
+      "additionalProperties": false,
+      "properties": {
+        "profile": {
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Profile",
+          "type": "string"
+        },
+        "signing": {
+          "items": {
+            "pattern": "^[a-z0-9][a-z0-9-]*$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Signing",
+          "type": "array"
+        },
+        "release_signing": {
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "title": "Release Signing",
+          "type": "string"
+        },
+        "hash": {
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "title": "Hash",
+          "type": "string"
+        }
+      },
+      "required": [
+        "profile",
+        "signing",
+        "release_signing",
+        "hash"
+      ],
+      "title": "Crypto",
+      "type": "object"
+    },
+    "DataTier": {
+      "enum": [
+        "public",
+        "synthetic",
+        "customer"
+      ],
+      "title": "DataTier",
+      "type": "string"
+    },
+    "Egress": {
+      "additionalProperties": false,
+      "properties": {
+        "allowed": {
+          "default": false,
+          "title": "Allowed",
+          "type": "boolean"
+        },
+        "data_tier": {
+          "$ref": "#/$defs/DataTier",
+          "default": "public"
+        },
+        "approved_vendors": {
+          "default": [],
+          "items": {
+            "pattern": "^[a-z0-9][a-z0-9._-]*$",
+            "type": "string"
+          },
+          "title": "Approved Vendors",
+          "type": "array"
+        },
+        "customer_approval_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Customer Approval Ref"
+        },
+        "ict_register_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ict Register Ref"
+        },
+        "processing_region": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProcessingRegion"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "require_pq_transport": {
+          "default": true,
+          "title": "Require Pq Transport",
+          "type": "boolean"
+        }
+      },
+      "title": "Egress",
+      "type": "object"
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "produce": {
+          "default": [
+            "impact",
+            "behavioral-equivalence",
+            "crypto-inventory"
+          ],
+          "items": {
+            "$ref": "#/$defs/EvidenceKind"
+          },
+          "title": "Produce",
+          "type": "array"
+        },
+        "outputs": {
+          "default": [
+            "in-toto"
+          ],
+          "items": {
+            "$ref": "#/$defs/OutputFormat"
+          },
+          "title": "Outputs",
+          "type": "array"
+        }
+      },
+      "title": "Evidence",
+      "type": "object"
+    },
+    "EvidenceKind": {
+      "enum": [
+        "impact",
+        "behavioral-equivalence",
+        "crypto-inventory"
+      ],
+      "title": "EvidenceKind",
+      "type": "string"
+    },
+    "Market": {
+      "enum": [
+        "general",
+        "us-defense",
+        "eu-dora"
+      ],
+      "title": "Market",
+      "type": "string"
+    },
+    "Optimization": {
+      "additionalProperties": false,
+      "properties": {
+        "backend": {
+          "default": "classical",
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Backend",
+          "type": "string"
+        }
+      },
+      "title": "Optimization",
+      "type": "object"
+    },
+    "OutputFormat": {
+      "enum": [
+        "in-toto",
+        "oscal",
+        "cyclonedx-cbom",
+        "pdf"
+      ],
+      "title": "OutputFormat",
+      "type": "string"
+    },
+    "PolicyRule": {
+      "additionalProperties": false,
+      "properties": {
+        "rule": {
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Rule",
+          "type": "string"
+        }
+      },
+      "required": [
+        "rule"
+      ],
+      "title": "PolicyRule",
+      "type": "object"
+    },
+    "ProcessingRegion": {
+      "enum": [
+        "eea",
+        "adequacy",
+        "other"
+      ],
+      "title": "ProcessingRegion",
+      "type": "string"
+    },
+    "System": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "owner": {
+          "minLength": 1,
+          "title": "Owner",
+          "type": "string"
+        },
+        "classification": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z0-9][a-z0-9._-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Classification"
+        }
+      },
+      "required": [
+        "name",
+        "owner"
+      ],
+      "title": "System",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "enum": [
+        "0.1",
+        0.1
+      ],
+      "title": "Version"
+    },
+    "market": {
+      "$ref": "#/$defs/Market",
+      "default": "general"
+    },
+    "system": {
+      "$ref": "#/$defs/System"
+    },
+    "components": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Component"
+      },
+      "title": "Components",
+      "type": "array"
+    },
+    "evidence": {
+      "$ref": "#/$defs/Evidence",
+      "default": {
+        "produce": [
+          "impact",
+          "behavioral-equivalence",
+          "crypto-inventory"
+        ],
+        "outputs": [
+          "in-toto"
+        ]
+      }
+    },
+    "crypto": {
+      "$ref": "#/$defs/Crypto"
+    },
+    "optimization": {
+      "$ref": "#/$defs/Optimization",
+      "default": {
+        "backend": "classical"
+      }
+    },
+    "egress": {
+      "$ref": "#/$defs/Egress",
+      "default": {
+        "allowed": false,
+        "data_tier": "public",
+        "approved_vendors": [],
+        "customer_approval_ref": null,
+        "ict_register_ref": null,
+        "processing_region": null,
+        "require_pq_transport": true
+      }
+    },
+    "policy": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/PolicyRule"
+      },
+      "title": "Policy",
+      "type": "array"
+    },
+    "frameworks": {
+      "default": [],
+      "items": {
+        "pattern": "^[a-z0-9][a-z0-9._-]*$",
+        "type": "string"
+      },
+      "title": "Frameworks",
+      "type": "array"
+    }
+  },
+  "required": [
+    "version",
+    "system",
+    "crypto"
+  ],
+  "title": "Config",
+  "type": "object"
+}
