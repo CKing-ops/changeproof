@@ -11,6 +11,7 @@ from pathlib import Path
 from changeproof.adapters.base import Entity, IRModule
 from changeproof.adapters.cobol import CobolAdapter
 from changeproof.config import Config
+from changeproof.graph.csd import CsdDefinition, parse_csd
 from changeproof.graph.jcl import JclJob, parse_jcl
 from changeproof.graph.model import Edge, Graph, Node
 from changeproof.provenance import Provenance
@@ -19,6 +20,9 @@ SQL_WORD_RE = re.compile(r"[\w.$#@:-]+|[(),]")
 CICS_FILE_COMMANDS = frozenset({  # RENAME: CICS COMMANDS THAT READ OR WRITE A FILE
     "READ", "WRITE", "REWRITE", "DELETE", "STARTBR", "READNEXT", "READPREV", "ENDBR", "RESETBR", "UNLOCK",
 })
+SCREEN_COMMANDS = frozenset({"SEND", "RECEIVE"})  # RENAME: CICS COMMANDS THAT SEND OR RECEIVE A BMS MAP
+TRANSACTION_COMMANDS = frozenset({"RETURN", "START"})  # RENAME: CICS COMMANDS THAT NAME THE NEXT TRANSACTION
+SHARED_KINDS = frozenset({"dataset", "table", "cics-file"})  # RENAME: NODES SEVERAL COMPONENTS CAN SHARE
 DD_PREFIX_RE = re.compile(r"^(?:[A-Z]{2}-)*(?:S-)?")  # ASSIGN TO UT-S-NAME style prefixes before the DD name
 
 
@@ -227,7 +231,7 @@ class GraphBuilder:
         extra = {"problem": e.attributes["problem"]} if e.attributes["problem"] else {}
         self.edge(e.id, home, book, "includes", e.provenance, **extra)
 
-    # PURPOSE: ADDS CICS LINK/XCTL CALL EDGES AND CICS FILE ACCESS EDGES
+    # PURPOSE: ADDS CICS CALL, FILE, SCREEN AND NEXT-TRANSACTION EDGES
     def add_cics(self, program: str, e: Entity, src: str) -> None:
         command = e.attributes["command"]
         if command in ("LINK", "XCTL"):
@@ -237,16 +241,50 @@ class GraphBuilder:
             elif "program_ref" in e.attributes:
                 self.add_dynamic(program, e, src, e.attributes["program_ref"], via)
         elif command in CICS_FILE_COMMANDS and ("file" in e.attributes or "file_ref" in e.attributes):
-            names = [(e.attributes["file"], None)] if "file" in e.attributes \
-                else self.values_of(program, e.attributes["file_ref"])
-            if not names:
-                self.unresolved(e.id, src, f"dynamic:{e.attributes['file_ref']}", "cics-file", e.provenance,
-                                "dynamic target with no VALUE or MOVE of a literal", command=command)
-            for name, fact in names:
-                file_id = self.node(f"cics-file:{name}", "cics-file", name, e.provenance)
-                key = e.id if len(names) == 1 else f"{e.id}>{name}"
-                extra = {"target_from": fact} if fact else {}
-                self.edge(key, src, file_id, "cics-file", e.provenance, command=command, **extra)
+            self.cics_target(program, e, src, "file", "cics-file", "cics-file", command=command)
+        elif command in SCREEN_COMMANDS and ("mapset" in e.attributes or "mapset_ref" in e.attributes
+                                             or "map" in e.attributes):
+            option = "mapset" if "mapset" in e.attributes or "mapset_ref" in e.attributes else "map"
+            self.cics_target(program, e, src, option, "mapset", "uses-screen", command=command,
+                             map=e.attributes.get("map") or e.attributes.get("map_ref"))
+        elif command in TRANSACTION_COMMANDS and ("transid" in e.attributes or "transid_ref" in e.attributes):
+            self.cics_target(program, e, src, "transid", "transaction", "starts-transaction", command=command)
+
+    # PURPOSE: LINKS A CICS COMMAND TO THE RESOURCE ITS OPTION NAMES, ONE EDGE PER LITERAL A DATA NAME CAN HOLD
+    def cics_target(self, program: str, e: Entity, src: str, option: str, kind: str, edge_kind: str,
+                    **attributes) -> None:
+        names = [(e.attributes[option], None)] if option in e.attributes \
+            else self.values_of(program, e.attributes[f"{option}_ref"])
+        if not names:
+            self.unresolved(e.id, src, f"dynamic:{e.attributes[f'{option}_ref']}", edge_kind, e.provenance,
+                            "dynamic target with no VALUE or MOVE of a literal", **attributes)
+        for name, fact in names:
+            target = self.node(f"{kind}:{name}", kind, name, e.provenance)
+            key = e.id if len(names) == 1 else f"{e.id}>{name}"
+            extra = {"target_from": fact} if fact else {}
+            self.edge(key, src, target, edge_kind, e.provenance, **attributes, **extra)
+
+    # PURPOSE: ADDS CSD TRANSACTIONS, FILES AND MAPSETS, SO THEIR DEFINITIONS ARE WHERE THE NODES POINT
+    def add_csd(self, definitions: list[CsdDefinition]) -> None:
+        for d in definitions:
+            where = Provenance(file=d.file, line=d.line)
+            match d.kind, d.options:
+                case "TRANSACTION", {"PROGRAM": (program, _)}:
+                    transaction = self.node(f"transaction:{d.name}", "transaction", d.name, where)
+                    if program in self.programs:
+                        self.edge(f"starts>{transaction}", transaction, f"program:{program}", "starts",
+                                  d.through("PROGRAM"))
+                    else:
+                        self.unresolved(f"starts>{transaction}", transaction, f"program:{program}", "starts",
+                                        d.through("PROGRAM"), "program not in the analyzed code")
+                case "FILE", _:
+                    cics_file = self.node(f"cics-file:{d.name}", "cics-file", d.name, where)
+                    if "DSNAME" in d.options:
+                        name = d.options["DSNAME"][0]
+                        dataset = self.node(f"dataset:{name}", "dataset", name, d.through("DSNAME"))
+                        self.edge(f"dsname>{cics_file}", cics_file, dataset, "cics-dataset", d.through("DSNAME"))
+                case "MAPSET", _:
+                    self.node(f"mapset:{d.name}", "mapset", d.name, where)
 
     # PURPOSE: ADDS JOB, STEP, PROGRAM, PROC AND DATASET EDGES, AND BINDS PROGRAM FILES TO DATASETS
     def add_job(self, job: JclJob, procs: set[str]) -> None:
@@ -279,15 +317,46 @@ class GraphBuilder:
                     self.edge(f"binds>{step_id}>{dd.name}", files[dd.name], dataset, "binds", dd.provenance,
                               step=step_id, ddname=dd.name)
 
-    # PURPOSE: COPIES EACH COMPONENT'S CONFIG ONTO THE PROGRAM NODES UNDER ITS PATH
+    # PURPOSE: COPIES COMPONENT CONFIG ONTO PROGRAM NODES AND MARKS WHERE ONE COMPONENT REACHES ANOTHER
     def add_components(self, config: Config) -> None:
-        for component in config.components:
-            prefix = component.path.rstrip("/") + "/"
-            meta = {"id": component.id, "criticality": str(component.criticality),
-                    "data_stores": component.data_stores, "relied_on_by": component.relied_on_by}
-            for node_id, node in self.nodes.items():
-                if node.kind == "program" and node.provenance.file.startswith(prefix):
-                    self.nodes[node_id] = node.model_copy(update={"attributes": node.attributes | {"component": meta}})
+        by_path = sorted(((c.path.rstrip("/") + "/", c) for c in config.components), key=lambda p: -len(p[0]))
+        owner = {  # RENAME: NODE ID TO THE COMPONENT ITS DEFINITION LIVES IN, BY LONGEST PATH PREFIX
+            node_id: next((c for prefix, c in by_path if node.provenance.file.startswith(prefix)), None)
+            for node_id, node in self.nodes.items()
+            if node.kind not in SHARED_KINDS and node.kind not in ("unresolved", "crypto-service")
+        }
+        for node_id, node in self.nodes.items():
+            if node.kind == "program" and (c := owner[node_id]):
+                meta = {"id": c.id, "criticality": str(c.criticality), "data_stores": c.data_stores,
+                        "relied_on_by": c.relied_on_by}
+                self.nodes[node_id] = node.model_copy(update={"attributes": node.attributes | {"component": meta}})
+        for key, e in self.edges.items():
+            a, b = owner.get(e.src), owner.get(e.dst)
+            if a and b and a.id != b.id:
+                self.edges[key] = e.model_copy(update={"attributes": e.attributes | {"crosses": [a.id, b.id]}})
+        for node_id, users in self.users({k: c.id for k, c in owner.items() if c}).items():
+            if len(users) > 1:
+                node = self.nodes[node_id]
+                self.nodes[node_id] = node.model_copy(update={"attributes": node.attributes | {"shared_by": sorted(users)}})
+
+    # PURPOSE: COMPONENTS THAT REACH EACH SHARED RESOURCE, DIRECTLY OR THROUGH ANOTHER RESOURCE
+    def users(self, owner: dict[str, str]) -> dict[str, set[str]]:
+        incoming: dict[str, list[str]] = {}
+        for e in self.edges.values():
+            if self.nodes[e.dst].kind in SHARED_KINDS:
+                incoming.setdefault(e.dst, []).append(e.src)
+        found: dict[str, set[str]] = {}
+        for resource in incoming:
+            seen, stack, users = {resource}, [resource], set()
+            while stack:
+                for src in incoming.get(stack.pop(), []):
+                    if src in owner:
+                        users.add(owner[src])
+                    elif src not in seen:
+                        seen.add(src)
+                        stack.append(src)
+            found[resource] = users
+        return found
 
     # PURPOSE: RETURNS THE FINISHED GRAPH, NODES AND EDGES IN A STABLE ORDER
     def graph(self) -> Graph:
@@ -295,10 +364,12 @@ class GraphBuilder:
                      edges=sorted(self.edges.values(), key=lambda e: e.key))
 
 
-# PURPOSE: BUILDS A GRAPH FROM ALREADY-PARSED MODULES AND JCL
-def graph_from(modules: list[IRModule], jobs: list[JclJob], config: Config | None = None) -> Graph:
+# PURPOSE: BUILDS A GRAPH FROM ALREADY-PARSED MODULES, JCL AND CICS DEFINITIONS
+def graph_from(modules: list[IRModule], jobs: list[JclJob], config: Config | None = None,
+               csd: list[CsdDefinition] = ()) -> Graph:
     builder = GraphBuilder()
     builder.index(modules)
+    builder.add_csd(list(csd))
     for program in sorted(builder.programs):
         builder.add_program(program)
     procs = {j.name for j in jobs if j.kind == "PROC"}
@@ -309,10 +380,11 @@ def graph_from(modules: list[IRModule], jobs: list[JclJob], config: Config | Non
     return builder.graph()
 
 
-# PURPOSE: PARSES COBOL PROGRAMS AND JCL UNDER ROOT, THEN BUILDS THEIR GRAPH
+# PURPOSE: PARSES COBOL PROGRAMS, JCL AND CSD EXTRACTS UNDER ROOT, THEN BUILDS THEIR GRAPH
 def build_graph(root: Path, programs: list[str], copybook_dirs: list[str], jcl: list[str] = (),
-                config: Config | None = None) -> Graph:
+                config: Config | None = None, csd: list[str] = ()) -> Graph:
     adapter = CobolAdapter(copybook_dirs)
     modules = [adapter.parse(Path(root) / p, Path(root)) for p in programs]
     jobs = [job for path in jcl for job in parse_jcl(Path(root) / path, Path(root))]
-    return graph_from(modules, jobs, config)
+    definitions = [d for path in csd for d in parse_csd(Path(root) / path, Path(root))]
+    return graph_from(modules, jobs, config, definitions)

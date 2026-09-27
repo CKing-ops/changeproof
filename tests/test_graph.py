@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parent / "fixtures" / "graph"
 @pytest.fixture(scope="module")
 def graph():
     return build_graph(ROOT, programs=["src/BATCH1.cbl", "src/SUBPGM.cbl"], copybook_dirs=["copy"],
-                       jcl=["jcl/RUNBATCH.jcl"], config=load_config(ROOT / "changeproof.yaml"))
+                       jcl=["jcl/RUNBATCH.jcl"], csd=["csd/TESTGRP.csd"], config=load_config(ROOT / "changeproof.yaml"))
 
 
 def edge(graph, src, dst, kind):
@@ -70,6 +70,30 @@ def test_jcl_edges_bind_program_files_to_datasets(graph):
     assert (str(dd.provenance), dd.attributes["ddname"]) == ("jcl/RUNBATCH.jcl:5-6", "ACCTIN")
     bind = edge(graph, "file:BATCH1.ACCT-IN", "dataset:TEST.ACCT.DATA", "binds")
     assert (str(bind.provenance), bind.attributes["step"]) == ("jcl/RUNBATCH.jcl:5-6", "step:RUNBATCH.STEP01")
+
+
+def test_cics_definitions_link_transactions_screens_and_datasets(graph):
+    assert str(edge(graph, "transaction:TB01", "program:SUBPGM", "starts").provenance) == "csd/TESTGRP.csd:3-4"
+    back = edge(graph, "paragraph:SUBPGM.MAIN-PARA", "transaction:TB01", "starts-transaction")
+    assert (str(back.provenance), back.attributes["command"]) == ("src/SUBPGM.cbl:15", "RETURN")
+    screen = edge(graph, "paragraph:SUBPGM.MAIN-PARA", "mapset:SUBMAP", "uses-screen")
+    assert (str(screen.provenance), screen.attributes["map"]) == ("src/SUBPGM.cbl:14", "SUBSCR")
+    assert str(edge(graph, "cics-file:ACCTDAT", "dataset:TEST.ACCT.DATA", "cics-dataset").provenance) == \
+        "csd/TESTGRP.csd:1-2"
+
+
+def test_edges_between_components_are_marked(graph):
+    assert edge(graph, "transaction:TB01", "program:SUBPGM", "starts").attributes["crosses"] == \
+        ["online-cics", "batch-core"]
+    assert edge(graph, "step:RUNBATCH.STEP01", "program:BATCH1", "runs").attributes["crosses"] == \
+        ["batch-schedule", "batch-core"]
+    assert "crosses" not in edge(graph, "program:BATCH1", "paragraph:BATCH1.MAIN-PARA", "contains").attributes
+
+
+def test_resources_used_by_several_components_are_marked(graph):
+    nodes = {n.id: n for n in graph.nodes}
+    assert nodes["dataset:TEST.ACCT.DATA"].attributes["shared_by"] == ["batch-core", "batch-schedule"]
+    assert "shared_by" not in nodes["table:ACCOUNTS"].attributes
 
 
 def test_unresolved_edges_are_reported_with_a_reason(graph):
