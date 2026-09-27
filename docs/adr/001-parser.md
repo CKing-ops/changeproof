@@ -1,6 +1,6 @@
 # ADR 001: COBOL parser
 
-- Status: proposed (Week 1), awaiting owner review
+- Status: accepted by the owner on 2026-09-27 (Week 1)
 - Date: 2026-09-27
 - Related: ROADMAP.md Weeks 1-2, `spike/`, `docs/licenses.md`
 

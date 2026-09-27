@@ -1,6 +1,6 @@
 # ADR 002: Crypto agility
 
-- Status: proposed (Week 1), awaiting owner review
+- Status: accepted by the owner on 2026-09-27 (Week 1)
 - Date: 2026-09-26
 - Markets: the decision applies to every market profile (ADR 004). The context below is written for
   `eu-dora`; the `us-defense` context (CNSA 2.0) is on branch `week-01-foundations`, and ADR 004
