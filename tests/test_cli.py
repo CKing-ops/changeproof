@@ -1,3 +1,5 @@
+import importlib.util
+import json
 from pathlib import Path
 
 import pytest
@@ -77,3 +79,15 @@ def test_init_writes_the_chosen_market(tmp_path, market, classification):
 def test_init_rejects_an_unknown_market(tmp_path, capsys):
     with pytest.raises(SystemExit):
         main(["init", "--dir", str(tmp_path), "--market", "mars"])
+
+
+def test_change_prints_a_record_per_commit(tmp_path, capsys):
+    spec = importlib.util.spec_from_file_location("seed", Path(__file__).parent / "fixtures" / "change" / "seed.py")
+    seed = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(seed)
+    shas = seed.seed(tmp_path)
+    assert main(["change", f"{shas[6]}..{shas[8]}", "--repo", str(tmp_path), "--copybooks", "copy"]) == 0
+    records = json.loads(capsys.readouterr().out)
+    assert [r["where"]["commit"] for r in records] == shas[7:9]
+    assert records[1]["why"]["emergency"] is True
+    assert records[1]["gaps"] == [] and "an approver is also the implementer" in records[1]["open_items"]

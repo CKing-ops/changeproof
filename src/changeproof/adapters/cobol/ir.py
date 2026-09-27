@@ -140,10 +140,10 @@ class Builder:
             end = last.end_line or last.line
         return Provenance(file=first.file, line=first.line, end_line=end if end != first.line else None)
 
-    # PURPOSE: DEFAULT-CHANNEL TOKEN TEXT OF A CONTEXT, SPACE-SEPARATED
+    # PURPOSE: DEFAULT-CHANNEL TOKEN TEXT OF A CONTEXT, SPACE-SEPARATED, SO LINE LAYOUT DOES NOT COUNT
     def text(self, ctx: ParserRuleContext) -> str:
-        return " ".join(t.text for t in self.tokens.tokens[ctx.start.tokenIndex:ctx.stop.tokenIndex + 1]
-                        if t.channel == 0)
+        return " ".join(t.text.strip() for t in self.tokens.tokens[ctx.start.tokenIndex:ctx.stop.tokenIndex + 1]
+                        if t.channel == 0 and t.text.strip())
 
     # PURPOSE: ADDS AN ENTITY, NUMBERING IDS THAT WOULD OTHERWISE REPEAT
     def add(self, kind: str, qualified: str, name: str, provenance: Provenance, attributes: dict,
@@ -316,7 +316,7 @@ class Builder:
         if not targets:
             return
         attributes = {"verb": verb, "sources": [name for part in sending for name in data_refs(part)],
-                      "targets": targets}
+                      "targets": targets, "text": self.text(node)}
         if isinstance(node, P.ReadStatementContext):
             attributes["file"] = node.fileName().getText().upper()
         if isinstance(node, P.MoveCorrespondingToStatementContext):

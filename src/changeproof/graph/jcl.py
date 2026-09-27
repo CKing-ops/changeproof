@@ -4,6 +4,7 @@ import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from changeproof.adapters.base import Entity, IRModule
 from changeproof.provenance import Provenance
 
 STATEMENT_RE = re.compile(r"^//([A-Z@#$][A-Z0-9@#$.]{0,16})?\s+(JOB|PROC|EXEC|DD)\b\s*(.*)$", re.IGNORECASE)
@@ -116,3 +117,18 @@ def parse_jcl(path: Path, root: Path) -> list[JclJob]:
             dataset = MEMBER_RE.sub("", dsn).upper() if dsn else None
             jobs[-1].steps[-1].dds.append(JclDD(name, dataset, keywords.get("DISP"), where))
     return jobs
+
+
+# PURPOSE: JCL AS IR ENTITIES (JOB, STEP, DD) SO TWO VERSIONS OF A MEMBER CAN BE DIFFED BY ID
+def jcl_module(path: Path, root: Path) -> IRModule:
+    entities = []
+    for job in parse_jcl(path, root):
+        scope = f"{job.kind.lower()}:{job.name}"
+        entities.append(Entity(id=scope, kind=f"jcl-{job.kind.lower()}", name=job.name, provenance=job.provenance))
+        for step in job.steps:
+            step_id = f"{job.name}.{step.name}"
+            entities.append(Entity(id=f"jcl-step:{step_id}", kind="jcl-step", name=step.name, provenance=step.provenance,
+                                   attributes={"program": step.program, "proc": step.proc}))
+            entities += [Entity(id=f"jcl-dd:{step_id}.{dd.name}", kind="jcl-dd", name=dd.name, provenance=dd.provenance,
+                                attributes={"dataset": dd.dataset, "disp": dd.disp}) for dd in step.dds]
+    return IRModule(path=Path(path).relative_to(root).as_posix(), language="jcl", entities=entities)

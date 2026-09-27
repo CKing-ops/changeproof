@@ -41,3 +41,7 @@ def test_flow_ids_are_named_by_target_not_line(flows):
         "flow:FLOWS.MAIN-PARA.WS-TARGET-PGM#1",
         "flow:FLOWS.MAIN-PARA.WS-LINE#2",
     ]
+
+
+def test_flow_text_ignores_line_layout(flows):
+    assert flows[1].attributes["text"] == "COMPUTE WS-FEE OF WS-TXN = WS-AMOUNT OF WS-TXN * WS-RATE"

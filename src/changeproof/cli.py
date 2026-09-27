@@ -7,6 +7,7 @@ from pathlib import Path
 import yaml
 from pydantic import ValidationError
 
+from changeproof.change import change_records
 from changeproof.config import Config, load_config
 from changeproof.markets import DEFAULT_MARKET, MARKETS
 
@@ -60,7 +61,18 @@ def cmd_schema(args: argparse.Namespace) -> int:
     return 0
 
 
-# PURPOSE: DEFINES THE INIT, VALIDATE AND SCHEMA SUBCOMMANDS
+# PURPOSE: PRINTS CHANGE RECORDS FOR A COMMIT OR RANGE AS JSON; EXIT 1 IF ANY RECORD HAS A GAP
+def cmd_change(args: argparse.Namespace) -> int:
+    repo = Path(args.repo)
+    config_path = Path(args.config) if args.config else repo / CONFIG_NAME
+    config = load_config(config_path) if config_path.is_file() else None  # RENAME: CONFIG GIVING SYSTEM AND COMPONENTS
+    records = change_records(repo, args.revisions, copybook_dirs=args.copybooks, config=config)
+    print(json.dumps([r.model_dump(mode="json") | {"gaps": r.gaps(), "open_items": r.open_items()} for r in records],
+                     indent=2))
+    return 1 if any(r.gaps() for r in records) else 0
+
+
+# PURPOSE: DEFINES THE INIT, VALIDATE, SCHEMA AND CHANGE SUBCOMMANDS
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="changeproof")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -79,6 +91,13 @@ def build_parser() -> argparse.ArgumentParser:
 
     schema = sub.add_parser("schema", help="print the config JSON Schema")
     schema.set_defaults(func=cmd_schema)
+
+    change = sub.add_parser("change", help="print who/what/when/where/how/why records for commits")
+    change.add_argument("revisions", help="a commit, or a range such as main..HEAD")
+    change.add_argument("--repo", default=".")
+    change.add_argument("--config", help=f"defaults to {CONFIG_NAME} in the repository")
+    change.add_argument("--copybooks", action="append", default=[], help="copybook folder, repo-relative; repeatable")
+    change.set_defaults(func=cmd_change)
     return parser
 
 
