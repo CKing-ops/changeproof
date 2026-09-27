@@ -7,6 +7,7 @@ license = "LicenseRef-Proprietary"
 license-files = ["LICENSE"]
 requires-python = ">=3.12,<3.13"
 dependencies = [
+    "antlr4-python3-runtime==4.13.2",
     "pydantic>=2.13,<3",
     "pyyaml>=6.0,<7",
     "jsonschema>=4.26,<5",
@@ -23,7 +24,6 @@ dev = [
 ]
 spike = [
     "tree-sitter>=0.26,<0.27",
-    "antlr4-python3-runtime==4.13.2",
     "tree-sitter-java==0.23.5",
     "tree-sitter-python==0.25.0",
     "tree-sitter-javascript==0.25.0",
