@@ -21,9 +21,12 @@ DATA_SECTIONS = {  # RENAME: PARSE-TREE SECTION TYPE TO THE SECTION NAME STORED 
     P.LocalStorageSectionContext: "local-storage",
     P.LinkageSectionContext: "linkage",
 }
-CICS_OPERAND_RE = {  # RENAME: CICS OPTION NAME TO THE ATTRIBUTE IT FILLS (LITERAL) OR ITS _REF (DATA NAME)
-    "program": re.compile(r"\bPROGRAM\s*\(\s*(?:'([^']*)'|\"([^\"]*)\"|([\w-]+))\s*\)", re.IGNORECASE),
-    "file": re.compile(r"\b(?:FILE|DATASET)\s*\(\s*(?:'([^']*)'|\"([^\"]*)\"|([\w-]+))\s*\)", re.IGNORECASE),
+CICS_OPTIONS = {  # RENAME: CICS OPTION NAMES TO THE ATTRIBUTE THEY FILL (LITERAL) OR ITS _REF (DATA NAME)
+    "program": "PROGRAM", "file": "FILE|DATASET", "transid": "TRANSID", "map": "MAP", "mapset": "MAPSET",
+}
+CICS_OPERAND_RE = {
+    attribute: re.compile(rf"\b(?:{words})\s*\(\s*(?:'([^']*)'|\"([^\"]*)\"|([\w-]+))\s*\)", re.IGNORECASE)
+    for attribute, words in CICS_OPTIONS.items()
 }
 
 

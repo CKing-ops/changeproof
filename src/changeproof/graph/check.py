@@ -33,6 +33,12 @@ def anchors(edge: Edge, names: dict[str, str]) -> list[str]:
             return [edge.attributes["command"]]
         case "runs" | "runs-proc":
             return ["EXEC"]
+        case "starts" | "cics-dataset":
+            return [names[edge.dst]]
+        case "uses-screen":
+            return [edge.attributes["command"]]
+        case "starts-transaction":
+            return ["TRANSID"]
         case "dd" | "binds":
             return [f"//{edge.attributes['ddname']}"]
     return []

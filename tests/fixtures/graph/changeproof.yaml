@@ -11,6 +11,12 @@ components:
     criticality: high
     data_stores: [ACCOUNTS]
     relied_on_by: [sepa-gateway]
+  - id: batch-schedule
+    path: jcl
+    language: jcl
+  - id: online-cics
+    path: csd
+    language: cics-csd
 crypto:
   profile: hybrid
   signing: [ml-dsa-87, ecdsa-p384]

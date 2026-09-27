@@ -3,13 +3,13 @@
 - Market: universal build, selling to DORA first
 - Branch: `week-03-dependency-graphs`, built on `week-02-cobol-ir` (PR #4)
 - Date: 2026-09-27
-- Status: exit check met; waiting for owner review
+- Status: exit check met, including the owner-approved addition; waiting for owner review
 
 ## Exit check
 
 | Check | Target | Result | Evidence |
 |---|---|---|---|
-| Every edge has provenance | all edges | **Met: 3,385 of 3,385 CardDemo edges carry `file:line`, and every one points at the statement that made it** | `scripts/graph_corpus_run.py` → `docs/weekly/week03-carddemo-graph.json` (`edges_failing_check: []`); `tests/test_graph.py::test_every_edge_has_provenance`, `::test_every_edge_points_at_the_statement_it_came_from` |
+| Every edge has provenance | all edges | **Met: 3,489 of 3,489 CardDemo edges carry `file:line`, and every one points at the statement that made it** (3,385 before the addition below) | `scripts/graph_corpus_run.py` → `docs/weekly/week03-carddemo-graph.json` (`edges_failing_check: []`); `tests/test_graph.py::test_every_edge_has_provenance`, `::test_every_edge_points_at_the_statement_it_came_from` |
 
 An edge cannot be built without provenance (`Edge.provenance` is required). That alone would
 make the check trivial, so `changeproof.graph.check.check_edges` goes further. It opens the cited
@@ -22,7 +22,7 @@ where the fact cited only the `EXEC SQL` line. Copybook facts now cite the whole
 the rerun passed. That fix also made one Week 2 golden fact more exact: `COPY CSSETATY REPLACING`
 in COTRTUPC now cites lines 1358-1361 instead of 1358.
 
-The whole test suite passes: 208 tests with sockets blocked.
+The whole test suite passes: 211 tests with sockets blocked.
 
 ## Roadmap items
 
@@ -45,13 +45,44 @@ The whole test suite passes: 208 tests with sockets blocked.
   copied onto the program nodes under its path. The test uses an `eu-dora` config
   (`::test_component_config_is_on_program_nodes`).
 
+## Owner-approved addition: what CAST and OpenText show, and links between applications
+
+The owner approved this addition on 2026-09-27 ("Add them", review thread), after the Week 0
+competitor check found that CAST and OpenText already map programs, CICS transactions, Db2 tables,
+files, batch jobs and JCL. Matching that is table stakes. The ECB IT Risk Questionnaire names
+"unexpected interdependencies" as a cause of failed changes, so the graph now also marks where one
+application reaches into another.
+
+- [x] **CICS definitions.** `changeproof.graph.csd` reads CSD `DEFINE` statements. A transaction
+  `starts` its program, and a CICS file maps to its dataset through `DSNAME`, which joins online
+  file access to the batch jobs that use the same dataset
+  (`tests/test_graph.py::test_cics_definitions_link_transactions_screens_and_datasets`).
+- [x] **Screens and next transactions.** `EXEC CICS SEND/RECEIVE MAP` gives a `uses-screen` edge
+  to the mapset, and `RETURN/START TRANSID` a `starts-transaction` edge (same test).
+- [x] **Links between applications.** Each configured component owns the code under its path
+  (longest path wins). An edge from one component's code to another's carries
+  `crosses: [from, to]`, and a dataset, table or CICS file reached from two or more components
+  carries `shared_by` (`::test_edges_between_components_are_marked`,
+  `::test_resources_used_by_several_components_are_marked`).
+
+CardDemo ships a base application and three optional extensions, so the run treats each as a
+component (`docs/examples/carddemo.yaml`). The result:
+
+| Interdependency | Count | Example |
+|---|---|---|
+| Extension copies a base copybook | 36 edges | 17 of them are authorization programs copying base copybooks |
+| Extension runs base procedure code | 6 edges | transaction-type programs whose paragraphs come from base copybooks |
+| Dataset or CICS file shared by components | 9 resources | `ACCTDAT` and its VSAM file are used by the base application, authorization and vsam-mq |
+
 ## CardDemo graph
 
-44 programs and 48 JCL members give 1,369 nodes and 3,385 edges. The largest groups are 1,202
+44 programs, 48 JCL members and 4 CSD members give 1,418 nodes and 3,489 edges. Before the
+addition above, 44 programs and 48 JCL members gave 1,369 nodes and 3,385 edges. The largest groups are 1,202
 performs, 1,024 contains, 357 includes, 213 DD, 200 GO TO, 118 runs and 97 calls. There are 44
 file-to-dataset bindings, which link 44 program files to the datasets their jobs give them.
 
-251 edges are unresolved, and every one points at IBM-supplied code, which is outside the corpus:
+251 of the original edges are unresolved, and every one points at IBM-supplied code, which is
+outside the corpus:
 
 | Reason | Count | Most common targets |
 |---|---|---|
@@ -60,6 +91,9 @@ file-to-dataset bindings, which link 44 program files to the datasets their jobs
 | Call to a program not in the code | 46 | `CEE3ABD` (Language Environment), MQ `MQOPEN`/`MQGET`/`MQPUT`/`MQCLOSE`, `COBDATFT` |
 | Dynamic call with no `VALUE` | 28 | CICS `XCTL PROGRAM(CDEMO-TO-PROGRAM)`, set by `MOVE` at run time |
 
+The addition leaves 6 more unresolved: transaction `CDV1` names program `COCRDSEC`, which CardDemo
+does not ship, and 5 screens are sent through `CCARD-NEXT-MAPSET`, which is set by `MOVE`.
+
 The graph database is written to `corpus/carddemo-graph.sqlite` (git-ignored).
 
 ## Open issues
@@ -67,8 +101,6 @@ The graph database is written to `corpus/carddemo-graph.sqlite` (git-ignored).
 - **System names are unresolved, not classified.** Tagging IBM-supplied programs and copybooks
   (CICS, MQ, LE, utilities) as `system` would leave only the 28 dynamic calls as real gaps.
 - **Dynamic targets set by `MOVE`** need data-flow analysis. That fits Week 4's field-level lineage.
-- The CICS file names (`cics-file:`) are not yet mapped to datasets through the CSD
-  (`app/csd/CARDDEMO.CSD`).
 - JCL symbolic parameters (`&HLQ`) are kept as written, and concatenated DDs are not merged.
 - Parsing speed is unchanged from Week 2: the full CardDemo graph takes about 1,300 CPU seconds.
   There is still no IR cache (no hashing outside the signer interface until Week 6).

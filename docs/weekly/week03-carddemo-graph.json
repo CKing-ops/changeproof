@@ -1,22 +1,26 @@
 {
  "programs": 44,
  "jcl_members": 48,
+ "csd_members": 4,
  "nodes": {
   "cics-file": 8,
   "copybook": 61,
-  "dataset": 92,
+  "dataset": 93,
   "file": 54,
   "job": 46,
+  "mapset": 21,
   "paragraph": 903,
   "proc": 1,
   "program": 44,
   "step": 121,
   "table": 3,
-  "unresolved": 36
+  "transaction": 25,
+  "unresolved": 38
  },
  "edges": {
   "binds": 44,
   "calls": 97,
+  "cics-dataset": 8,
   "cics-file": 58,
   "contains": 1024,
   "dd": 213,
@@ -27,16 +31,68 @@
   "reads-table": 5,
   "runs": 118,
   "runs-proc": 3,
+  "starts": 25,
+  "starts-transaction": 24,
+  "uses-screen": 47,
   "writes-table": 10
  },
- "edges_total": 3385,
- "edges_with_provenance": 3385,
+ "edges_total": 3489,
+ "edges_with_provenance": 3489,
  "edges_failing_check": [],
+ "edges_crossing_components": {
+  "contains: transaction-type -> carddemo-base": 4,
+  "includes: authorization -> carddemo-base": 17,
+  "includes: transaction-type -> carddemo-base": 18,
+  "includes: vsam-mq -> carddemo-base": 1,
+  "performs: transaction-type -> carddemo-base": 2
+ },
+ "shared_resources": {
+  "cics-file:ACCTDAT": [
+   "authorization",
+   "carddemo-base",
+   "vsam-mq"
+  ],
+  "cics-file:CCXREF": [
+   "authorization",
+   "carddemo-base"
+  ],
+  "cics-file:CUSTDAT": [
+   "authorization",
+   "carddemo-base"
+  ],
+  "cics-file:CXACAIX": [
+   "authorization",
+   "carddemo-base"
+  ],
+  "dataset:AWS.M2.CARDDEMO.ACCTDATA.VSAM.KSDS": [
+   "authorization",
+   "carddemo-base",
+   "vsam-mq"
+  ],
+  "dataset:AWS.M2.CARDDEMO.CARDXREF.VSAM.AIX.PATH": [
+   "authorization",
+   "carddemo-base"
+  ],
+  "dataset:AWS.M2.CARDDEMO.CARDXREF.VSAM.KSDS": [
+   "authorization",
+   "carddemo-base"
+  ],
+  "dataset:AWS.M2.CARDDEMO.CUSTDATA.VSAM.KSDS": [
+   "authorization",
+   "carddemo-base"
+  ],
+  "dataset:AWS.M2.CARDDEMO.LOADLIB": [
+   "carddemo-base",
+   "transaction-type"
+  ]
+ },
  "unresolved": {
   "calls: dynamic target with no VALUE": 28,
   "calls: program not in the analyzed code": 46,
   "includes: copybook not found": 71,
-  "runs: program not in the analyzed code": 106
+  "runs: program not in the analyzed code": 106,
+  "starts: program not in the analyzed code": 1,
+  "uses-screen: dynamic target with no VALUE": 5
  },
  "unresolved_examples": [
   "paragraph:CBACT01C.1300-POPUL-ACCT-RECORD -calls-> unresolved:program:COBDATFT at app/cbl/CBACT01C.cbl:231",
