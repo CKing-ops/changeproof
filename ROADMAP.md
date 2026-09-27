@@ -21,15 +21,25 @@ Each evidence record answers **who / what / when / where / how** at code depth a
 
 ## Market focus (narrow first)
 
-**Primary: US national security & government.**
+One build serves every market through the `market:` setting (`general` default, `eu-dora`, `us-defense`; ADR 004).
+
+**Main path: universal (`general`) (owner decision, 2026-09-27).** Any software company that answers to change-management controls: SOC 2 CC8.1 and ISO/IEC 27001:2022 Annex A 8.25/8.28/8.29/8.32. The engine, schemas, examples and mappings are built for `general` first. Selling here needs a mainstream-language adapter (Java, Week 11); until then COBOL is the only adapter.
+
+**Strong second: EU financial sector under DORA (`eu-dora`).** The first regulated vertical, and where the COBOL adapter (Weeks 2-4) pays off first. Week 0 desk research supports it (`docs/weekly/WEEK-00.md`).
+- **Buyer 1: ICT risk and change-management functions at EU banks and payment firms** running COBOL cores (DORA in force since 17 Jan 2025; ICT change management in the RTS on ICT risk management, Art. 17).
+- **Buyer 2: Their internal audit teams and external auditors / Big 4 IT-audit practices** (distribution channel and trust moat, the role SWFT assessors play in the US market).
+- **Buyer 3: Core-banking and payment software vendors** that must hand their bank customers change evidence.
+- **Entry vehicles:** design-partner pilots with one bank or vendor, teaming with an audit firm. **Planned**, pending the DORA Week 0 interviews.
+
+**Kept as a tested profile: US national security & government (`us-defense`).** Buyers and entry vehicles below are unchanged and can be revived if the Week 0 interviews favour them.
 - **Buyer 1: SWFT third-party assessors and security assessment firms** (distribution channel and trust moat).
 - **Buyer 2: Defense software vendors and small primes** seeking faster ATOs and facing CNSA 2.0 procurement gates.
 - **Buyer 3: Program offices / software factories** maintaining legacy mission systems (COBOL, Ada, C/C++, Fortran) that must also migrate crypto by 2030–2033.
 - **Entry vehicles:** DoD SBIR/STTR (reauthorized through Sept 30, 2031; FY2027 proposal caps and stricter foreign-risk screening), DIU, AFWERX, teaming with primes or assessment firms.
 
-**Secondary:** EU financial sector (DORA RTS Art. 17), then SOX / FDA CSA.
+**Later:** SOX / FDA CSA.
 
-**Moat targets:** (1) assessor acceptance, (2) deep legacy-language adapters (COBOL, Ada), (3) air-gapped, offline-first operation, (4) accumulated per-program baselines, (5) CNSA 2.0-native evidence plus PQC-migration proof, which few change-evidence tools offer.
+**Moat targets:** (1) assessor acceptance, (2) deep legacy-language adapters (COBOL, Ada), (3) air-gapped, offline-first operation, (4) accumulated per-system baselines, (5) CNSA 2.0-native evidence plus PQC-migration proof, which few change-evidence tools offer.
 
 **Compliance realities:**
 - No CUI or classified code until you're on a CMMC Level 2 path. Pilot on unclassified, public or synthetic code.
@@ -123,10 +133,13 @@ frameworks: [nist-ssdf, nist-800-53-cm, nist-800-53-sc, swft, cnsa2]
 # PART A — Core engine (with PQ foundations pulled forward)
 
 ## Week 0 — Validate & recruit an assessor design partner (no code)
+- [x] Desk research as a proxy for the interviews (`docs/weekly/WEEK-00.md`). The owner chose to proceed on it on 2026-09-27 while the interviews stay open.
+- [ ] **DORA:** 12 conversations: 4 bank ICT-risk / change-management leads, 3 internal or external IT auditors, 3 core-banking engineers who maintain COBOL, 2 people who went through a DORA supervisory review. Same questions as below, with "DORA ICT change management" in place of ATO and "EU PQC roadmap" in place of CNSA 2.0.
+- [ ] The US conversations below are optional and only needed to reopen `us-defense`.
 - [ ] 12 conversations: 4 SWFT/security assessors, 3 defense vendor/prime software leads, 3 program-office engineers, 2 recent ATO participants.
 - [ ] Ask about change evidence, rejected artifacts, AI-written changes, legacy languages, **and** "How is CNSA 2.0 / PQC migration hitting your programs? Who proves a crypto swap didn't break anything?"
 - [ ] Identify 1–2 open SBIR/DIU/AFWERX topics on software assurance, ATO acceleration, legacy modernization or PQC migration.
-- **Kill gate:** fewer than 4 of 12 name change-impact or PQC-migration evidence as a real gap, or zero assessor interest → re-scope (fallback: DORA market).
+- **Kill gate:** fewer than 4 of 12 name change-impact evidence as a real gap, or zero auditor interest → re-scope (fallback: `general` or `us-defense`).
 
 ## Week 1 — Repo, universal schemas, crypto-agility ADR, parser
 - [ ] Scaffold `src/changeproof/`, `tests/`, `corpus/`, `docs/`, CI, offline test mode.
@@ -137,6 +150,7 @@ frameworks: [nist-ssdf, nist-800-53-cm, nist-800-53-sc, swft, cnsa2]
 - [ ] **`docs/adr/003-data-egress.md`**: offline by default; data-tier table; what may and may never leave; enforcement design. Add the `egress:` section to the config schema with `allowed: false` as the default.
 - [ ] Test: the engine makes zero network calls in its default configuration (run the test suite with networking disabled).
 - [ ] Corpus (AWS CardDemo + GnuCOBOL samples) and parser spike → `docs/adr/001-parser.md`.
+- [ ] `market:` profiles (`general`, `eu-dora`, `us-defense`) → `docs/adr/004-market-profiles.md`.
 - **Exit check:** ≥90% parse; sample config validates; ADRs reviewed.
 
 ## Week 2 — Intermediate representation (COBOL adapter)
@@ -146,15 +160,17 @@ frameworks: [nist-ssdf, nist-800-53-cm, nist-800-53-sc, swft, cnsa2]
 
 ## Week 3 — Dependency graphs
 - [ ] Call, PERFORM, copybook, file/table, JCL graphs (SQLite + NetworkX); unresolved edges reported; config metadata on nodes.
+- [ ] Cover what COBOL analysers already show (programs, CICS transactions, Db2 tables, files, batch jobs), and flag edges that cross from one configured component to another: the "unexpected interdependencies between applications" the ECB IT Risk Questionnaire asks about.
 - **Exit check:** every edge has provenance.
 
 ## Week 4 — Change-centric input
-- [ ] Diff → IR entities; field-level lineage; who/when/where from git/CI; why from commit trailers/tickets.
+- [ ] Diff → IR entities; field-level lineage; who/when/where from git/CI; why from commit trailers/tickets (ticket IDs from ServiceNow/Jira-style change records, as DORA ICT change management expects).
+- [ ] Keep requester, implementer and approver as separate identities (DORA RTS Art. 17(1)(b) independence), carry an emergency-change flag, and link the change-request ID for purpose, scope and expected outcome (Art. 17(1)(d)). All linked from existing records, never invented.
 - **Exit check:** 10 seeded commits give complete who/what/when/where/how records.
 
 ## Week 5 — Impact engine + framework mapping
 - [ ] `changeproof impact <range>` with confidence tiers, reliant systems/partners, and a flag when a change touches crypto entities.
-- [ ] `docs/framework-mapping.md`: NIST 800-53 CM-3/CM-4/SC-12/SC-13, SSDF, SWFT, CNSA 2.0 (DORA secondary).
+- [ ] `docs/framework-mapping.md`, one section per market profile: `general` first (SOC 2 CC8.1 and ISO/IEC 27001 Annex A 8.25/8.28/8.29/8.32); then `eu-dora` (DORA and its RTS on ICT risk management, Art. 16 testing and Art. 17 change management); then `us-defense` (CM-3/CM-4/SC-12/SC-13, SSDF, SWFT, CNSA 2.0). The DORA section also maps impact and equivalence evidence to the change-failure root causes the ECB IT Risk Questionnaire asks about (unexpected interdependencies, inadequate test coverage).
 - **Exit check:** recall ≥95% on seeded changes.
 
 ## Week 6 — Crypto-agile signed attestations (PQ core, not optional)
@@ -186,9 +202,9 @@ frameworks: [nist-ssdf, nist-800-53-cm, nist-800-53-sc, swft, cnsa2]
 - [ ] Benchmark harness: solution quality, runtime, cost, reproducibility; results stored per run.
 - **Exit check:** selected subsets catch the same mutations as the full suite; QUBO export verified equivalent to the classical model on small instances.
 
-## Week 11 — Second adapter (defense moat test)
-- [ ] Ada (evaluate libadalang) or C adapter: `parse → IR`, `diff → entities`, crypto-call tagging.
-- **Exit check:** impact runs on an open-source Ada/C project; no core schema changes.
+## Week 11 — Second adapter (moat test)
+- [ ] **Java adapter** (tree-sitter-java; 100% parse in the Week 1 spike): `parse → IR`, `diff → entities`, crypto-call tagging (JCA). Serves DORA banks (COBOL plus Java) and opens `general`. Ada or C only if `us-defense` is reopened.
+- **Exit check:** impact runs on an open-source Java project; no core schema changes.
 
 ## Week 12 — AI-agent changes + assessor evidence pack
 - [ ] MCP server (`impact`, `lineage`, `equivalence_status`, `crypto_inventory`); AI attribution in attestations.
