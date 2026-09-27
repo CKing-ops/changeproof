@@ -1,12 +1,14 @@
-# Week 0: validate DORA as the first market (no code)
+# Week 0: market validation (no code)
 
-- Market: `eu-dora` first (owner decision, 2026-09-27)
+- Market: universal (`general`) is the main path, `eu-dora` the strong second (owner decision,
+  2026-09-27, 05:00)
 - Branch: `week-00-dora`
 - Date: 2026-09-27
-- Status: **desk re-check passes on proxy evidence; conversations not started.** Public
-  supervisor findings and industry surveys stand in for the interviews (scorecard below). The
-  proxy does not trigger the kill gate, so Weeks 3-5 continue on DORA. The real exit check still
-  counts interviews and is re-scored when the tracker is filled.
+- Status: **closed on desk research by owner decision; interviews still open.** Public supervisor
+  findings and industry surveys stand in for the interviews (scorecard below), and the proxy does
+  not trigger the kill gate. On 2026-09-27 the owner chose to proceed to Week 5 on this evidence.
+  The interview rows stay open and are scored when the tracker is filled; they should be done
+  before Week 13 (assessor review).
 
 ## Exit check
 
@@ -114,10 +116,10 @@ batch jobs, JCL and CICS. Matching that graph is table stakes for Week 3, not a 
 
 ### What this means for Week 5 (planned)
 
-- Framework mapping leads with DORA RTS Art. 16 and 17, and adds the ECB ITRQ 2026 change
-  root-cause categories (interdependencies, test coverage) as a DORA-profile section.
-- The `general` profile (SOC 2 CC8.1, ISO/IEC 27001 A.8.32) stays in the same document, so the
-  universal build keeps one mapping per market.
+- Framework mapping leads with the `general` profile (SOC 2 CC8.1, ISO/IEC 27001 A.8.25/8.28/
+  8.29/8.32), per the owner's 05:00 decision to keep universal as the main path.
+- The `eu-dora` section follows in the same document: DORA RTS Art. 16 and 17, plus the ECB ITRQ
+  2026 change root causes (interdependencies, test coverage).
 - Week 5 builds on Weeks 3 (dependency graphs) and 4 (diff to entities).
 
 ### What this adds to Weeks 3 and 4 (approved by the owner 2026-09-27, now in ROADMAP.md)

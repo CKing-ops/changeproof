@@ -31,8 +31,9 @@ Read it before starting any week.
 - One build. Market rules live only in `src/changeproof/markets.py` as `MarketProfile` data and are
   picked with `market:` in the config (`general` default, `eu-dora`, `us-defense`; ADR 004).
   Code reads the active profile and never branches on a market name. Never fork a branch per market.
-- `eu-dora` is the first market to sell to. When a week needs an example, fixture or framework
-  mapping, do the `eu-dora` one first, and keep the other profiles' tests passing.
+- `general` (universal) is the main path and `eu-dora` the strong second. When a week needs an
+  example, fixture or framework mapping, do the `general` one first, then `eu-dora`, and keep the
+  `us-defense` tests passing.
 
 ## Testing
 - `uv run pytest` must pass with networking disabled. The suite includes a test that the engine

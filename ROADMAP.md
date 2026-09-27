@@ -21,15 +21,15 @@ Each evidence record answers **who / what / when / where / how** at code depth a
 
 ## Market focus (narrow first)
 
-One build serves every market through the `market:` setting (`general` default, `eu-dora`, `us-defense`; ADR 004). This section says which market is sold to first.
+One build serves every market through the `market:` setting (`general` default, `eu-dora`, `us-defense`; ADR 004).
 
-**First sales target: EU financial sector under DORA (owner decision, 2026-09-27).**
+**Main path: universal (`general`) (owner decision, 2026-09-27).** Any software company that answers to change-management controls: SOC 2 CC8.1 and ISO/IEC 27001:2022 Annex A 8.25/8.28/8.29/8.32. The engine, schemas, examples and mappings are built for `general` first. Selling here needs a mainstream-language adapter (Java, Week 11); until then COBOL is the only adapter.
+
+**Strong second: EU financial sector under DORA (`eu-dora`).** The first regulated vertical, and where the COBOL adapter (Weeks 2-4) pays off first. Week 0 desk research supports it (`docs/weekly/WEEK-00.md`).
 - **Buyer 1: ICT risk and change-management functions at EU banks and payment firms** running COBOL cores (DORA in force since 17 Jan 2025; ICT change management in the RTS on ICT risk management, Art. 17).
 - **Buyer 2: Their internal audit teams and external auditors / Big 4 IT-audit practices** (distribution channel and trust moat, the role SWFT assessors play in the US market).
 - **Buyer 3: Core-banking and payment software vendors** that must hand their bank customers change evidence.
 - **Entry vehicles:** design-partner pilots with one bank or vendor, teaming with an audit firm. **Planned**, pending the DORA Week 0 interviews.
-
-**Second: `general`** (SOC 2 CC8.1, ISO/IEC 27001 Annex A 8.32), once a mainstream-language adapter exists.
 
 **Kept as a tested profile: US national security & government (`us-defense`).** Buyers and entry vehicles below are unchanged and can be revived if the Week 0 interviews favour them.
 - **Buyer 1: SWFT third-party assessors and security assessment firms** (distribution channel and trust moat).
@@ -133,7 +133,8 @@ frameworks: [nist-ssdf, nist-800-53-cm, nist-800-53-sc, swft, cnsa2]
 # PART A — Core engine (with PQ foundations pulled forward)
 
 ## Week 0 — Validate & recruit an assessor design partner (no code)
-- [ ] **DORA first:** 12 conversations: 4 bank ICT-risk / change-management leads, 3 internal or external IT auditors, 3 core-banking engineers who maintain COBOL, 2 people who went through a DORA supervisory review. Same questions as below, with "DORA ICT change management" in place of ATO and "EU PQC roadmap" in place of CNSA 2.0.
+- [x] Desk research as a proxy for the interviews (`docs/weekly/WEEK-00.md`). The owner chose to proceed on it on 2026-09-27 while the interviews stay open.
+- [ ] **DORA:** 12 conversations: 4 bank ICT-risk / change-management leads, 3 internal or external IT auditors, 3 core-banking engineers who maintain COBOL, 2 people who went through a DORA supervisory review. Same questions as below, with "DORA ICT change management" in place of ATO and "EU PQC roadmap" in place of CNSA 2.0.
 - [ ] The US conversations below are optional and only needed to reopen `us-defense`.
 - [ ] 12 conversations: 4 SWFT/security assessors, 3 defense vendor/prime software leads, 3 program-office engineers, 2 recent ATO participants.
 - [ ] Ask about change evidence, rejected artifacts, AI-written changes, legacy languages, **and** "How is CNSA 2.0 / PQC migration hitting your programs? Who proves a crypto swap didn't break anything?"
@@ -169,7 +170,7 @@ frameworks: [nist-ssdf, nist-800-53-cm, nist-800-53-sc, swft, cnsa2]
 
 ## Week 5 — Impact engine + framework mapping
 - [ ] `changeproof impact <range>` with confidence tiers, reliant systems/partners, and a flag when a change touches crypto entities.
-- [ ] `docs/framework-mapping.md`, one section per market profile: DORA and its RTS on ICT risk management (Art. 17 change management) first; SOC 2 CC8.1 and ISO/IEC 27001 Annex A 8.25/8.28/8.29/8.32; NIST 800-53 CM-3/CM-4/SC-12/SC-13, SSDF, SWFT, CNSA 2.0. The DORA section also maps impact and equivalence evidence to the change-failure root causes the ECB IT Risk Questionnaire asks about (unexpected interdependencies, inadequate test coverage).
+- [ ] `docs/framework-mapping.md`, one section per market profile: `general` first (SOC 2 CC8.1 and ISO/IEC 27001 Annex A 8.25/8.28/8.29/8.32); then `eu-dora` (DORA and its RTS on ICT risk management, Art. 16 testing and Art. 17 change management); then `us-defense` (CM-3/CM-4/SC-12/SC-13, SSDF, SWFT, CNSA 2.0). The DORA section also maps impact and equivalence evidence to the change-failure root causes the ECB IT Risk Questionnaire asks about (unexpected interdependencies, inadequate test coverage).
 - **Exit check:** recall ≥95% on seeded changes.
 
 ## Week 6 — Crypto-agile signed attestations (PQ core, not optional)
