@@ -5,7 +5,7 @@
 - Date: 2026-09-27
 - Status: exit check met; ADRs 001 to 004 accepted by the owner on 2026-09-27
 - Alternatives: the single-market US (PR #1) and DORA (PR #2) builds were closed unmerged. Their
-  reports are kept in `week-01-alternatives/`.
+  reports stay in those PRs and in git history.
 
 ## Exit check
 
@@ -52,20 +52,10 @@ Parsing mainstream languages is the easy part; COBOL was the hard one. Adapters 
 languages (syntax tree to IR with provenance, diff, test runs) are **planned** and not on the
 roadmap yet.
 
-## Market recommendation, updated
+## Market direction
 
-The universal version turns the market question from "which one do we build" into "which one do
-we sell first", since all three run on the same code.
-
-1. **Build on this branch.** Week 2 would start from `week-01-universal`, not from PR #1 or #2.
-   Nothing is lost: both markets are profiles here, with their rules tested.
-2. **Sell DORA first.** The recommendation from the earlier comparison still holds: DORA has been
-   in force since January 2025, its buyers run COBOL, and the COBOL adapter is what Weeks 2 to 4
-   build. This is a business judgement pending the Week 0 interviews, not something a test proves.
-3. **Grow into `general` second.** It is the biggest market, but it mostly runs Java, Python,
-   JavaScript and similar. Selling there needs at least one mainstream-language adapter, which is
-   not scheduled. The parsing risk for those languages looks low (table above).
-4. **Keep `us-defense` as a profile.** Its rules stay tested, so it costs nothing to keep.
+Superseded by the owner's decisions below and by the market focus in `ROADMAP.md`: universal
+(`general`) is the main path, `eu-dora` the strong second, and `us-defense` stays a tested profile.
 
 ## Open issues
 
@@ -78,7 +68,7 @@ we sell first", since all three run on the same code.
 ## Owner decisions (2026-09-27)
 
 1. Week 2 builds on this universal branch. PRs #1 and #2 were closed without merging.
-2. DORA (`eu-dora`) is the first market to sell to. Matching ROADMAP.md and CLAUDE.md changes are
-   drafted and await owner approval.
+2. Universal (`general`) is the main path and DORA (`eu-dora`) the strong second (final call,
+   05:00, after an earlier DORA-first decision). ROADMAP.md and CLAUDE.md say so.
 3. ADRs 001 to 004 are accepted.
 4. `MyPackages.py`, left over on `main` from before this project, is removed.
