@@ -1,33 +1,36 @@
 """Default-deny egress rules (docs/adr/003-data-egress.md).
 
 Config validation calls these today. The Week 10 solver interface will call the same function
-before any backend flagged remote runs, so there is one rule set, not two.
+before any backend flagged remote runs, so there is one rule set, not two. What differs by market
+comes from the market profile (docs/adr/004-market-profiles.md).
 """
 
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from changeproof.config import Egress
+    from changeproof.markets import MarketProfile
 
-NO_EGRESS_CLASSIFICATIONS = frozenset({"restricted"})  # RENAME: SYSTEM CLASSES THAT MAY NEVER SEND DATA OUT
-ALLOWED_REGIONS = frozenset({"eea", "adequacy"})  # RENAME: VENDOR PROCESSING REGIONS OK FOR CUSTOMER DATA
 REMOTE_BACKENDS = frozenset({"qpu"})  # RENAME: SOLVER BACKENDS THAT SEND DATA OFF THE MACHINE
-PQ_TRANSPORT_PROFILES = frozenset({"hybrid", "nist-pqc"})  # RENAME: CRYPTO PROFILES THAT FORBID CLASSICAL-ONLY TLS
+PQ_TRANSPORT_PROFILES = frozenset({"cnsa2", "hybrid", "nist-pqc"})  # RENAME: CRYPTO PROFILES THAT FORBID CLASSICAL-ONLY TLS
 
 
-# PURPOSE: RETURNS EVERY EGRESS RULE THE SETTINGS BREAK; AN EMPTY LIST MEANS ALLOWED
-def check_egress(*, classification: str, backend: str, egress: "Egress", crypto_profile: str) -> list[str]:
+# PURPOSE: RETURNS EVERY EGRESS RULE THE SETTINGS BREAK UNDER A MARKET; AN EMPTY LIST MEANS ALLOWED
+def check_egress(
+    *, market: "MarketProfile", classification: str, backend: str, egress: "Egress", crypto_profile: str
+) -> list[str]:
     problems = []  # RENAME: HUMAN-READABLE RULE VIOLATIONS
-    if egress.allowed and classification in NO_EGRESS_CLASSIFICATIONS:
+    if egress.allowed and classification in market.no_egress_classifications:
         problems.append(f"egress.allowed cannot be true when system.classification is {classification}")
-    if egress.allowed and egress.data_tier == "customer-confidential":
-        if not egress.customer_approval_ref:
-            problems.append("egress.customer_approval_ref is required for customer-confidential data")
-        if not egress.ict_register_ref:
-            problems.append("egress.ict_register_ref is required for customer-confidential data "
-                            "(vendor must be in the DORA register of information)")
-        if egress.processing_region not in ALLOWED_REGIONS:
-            problems.append("egress.processing_region must be eea or adequacy for customer-confidential data")
+    if egress.allowed and egress.data_tier == "customer":
+        problems += [
+            f"egress.{field} is required for customer data under the {market.name} market"
+            for field in market.customer_egress_needs
+            if not getattr(egress, field)
+        ]
+        if market.allowed_regions is not None and egress.processing_region not in market.allowed_regions:
+            allowed = " or ".join(sorted(market.allowed_regions))
+            problems.append(f"egress.processing_region must be {allowed} for customer data under the {market.name} market")
     if crypto_profile in PQ_TRANSPORT_PROFILES and not egress.require_pq_transport:
         problems.append(f"egress.require_pq_transport must stay true under the {crypto_profile} profile")
     if backend in REMOTE_BACKENDS:

@@ -1,8 +1,9 @@
 version: 0.1
+market: {market}                          # general | us-defense | eu-dora (docs/adr/004-market-profiles.md)
 system:
   name: {name}
   owner: {owner}
-  classification: internal              # public | internal | confidential | restricted
+  classification: {classification}   # {classifications}
 
 # One entry per part of the system. `language` picks the adapter.
 components: []
@@ -29,12 +30,12 @@ optimization:
 # Nothing leaves this machine unless this section allows it. See docs/adr/003-data-egress.md.
 egress:
   allowed: false
-  data_tier: public                      # public | synthetic | customer-confidential
+  data_tier: public                      # public | synthetic | customer
   approved_vendors: []
   customer_approval_ref: null
-  ict_register_ref: null                 # DORA register of information entry
-  processing_region: null                # eea | adequacy | other
+  ict_register_ref: null                 # vendor register entry (required by eu-dora)
+  processing_region: null                # eea | adequacy | other (checked by eu-dora)
   require_pq_transport: true
 
 policy: []
-frameworks: []
+frameworks: {frameworks}

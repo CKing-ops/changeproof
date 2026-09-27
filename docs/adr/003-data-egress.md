@@ -1,8 +1,9 @@
 # ADR 003: Data egress
 
-- Status: proposed (Week 1, DORA market), awaiting owner review
+- Status: proposed (Week 1, universal version), awaiting owner review
 - Date: 2026-09-27
-- Market: DORA (EU financial sector). The US version of this ADR is on branch `week-01-foundations`.
+- Markets: all profiles in ADR 004. The rules below are the same for every market except where a
+  row names a profile. The DORA context is kept because `eu-dora` is the strictest profile.
 - Related: ROADMAP.md "Quantum data-egress guard", Week 10 (solver gate), Week 14 (bundle check),
   Week 20 (QPU package), CLAUDE.md rules 4 and 5
 
@@ -32,16 +33,22 @@ allowed.
 
 ### What may leave, and what never leaves
 
-System classification uses the four levels most EU banks already use: `public`, `internal`,
-`confidential`, `restricted`.
+The active market profile (`market:` in the config, default `general`) supplies the system
+classification levels and the extra conditions for customer data:
+
+| Profile | Classifications (default first) | Never sends anything out | Customer data also needs |
+|---|---|---|---|
+| `general` | `internal`, `public`, `confidential`, `restricted` | `restricted` | `customer_approval_ref` |
+| `us-defense` | `unclassified`, `cui` | `cui` | `customer_approval_ref` |
+| `eu-dora` | `internal`, `public`, `confidential`, `restricted` | `restricted` | `customer_approval_ref`, `ict_register_ref`, `processing_region` of `eea` or `adequacy` |
 
 | Data the problem is built from | Local classical | Local quantum simulator | Cloud QPU |
 |---|---|---|---|
 | Public / open-source / synthetic | yes | yes | yes, sanitized QUBO only, approved vendor |
-| Customer confidential (non-public bank code or data) | yes | yes | only sanitized QUBO **and** written approval **and** vendor in the DORA register of information **and** processing in the EEA or an adequacy country |
-| Any problem from a `restricted` system (e.g. personal data, payment credentials, supervisory information) | yes | yes | never |
+| Customer (`data_tier: customer`, any non-public customer code or data) | yes | yes | only sanitized QUBO **and** the profile's conditions above |
+| Any problem from a never-egress system (`restricted`, or `cui` under `us-defense`) | yes | yes | never |
 
-Bank code, IR, graphs, test data and evidence **never** leave, under any setting. The only thing
+Customer code, IR, graphs, test data and evidence **never** leave, under any setting. The only thing
 that may ever leave is an abstract numeric problem (a QUBO or Ising matrix) that has passed the
 sanitizer.
 
@@ -49,14 +56,13 @@ sanitizer.
 
 1. **Default deny in config.** `egress.allowed` defaults to `false`. A config that selects a remote
    solver backend (today: `qpu`) fails validation unless `egress.allowed: true` and at least one
-   `egress.approved_vendors` entry are set. For `data_tier: customer-confidential` it also needs
-   `customer_approval_ref`, `ict_register_ref` (the vendor's entry in the register of information)
-   and `processing_region` of `eea` or `adequacy`. A `restricted` system can never set
-   `egress.allowed: true`. Under the `hybrid` and `nist-pqc` profiles, `require_pq_transport`
-   cannot be turned off.
+   `egress.approved_vendors` entry are set. For `data_tier: customer` it also needs the fields the
+   market profile lists above. A never-egress system can never set `egress.allowed: true`. Under
+   the `cnsa2`, `hybrid` and `nist-pqc` crypto profiles, `require_pq_transport` cannot be turned off.
    Proven: `src/changeproof/egress.py::check_egress`, called from `Config` validation
-   (`tests/test_egress.py::test_qpu_egress_matrix`,
-   `tests/test_config.py::test_customer_data_egress_needs_approval_register_entry_and_eu_processing`,
+   (`tests/test_egress.py::test_qpu_egress_matrix`, 20 cases across the three markets;
+   `tests/test_config.py::test_customer_data_egress_needs_approval`,
+   `::test_dora_customer_data_egress_needs_approval_register_entry_and_eu_processing`,
    `::test_restricted_system_can_never_allow_egress`, `::test_egress_is_denied_when_section_is_missing`).
 
 2. **One rule set, two gates.** The Week 10 solver interface calls the same `check_egress` before
@@ -87,7 +93,7 @@ sanitizer.
    Art. 28. **Planned** (Week 20).
 
 8. **Post-quantum transport.** Outbound TLS must use a hybrid ML-KEM key exchange where the
-   provider supports it; under `hybrid` and `nist-pqc` the call is refused otherwise.
+   provider supports it; under `cnsa2`, `hybrid` and `nist-pqc` the call is refused otherwise.
    **Planned** (Week 20); the config rule that keeps `require_pq_transport` on is already enforced.
 
 ### Setup-time network use is separate
@@ -99,7 +105,7 @@ they do not ship in the offline bundle.
 ## Consequences
 
 - The config records references (approval, register entry) but cannot check them against the
-  bank's actual register. The Week 20 egress attestation carries them so auditors can.
+  customer's actual approvals or register. The Week 20 egress attestation carries them so auditors can.
 - `processing_region` is self-declared per vendor. Vendor review (`docs/qpu-vendors.md`, Week 20)
   must confirm it before a vendor goes on `approved_vendors`.
 - `REMOTE_BACKENDS` in `egress.py` is a fixed set until the Week 10 solver registry can tell the

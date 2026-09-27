@@ -1,15 +1,5 @@
 {
   "$defs": {
-    "Classification": {
-      "enum": [
-        "public",
-        "internal",
-        "confidential",
-        "restricted"
-      ],
-      "title": "Classification",
-      "type": "string"
-    },
     "Component": {
       "additionalProperties": false,
       "properties": {
@@ -107,7 +97,7 @@
       "enum": [
         "public",
         "synthetic",
-        "customer-confidential"
+        "customer"
       ],
       "title": "DataTier",
       "type": "string"
@@ -215,6 +205,15 @@
       "title": "EvidenceKind",
       "type": "string"
     },
+    "Market": {
+      "enum": [
+        "general",
+        "us-defense",
+        "eu-dora"
+      ],
+      "title": "Market",
+      "type": "string"
+    },
     "Optimization": {
       "additionalProperties": false,
       "properties": {
@@ -276,8 +275,17 @@
           "type": "string"
         },
         "classification": {
-          "$ref": "#/$defs/Classification",
-          "default": "internal"
+          "anyOf": [
+            {
+              "pattern": "^[a-z0-9][a-z0-9._-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Classification"
         }
       },
       "required": [
@@ -296,6 +304,10 @@
         0.1
       ],
       "title": "Version"
+    },
+    "market": {
+      "$ref": "#/$defs/Market",
+      "default": "general"
     },
     "system": {
       "$ref": "#/$defs/System"

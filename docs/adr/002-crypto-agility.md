@@ -2,7 +2,9 @@
 
 - Status: proposed (Week 1), awaiting owner review
 - Date: 2026-09-26
-- Market: DORA (EU financial sector). The US version of this ADR is on branch `week-01-foundations`.
+- Markets: the decision applies to every market profile (ADR 004). The context below is written for
+  `eu-dora`; the `us-defense` context (CNSA 2.0) is on branch `week-01-foundations`, and ADR 004
+  lists the drivers for the `general` profile.
 - Related: ROADMAP.md Week 6 (signer), Week 17 (production profile), CLAUDE.md rule 6
 
 ## Context

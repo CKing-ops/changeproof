@@ -6,6 +6,7 @@ import yaml
 from pydantic import BaseModel, BeforeValidator, ConfigDict, Field, WithJsonSchema, model_validator
 
 from changeproof.egress import check_egress
+from changeproof.markets import DEFAULT_MARKET, MARKETS
 
 Identifier = Annotated[str, Field(pattern=r"^[a-z0-9][a-z0-9._-]*$")]
 AlgorithmId = Annotated[str, Field(pattern=r"^[a-z0-9][a-z0-9-]*$")]
@@ -22,12 +23,7 @@ class Strict(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
 
-# Bank-style information classification, as most EU financial entities label their data.
-class Classification(StrEnum):
-    PUBLIC = "public"
-    INTERNAL = "internal"
-    CONFIDENTIAL = "confidential"
-    RESTRICTED = "restricted"
+Market = StrEnum("Market", {name.upper().replace("-", "_"): name for name in MARKETS})
 
 
 class Criticality(StrEnum):
@@ -39,7 +35,7 @@ class Criticality(StrEnum):
 class DataTier(StrEnum):
     PUBLIC = "public"
     SYNTHETIC = "synthetic"
-    CUSTOMER_CONFIDENTIAL = "customer-confidential"
+    CUSTOMER = "customer"
 
 
 # Where a vendor processes data: inside the EEA, in a country with a GDPR adequacy decision, or elsewhere.
@@ -65,7 +61,7 @@ class OutputFormat(StrEnum):
 class System(Strict):
     name: str = Field(min_length=1)
     owner: str = Field(min_length=1)
-    classification: Classification = Classification.INTERNAL
+    classification: Identifier | None = None  # checked against the market profile; None takes its default
 
 
 class Component(Strict):
@@ -99,7 +95,7 @@ class Egress(Strict):
     data_tier: DataTier = DataTier.PUBLIC
     approved_vendors: list[Identifier] = []
     customer_approval_ref: str | None = None
-    ict_register_ref: str | None = None  # entry in the DORA register of information (Art. 28(3))
+    ict_register_ref: str | None = None  # entry in a regulatory vendor register, e.g. DORA Art. 28(3)
     processing_region: ProcessingRegion | None = None
     require_pq_transport: bool = True
 
@@ -110,6 +106,7 @@ class PolicyRule(Strict):
 
 class Config(Strict):
     version: SchemaVersion
+    market: Market = Market(DEFAULT_MARKET)
     system: System
     components: list[Component] = []
     evidence: Evidence = Evidence()
@@ -119,10 +116,19 @@ class Config(Strict):
     policy: list[PolicyRule] = []
     frameworks: list[Identifier] = []
 
-    # PURPOSE: APPLIES THE DEFAULT-DENY EGRESS RULES FROM ADR 003 TO THE WHOLE CONFIG
+    # PURPOSE: APPLIES THE MARKET PROFILE, THEN THE DEFAULT-DENY EGRESS RULES FROM ADR 003
     @model_validator(mode="after")
-    def enforce_egress(self) -> "Config":
+    def enforce_market_and_egress(self) -> "Config":
+        profile = MARKETS[self.market]  # RENAME: ACTIVE MARKET PROFILE
+        if self.system.classification is None:
+            self.system.classification = profile.default_classification
+        elif self.system.classification not in profile.classifications:
+            raise ValueError(
+                f"system.classification '{self.system.classification}' is not a {profile.name} classification "
+                f"({' | '.join(profile.classifications)})"
+            )
         problems = check_egress(  # RENAME: EGRESS RULE VIOLATIONS
+            market=profile,
             classification=self.system.classification,
             backend=self.optimization.backend,
             egress=self.egress,

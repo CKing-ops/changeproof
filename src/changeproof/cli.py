@@ -8,6 +8,7 @@ import yaml
 from pydantic import ValidationError
 
 from changeproof.config import Config, load_config
+from changeproof.markets import DEFAULT_MARKET, MARKETS
 
 CONFIG_NAME = "changeproof.yaml"
 
@@ -20,8 +21,17 @@ def cmd_init(args: argparse.Namespace) -> int:
         return 1
     name = args.name or Path(args.dir).resolve().name  # RENAME: SYSTEM NAME WRITTEN INTO THE FILE
     template = files("changeproof").joinpath("templates", CONFIG_NAME).read_text(encoding="utf-8")
+    profile = MARKETS[args.market]  # RENAME: MARKET PROFILE THE STARTER FILE IS WRITTEN FOR
     # json.dumps gives a quoted scalar that YAML reads back unchanged
-    target.write_text(template.format(name=json.dumps(name), owner=json.dumps(args.owner)), encoding="utf-8")
+    text = template.format(  # RENAME: FILLED-IN STARTER CONFIG
+        name=json.dumps(name),
+        owner=json.dumps(args.owner),
+        market=profile.name,
+        classification=profile.default_classification,
+        classifications=" | ".join(profile.classifications),
+        frameworks=json.dumps(list(profile.frameworks)),
+    )
+    target.write_text(text, encoding="utf-8")
     load_config(target)
     print(f"wrote {target}")
     return 0
@@ -59,6 +69,7 @@ def build_parser() -> argparse.ArgumentParser:
     init.add_argument("--dir", default=".")
     init.add_argument("--name")
     init.add_argument("--owner", default="unassigned")
+    init.add_argument("--market", choices=sorted(MARKETS), default=DEFAULT_MARKET)
     init.add_argument("--force", action="store_true")
     init.set_defaults(func=cmd_init)
 

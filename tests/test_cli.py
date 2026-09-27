@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import pytest
 import yaml
 
 from changeproof.cli import main
@@ -64,3 +65,15 @@ def test_init_quotes_names_that_look_like_yaml(tmp_path):
     main(["init", "--dir", str(tmp_path), "--name", "pay: {batch}", "--owner", "#office"])
     config = load_config(tmp_path / "changeproof.yaml")
     assert (config.system.name, config.system.owner) == ("pay: {batch}", "#office")
+
+
+@pytest.mark.parametrize(("market", "classification"), [("general", "internal"), ("us-defense", "unclassified"), ("eu-dora", "internal")])
+def test_init_writes_the_chosen_market(tmp_path, market, classification):
+    assert main(["init", "--dir", str(tmp_path), "--market", market]) == 0
+    config = load_config(tmp_path / "changeproof.yaml")
+    assert (config.market, config.system.classification) == (market, classification)
+
+
+def test_init_rejects_an_unknown_market(tmp_path, capsys):
+    with pytest.raises(SystemExit):
+        main(["init", "--dir", str(tmp_path), "--market", "mars"])

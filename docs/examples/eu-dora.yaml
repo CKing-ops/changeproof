@@ -1,25 +1,22 @@
 version: 0.1
-market: general                          # general | us-defense | eu-dora
+market: eu-dora
 system:
-  name: billing-platform
-  owner: platform-engineering
+  name: eu-payments-core
+  owner: ict-risk-office
   classification: confidential          # public | internal | confidential | restricted
 components:
-  - id: invoice-batch
-    path: src/cobol/invoice
+  - id: pay-batch
+    path: src/cobol/pay
     language: cobol                      # selects the adapter
     criticality: high
-    data_stores: [BILLDB]
-    relied_on_by: [customer-portal, finance-reporting]
-#  - id: orders-api                      # other languages need their adapter first (planned)
-#    path: services/orders
-#    language: java
+    data_stores: [PAYDB, VSAM.PAYMAST]
+    relied_on_by: [sepa-gateway, regulatory-reporting]
 evidence:
   produce: [impact, behavioral-equivalence, crypto-inventory]
   outputs: [in-toto, oscal, cyclonedx-cbom, pdf]
 crypto:
-  profile: hybrid                        # hybrid | nist-pqc | cnsa2 | classical-legacy
-  signing: [ml-dsa-87, ecdsa-p384]
+  profile: hybrid                        # hybrid | nist-pqc | classical-legacy
+  signing: [ml-dsa-87, ecdsa-p384]       # hybrid until the EU PQC roadmap's 2030 high-risk deadline
   release_signing: lms-sha256-192
   hash: sha-384
 optimization:
@@ -29,9 +26,11 @@ egress:
   data_tier: public                      # public | synthetic | customer
   approved_vendors: []
   customer_approval_ref: null            # written approval, required for customer data
+  ict_register_ref: null                 # DORA register of information entry, required for customer data
+  processing_region: null                # eea | adequacy | other
   require_pq_transport: true
 policy:
   - rule: high-criticality-needs-two-approvers
   - rule: equivalence-required-outside-impact-set
   - rule: no-new-quantum-vulnerable-crypto
-frameworks: [soc2, iso-27001]
+frameworks: [dora, dora-rts-ict-risk, eu-pqc-roadmap, gdpr]

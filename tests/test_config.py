@@ -10,7 +10,9 @@ from pydantic import ValidationError
 from changeproof.config import Config, load_config
 
 ROOT = Path(__file__).resolve().parent.parent
-EXAMPLE = ROOT / "docs" / "examples" / "changeproof.yaml"
+EXAMPLES = ROOT / "docs" / "examples"
+EXAMPLE = EXAMPLES / "changeproof.yaml"
+MARKET_EXAMPLES = {"general": EXAMPLE, "us-defense": EXAMPLES / "us-defense.yaml", "eu-dora": EXAMPLES / "eu-dora.yaml"}
 SCHEMA = ROOT / "src" / "changeproof" / "schema" / "changeproof.schema.json"
 
 
@@ -28,9 +30,42 @@ def with_changes(raw: dict, **sections) -> dict:
 
 def test_roadmap_sample_config_validates():
     config = load_config(EXAMPLE)
-    assert config.system.name == "eu-payments-core"
+    assert config.market == "general"
     assert config.components[0].language == "cobol"
     assert config.version == "0.1"
+
+
+@pytest.mark.parametrize("market", sorted(MARKET_EXAMPLES))
+def test_each_market_sample_validates(market):
+    path = MARKET_EXAMPLES[market]
+    assert load_config(path).market == market
+    jsonschema.validate(yaml.safe_load(path.read_text()), json.loads(SCHEMA.read_text()))
+
+
+def test_market_defaults_to_general(raw):
+    del raw["market"]
+    assert Config.model_validate(raw).market == "general"
+
+
+def test_unknown_market_is_rejected(raw):
+    raw["market"] = "mars"
+    with pytest.raises(ValidationError, match="market"):
+        Config.model_validate(raw)
+
+
+@pytest.mark.parametrize(("market", "default"), [("general", "internal"), ("us-defense", "unclassified"), ("eu-dora", "internal")])
+def test_default_classification_follows_the_market(raw, market, default):
+    del raw["system"]["classification"]
+    raw["market"] = market
+    assert Config.model_validate(raw).system.classification == default
+
+
+@pytest.mark.parametrize(("market", "classification"), [("general", "cui"), ("eu-dora", "cui"), ("us-defense", "confidential")])
+def test_classification_must_belong_to_the_market(raw, market, classification):
+    raw["market"] = market
+    raw["system"]["classification"] = classification
+    with pytest.raises(ValidationError, match=f"not a {market} classification"):
+        Config.model_validate(raw)
 
 
 def test_committed_json_schema_matches_models():
@@ -75,12 +110,25 @@ def test_qpu_backend_allowed_for_public_data_with_vendor(raw):
     assert Config.model_validate(data).optimization.backend == "qpu"
 
 
-def test_customer_data_egress_needs_approval_register_entry_and_eu_processing(raw):
+def test_customer_data_egress_needs_approval(raw):
     data = with_changes(
         raw,
         optimization={"backend": "qpu"},
-        egress={"allowed": True, "data_tier": "customer-confidential", "approved_vendors": ["ibm-quantum"]},
+        egress={"allowed": True, "data_tier": "customer", "approved_vendors": ["ibm-quantum"]},
     )
+    with pytest.raises(ValidationError, match="customer_approval_ref"):
+        Config.model_validate(data)
+    data["egress"]["customer_approval_ref"] = "DPA-12"
+    assert Config.model_validate(data).egress.customer_approval_ref == "DPA-12"
+
+
+def test_dora_customer_data_egress_needs_approval_register_entry_and_eu_processing(raw):
+    data = with_changes(
+        raw,
+        optimization={"backend": "qpu"},
+        egress={"allowed": True, "data_tier": "customer", "approved_vendors": ["ibm-quantum"]},
+    )
+    data["market"] = "eu-dora"
     with pytest.raises(ValidationError) as err:
         Config.model_validate(data)
     for field in ("customer_approval_ref", "ict_register_ref", "processing_region"):
@@ -111,15 +159,10 @@ def test_hybrid_profile_requires_pq_transport(raw):
         Config.model_validate(data)
 
 
-def test_us_only_values_are_rejected(raw):
-    for section, values in [("system", {"classification": "cui"}), ("egress", {"data_tier": "customer-unclassified"})]:
+def test_old_market_specific_data_tiers_are_rejected(raw):
+    for tier in ("customer-unclassified", "customer-confidential"):
         with pytest.raises(ValidationError):
-            Config.model_validate(with_changes(raw, **{section: values}))
-
-
-def test_default_classification_is_internal(raw):
-    del raw["system"]["classification"]
-    assert Config.model_validate(raw).system.classification == "internal"
+            Config.model_validate(with_changes(raw, egress={"data_tier": tier}))
 
 
 def test_crypto_algorithms_are_identifiers_not_a_closed_list(raw):
