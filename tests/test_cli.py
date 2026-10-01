@@ -171,3 +171,27 @@ def test_impact_signs_its_statement_with_the_given_keys(tmp_path, capsys):
     path.write_text(json.dumps(envelope))
     assert main(["verify", str(path), "--trust", str(tmp_path / "ml-dsa-87.pub.json"),
                  "--trust", str(tmp_path / "ecdsa-p384.pub.json")]) == 0
+
+
+def test_gate_blocks_the_rsa_pr_and_writes_valid_oscal(tmp_path, capsys):
+    from changeproof.oscal import validate_oscal
+
+    spec = importlib.util.spec_from_file_location("gate_seed", Path(__file__).parent / "fixtures" / "gate" / "seed.py")
+    seed = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(seed)
+    shas = dict(seed.seed(tmp_path / "repo"))
+    out = tmp_path / "oscal-ar.json"
+    assert main(["gate", shas["add-rsa-2048-key"], "--repo", str(tmp_path / "repo"), "--oscal", str(out)]) == 1
+    decision = json.loads(capsys.readouterr().out)
+    assert decision["ok"] is False
+    validate_oscal(json.loads(out.read_text()))
+    assert main(["gate", shas["add-sha-384-digest"], "--repo", str(tmp_path / "repo")]) == 0
+
+
+def test_validate_rejects_an_unknown_policy_rule(tmp_path, capsys):
+    data = yaml.safe_load(EXAMPLE.read_text())
+    data["policy"].append({"rule": "no-friday-deploys"})
+    bad = tmp_path / "changeproof.yaml"
+    bad.write_text(yaml.safe_dump(data))
+    assert main(["validate", str(bad)]) == 1
+    assert "policy: unknown rule 'no-friday-deploys'" in capsys.readouterr().err

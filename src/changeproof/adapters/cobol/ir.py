@@ -11,7 +11,7 @@ from antlr4 import ParserRuleContext
 
 from changeproof.adapters.base import Entity
 from changeproof.adapters.cobol._generated.Cobol85Parser import Cobol85Parser as P
-from changeproof.adapters.cobol.crypto import classify_call, classify_sql
+from changeproof.adapters.cobol.crypto import SQL_ALGORITHMS, classify_call, classify_sql, read_algorithm
 from changeproof.adapters.cobol.preprocess import Source
 from changeproof.provenance import Provenance
 
@@ -119,6 +119,8 @@ def qualified_name(node: P.QualifiedDataNameContext) -> str:
         parts.append(in_file.fileName().getText().upper())
     return " OF ".join(parts)
 
+
+NUMBER_VALUE_RE = re.compile(r"\bVALUE\s+(?:IS\s+)?\+?(\d+)\b", re.IGNORECASE)
 
 class Builder:
     # PURPOSE: HOLDS THE SOURCE, TOKENS AND RUNNING STATE WHILE ONE MODULE IS WALKED
@@ -249,6 +251,8 @@ class Builder:
                 attributes["picture"] = pic[0].pictureString().getText().upper()
             if value := node.dataValueClause():
                 literal = re.search(r"'([^']*)'|\"([^\"]*)\"", self.text(value[0]))
+                if number := NUMBER_VALUE_RE.search(self.text(value[0])):
+                    attributes["number"] = int(number.group(1))
         if literal:
             attributes["value"] = next(g for g in literal.groups() if g is not None)
         entity_id = self.add("data", f"{parent_path}.{name}", name, self.span(node), attributes)
@@ -285,7 +289,9 @@ class Builder:
         paragraph = {"paragraph": self.paragraph_id} if self.paragraph_id else {}
         if crypto := classify_call(target):
             service, category = crypto
-            attributes = {"service": service, "category": category, "via": "call", "dynamic": dynamic}
+            using = node.callUsingPhrase()
+            attributes = {"service": service, "category": category, "via": "call", "dynamic": dynamic,
+                          "using": data_refs(using) if using else []}
             if target_from:
                 attributes["target_from"] = target_from
             self.add("crypto-call", f"{self.owner()}.{service}", written.upper().strip("'\""),
@@ -331,6 +337,34 @@ class Builder:
             attributes["paragraph"] = self.paragraph_id
         self.add("flow", f"{self.owner()}.{targets[0].split()[0]}", verb, self.span(node), attributes, numbered=True)
 
+    # PURPOSE: READS EACH ICSF CALL'S ALGORITHM FROM THE VALUES AND MOVED LITERALS OF THE DATA IT IS GIVEN
+    def read_crypto(self) -> None:
+        by_name = {}
+        children: dict[str, list[str]] = {}
+        for e in self.entities:
+            if e.kind == "data":
+                by_name.setdefault(e.name, e.id)
+                children.setdefault(e.attributes.get("parent"), []).append(e.id)
+        data = {e.id: e for e in self.entities if e.kind == "data"}
+        moved = [e for e in self.entities if e.kind == "flow" and "literal" in e.attributes]
+        for call in self.entities:
+            if call.kind != "crypto-call" or call.attributes["via"] != "call":
+                continue
+            given = []
+            for ref in call.attributes["using"]:
+                todo, items = [by_name.get(ref.split()[0])], []
+                while todo:
+                    if item := todo.pop():
+                        items.append(item)
+                        todo.extend(children.get(item, []))
+                names = {data[i].name for i in items}
+                given += [(data[i].attributes[k], i) for i in sorted(items, key=lambda i: data[i].provenance.line)
+                          for k in ("value", "number") if k in data[i].attributes]
+                given += [(f.attributes["literal"], f.id) for f in moved
+                          if f.attributes["targets"][0].split()[0] in names
+                          and f.provenance.line < call.provenance.line]
+            call.attributes.update(read_algorithm(call.attributes["service"], given))
+
     # PURPOSE: ADDS ENTITIES FOR COPY STATEMENTS AND EXEC BLOCKS, WHICH THE PREPROCESSOR HELD
     def add_preprocessed(self) -> None:
         for copy in self.source.copies:
@@ -359,7 +393,9 @@ class Builder:
                 for function, category in classify_sql(block.text):
                     extra = {"paragraph": paragraph} if paragraph else {}
                     self.add("crypto-call", f"{owner}.{function}", function, where,
-                             {"service": function, "category": category, "via": "sql", "dynamic": False} | extra,
+                             {"service": function, "category": category, "via": "sql", "dynamic": False,
+                              "algorithm": SQL_ALGORITHMS.get(function), "key_bits": None,
+                              "quantum_vulnerable": False, "algorithm_from": []} | extra,
                              numbered=True)
 
 
@@ -368,4 +404,5 @@ def build_entities(source: Source, tree, tokens) -> list[Entity]:
     builder = Builder(source, tokens)
     builder.walk(tree)
     builder.add_preprocessed()
+    builder.read_crypto()
     return builder.entities

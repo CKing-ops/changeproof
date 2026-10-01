@@ -97,6 +97,8 @@ def test_crypto_calls_are_tagged(by_id):
     assert dynamic.attributes == {
         "service": "CSNBOWH", "category": "hash", "via": "call", "dynamic": True,
         "target_from": "data:PAYCALC.WS-HASH-SVC", "paragraph": "paragraph:PAYCALC.MAIN-PARA",
+        "using": ["WS-TOTAL", "WS-DIGEST"], "algorithm": None, "key_bits": None, "quantum_vulnerable": False,
+        "algorithm_from": [],
     }
     sign = by_id["crypto-call:PAYCALC.CALC-SECTION.CALC-PARA.CSNDDSG#1"]
     assert (at(sign), sign.attributes["category"]) == ("src/PAYCALC.cbl:39", "signature-generate")

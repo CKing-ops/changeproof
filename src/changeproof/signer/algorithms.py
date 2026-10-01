@@ -5,6 +5,7 @@ Adding an algorithm means adding a class here and registering it; no schema chan
 """
 
 import hashlib
+import uuid
 from abc import ABC, abstractmethod
 from importlib.metadata import version
 
@@ -147,3 +148,8 @@ ALGORITHMS = {a.id: a for a in (EcdsaP384(), MlDsa87(), LmsSha256M24())}  # RENA
 # PURPOSE: IN-TOTO DIGESTSET OF THE BYTES UNDER A REGISTERED HASH
 def digest(data: bytes, alg: str = "sha-384") -> dict[str, str]:
     return {alg: HASHES[alg](data).hexdigest()}
+
+
+# PURPOSE: NAME-BASED UUID (RFC 4122 VERSION 5), SO IDENTIFIERS DERIVED FROM THE SAME INPUTS REPEAT
+def name_uuid(name: str) -> str:
+    return str(uuid.uuid5(uuid.NAMESPACE_URL, f"urn:changeproof:{name}"))

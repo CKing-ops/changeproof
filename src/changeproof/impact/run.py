@@ -6,6 +6,7 @@ the head, using the changeproof.yaml committed there.
 """
 
 import tempfile
+from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 
 import yaml
@@ -49,17 +50,18 @@ def system_graph(tree: Path, copybook_dirs: list[str], config: Config | None) ->
     return graph_from(modules, jobs, config, csd), failed
 
 
-# PURPOSE: LINE OF EACH COMPONENT'S RELIED_ON_BY LIST IN THE CONFIG TEXT, KEYED BY COMPONENT ID
-def reliant_lines(text: str) -> dict[str, int]:
+# PURPOSE: LINES OF EACH COMPONENT ENTRY AND OF ITS RELIED_ON_BY LIST IN THE CONFIG TEXT, KEYED BY COMPONENT ID
+def component_lines(text: str) -> tuple[dict[str, int], dict[str, int]]:
     root = yaml.compose(text)
-    found = {}
+    entries, reliant = {}, {}
     for key, value in root.value:
         if key.value == "components":
             for item in value.value:
                 fields = {k.value: v for k, v in item.value}
+                entries[fields["id"].value] = item.start_mark.line + 1
                 if "relied_on_by" in fields:
-                    found[fields["id"].value] = fields["relied_on_by"].start_mark.line + 1
-    return found
+                    reliant[fields["id"].value] = fields["relied_on_by"].start_mark.line + 1
+    return entries, reliant
 
 
 # PURPOSE: KEEPS THE FIRST DICT FOR EACH VALUE OF THE KEY FIELDS, IN ORDER
@@ -107,8 +109,22 @@ def people_and_reasons(root: Path, shas: list[str]) -> tuple[list[dict], dict, l
     return unique(who, "role", "id"), when, unique(why, "ref")
 
 
+@dataclass(frozen=True)
+class ImpactRun:
+    predicate: dict
+    what: What
+    config: Config | None
+    config_path: str
+    component_at: dict[str, int]  # component ID to its line in the config
+
+
 # PURPOSE: THE IMPACT PREDICATE FOR A COMMIT OR RANGE, VALIDATED AGAINST ITS SCHEMA
 def impact(root: Path, revisions: str, copybook_dirs: list[str] = (), config_path: str = CONFIG_NAME) -> dict:
+    return run_impact(root, revisions, copybook_dirs, config_path).predicate
+
+
+# PURPOSE: RUNS THE IMPACT ANALYSIS AND KEEPS WHAT LATER STEPS (POLICY, OSCAL) READ BESIDE THE PREDICATE
+def run_impact(root: Path, revisions: str, copybook_dirs: list[str] = (), config_path: str = CONFIG_NAME) -> ImpactRun:
     root = Path(root)
     copybook_dirs = list(copybook_dirs)
     shas = commits_in(root, revisions)
@@ -120,7 +136,7 @@ def impact(root: Path, revisions: str, copybook_dirs: list[str] = (), config_pat
         what = what_in(before, after, tree_diffs(root, base, head), copybook_dirs)
         config_file = after / config_path
         config = load_config(config_file) if config_file.is_file() else None
-        reliant_at = reliant_lines(config_file.read_text(encoding="utf-8")) if config else {}
+        component_at, reliant_at = component_lines(config_file.read_text(encoding="utf-8")) if config else ({}, {})
         graph, failed = system_graph(after, copybook_dirs, config)
     walk = ImpactWalk(graph)
     best, changed = walk.walk(what.entities)
@@ -157,4 +173,4 @@ def impact(root: Path, revisions: str, copybook_dirs: list[str] = (), config_pat
                                 {"language": "jcl", "version": __version__}]},
     }
     validate_predicate(PREDICATE_TYPES["impact"], predicate)
-    return predicate
+    return ImpactRun(predicate, what, config, PurePosixPath(config_path).as_posix(), component_at)
