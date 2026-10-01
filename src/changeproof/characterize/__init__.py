@@ -42,10 +42,16 @@ def variants(seed: dict[str, str], pools: dict[str, list[str]]) -> list[dict[str
     return [seed | {name: value} for name, pool in pools.items() if len(pool) > 1 for value in pool]
 
 
+# PURPOSE: (FIELD, VALUE, CONDITION) FOR EACH INPUT SITTING EXACTLY ON A LITERAL A CONDITION THAT RAN COMPARED IT WITH
+def boundary_hits(inputs: dict[str, str], bounds: dict[str, dict[str, set[str]]], got: set) -> set[tuple[str, str, str]]:
+    ran = {branch for branch, _ in got}
+    return {(name, value, branch) for name, value in inputs.items()
+            for branch in bounds.get(name, {}).get(value, set()) & ran}
+
+
 # PURPOSE: (FIELD, VALUE) PAIRS OF A RUN THAT SAT EXACTLY ON A LITERAL A CONDITION THAT RAN COMPARED THE FIELD WITH
 def on_point(inputs: dict[str, str], bounds: dict[str, dict[str, set[str]]], got: set) -> set[tuple[str, str]]:
-    ran = {branch for branch, _ in got}
-    return {(name, value) for name, value in inputs.items() if bounds.get(name, {}).get(value, set()) & ran}
+    return {(name, value) for name, value, _ in boundary_hits(inputs, bounds, got)}
 
 
 # PURPOSE: BOUNDARY SEARCH, KEEPING THE FIRST RUN DOWN EACH PATH AND THE FIRST RUN ON EACH BOUNDARY POINT
@@ -99,18 +105,23 @@ def characterize(path: Path, root: Path, runner: Runner, copybook_dirs: list[str
     branches = [e for e in module.entities if e.kind == "branch"]
     fields = [f for f in linkage_fields(module) if f.picture]
     pools = {f.name: candidates(f, module) for f in fields}
-    chosen, count = search(adapter, module, branches, pools, {f.name: boundary_values(f, module) for f in fields})
+    bounds = {f.name: boundary_values(f, module) for f in fields}  # RENAME: FIELD TO LITERAL TO CONDITIONS COMPARING THEM
+    chosen, count = search(adapter, module, branches, pools, bounds)
     tests = []
     for n, (inputs, run, got) in enumerate(chosen, 1):
         tests.append({"id": f"{program.name}-{n:02d}", "input": inputs, "output": run.output,
                       "output_digest": output_digest(run.output), "rc": run.rc,
                       "covers": [{"condition": b.id, "outcome": o} for b in branches for o in (True, False)
-                                 if (b.id, o) in got]})
+                                 if (b.id, o) in got],
+                      "lines": sorted(line for line, times in run.lines.items() if times),
+                      "boundaries": [{"field": f, "value": v, "condition": b}
+                                     for f, v, b in sorted(boundary_hits(inputs, bounds, got))]})
     conditions = []
     for b in branches:
         seen = [o for o in (True, False) if any((b.id, o) in got for _, _, got in chosen)]
         conditions.append({"id": b.id, "kind": b.attributes["kind"], "condition": b.attributes["condition"],
                            "provenance": b.provenance.model_dump(exclude_none=True),
+                           "decision_line": b.attributes.get("decision_line", b.provenance.line),
                            "true_line": b.attributes["true_line"], "false_line": b.attributes["false_line"],
                            "covered": seen,
                            "tests": [t["id"] for t in tests if any(c["condition"] == b.id for c in t["covers"])]})

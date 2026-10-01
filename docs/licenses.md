@@ -26,6 +26,20 @@ installed metadata.
 | cffi (Week 6, needed by cryptography) | 2.1.1 | MIT-0 (MIT No Attribution, read from its LICENSE file) |
 | pycparser (Week 6, needed by cffi) | 3.0 | BSD-3-Clause |
 | pyhsslms (Week 6: LMS, pure Python) | 2.0.0 | Package metadata says MIT; the source file headers carry a BSD-3-Clause-style notice (Vigil Security). Both permissive; the notice is kept in the installed files |
+| ortools (Week 10: CP-SAT for test selection) | 9.15.6755 | Apache-2.0 |
+| absl-py (Week 10, needed by ortools) | 2.5.0 | Apache-2.0 |
+| immutabledict (Week 10, needed by ortools) | 4.3.1 | MIT |
+| protobuf (Week 10, needed by ortools) | 6.33.6 | BSD-3-Clause |
+| pandas (Week 10, needed by ortools) | 3.0.6 | BSD-3-Clause |
+| python-dateutil (Week 10, needed by pandas) | 2.9.0.post0 | Apache-2.0 OR BSD-3-Clause |
+| six (Week 10, needed by python-dateutil) | 1.17.0 | MIT |
+| scikit-learn (Week 10: gradient-boosted risk baseline) | 1.9.1 | BSD-3-Clause |
+| scipy (Week 10, needed by scikit-learn) | 1.18.1 | BSD-3-Clause; its Linux wheel bundles OpenBLAS (BSD-3-Clause), the gfortran runtime (GPL-3.0 with the GCC Runtime Library Exception, which allows this use) and libquadmath (LGPL-2.1-or-later, loaded as a shared library). None of these is copied into this repo |
+| numpy (Week 10: brute-force QUBO checks and risk features; also needed by ortools and scikit-learn) | 2.5.3 | BSD-3-Clause AND 0BSD AND MIT AND Zlib AND CC0-1.0; its Linux wheel bundles the same OpenBLAS, gfortran runtime and libquadmath libraries as scipy's |
+| joblib (Week 10, needed by scikit-learn) | 1.6.0 | BSD-3-Clause |
+| threadpoolctl (Week 10, needed by scikit-learn) | 3.7.0 | BSD-3-Clause |
+| cloudpickle (Week 10, needed by joblib) | 3.1.2 | BSD-3-Clause |
+| narwhals (Week 10, needed by scikit-learn) | 2.26.0 | MIT |
 
 ## Vendored generated code and data (shipped)
 

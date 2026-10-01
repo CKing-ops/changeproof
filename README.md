@@ -14,7 +14,7 @@ tamper-evident change records. Sources and the full comparison are in `ROADMAP.m
 
 ## Status
 
-Weeks 1-9 (planned capabilities are labeled; proven ones cite their test):
+Weeks 1-10 (planned capabilities are labeled; proven ones cite their test):
 
 - `changeproof init` writes a starter `changeproof.yaml` (`tests/test_cli.py`).
 - `changeproof validate` checks a config against the schema (`tests/test_cli.py`).
@@ -71,6 +71,20 @@ Weeks 1-9 (planned capabilities are labeled; proven ones cite their test):
   and the verdict is then inconclusive. Mutation check: the tests catch 19 of 20 seeded bugs (95%)
   and 8 of 10 held-out bugs (`tests/test_equivalence.py`, `scripts/mutation_check.py`,
   `docs/adr/007-equivalence.md`).
+- Solver interface: `solve(problem, backend)` with the `classical` backend (OR-Tools CP-SAT and a
+  greedy baseline). `quantum-sim` and `qpu` are reserved (**planned**), and a remote backend must pass
+  the same egress rules as config validation or raise (`tests/test_solver.py`,
+  `docs/adr/008-solver-interface.md`).
+- Test selection: `changeproof select` picks the fewest characterization tests that cover an edit.
+  On 30 seeded bugs the subsets catch exactly what the full suites catch (27), with 281 test runs
+  instead of 517 (`tests/test_selection.py`, `scripts/selection_check.py`).
+- Change-risk ranking: fan-in, criticality, churn and crypto-touch per program, each value citing
+  the lines or commits it was counted from, ranked by a gradient-boosted baseline. It is trained on
+  a seeded synthetic history, so it proves the pipeline, not accuracy on real incidents
+  (`tests/test_risk.py`). Real defect history: **planned**.
+- QUBO and Ising export of both problems, with names stripped; on small instances the QUBO minimum
+  equals the classical optimum (`tests/test_solver.py`). `changeproof benchmark` stores quality,
+  runtime, cost and a reproducibility digest per run in `benchmarks/runs/` (`tests/test_benchmark.py`).
 - Adapters for languages other than COBOL: **planned** (Java in Week 11; see `ROADMAP.md`).
 - Crypto-inventory evidence: **planned** (Week 16).
 

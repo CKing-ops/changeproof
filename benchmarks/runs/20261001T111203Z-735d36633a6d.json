@@ -1,0 +1,117 @@
+{
+  "seed": 0,
+  "selection": [
+    {
+      "elements": 6,
+      "candidates": 5,
+      "greedy": {
+        "objective": 9,
+        "optimal": false,
+        "selected": 4,
+        "seconds": 0.0001
+      },
+      "cp-sat": {
+        "objective": 9,
+        "optimal": true,
+        "selected": 4,
+        "seconds": 0.0091
+      },
+      "qubo": {
+        "variables": 5,
+        "brute_force": 9.0
+      }
+    },
+    {
+      "elements": 20,
+      "candidates": 15,
+      "greedy": {
+        "objective": 16,
+        "optimal": false,
+        "selected": 9,
+        "seconds": 0.0002
+      },
+      "cp-sat": {
+        "objective": 16,
+        "optimal": true,
+        "selected": 9,
+        "seconds": 0.0036
+      },
+      "qubo": {
+        "variables": 35
+      }
+    },
+    {
+      "elements": 40,
+      "candidates": 30,
+      "greedy": {
+        "objective": 20,
+        "optimal": false,
+        "selected": 11,
+        "seconds": 0.0003
+      },
+      "cp-sat": {
+        "objective": 20,
+        "optimal": true,
+        "selected": 11,
+        "seconds": 0.0095
+      },
+      "qubo": {
+        "variables": 113
+      }
+    },
+    {
+      "elements": 80,
+      "candidates": 60,
+      "greedy": {
+        "objective": 24,
+        "optimal": false,
+        "selected": 18,
+        "seconds": 0.0014
+      },
+      "cp-sat": {
+        "objective": 22,
+        "optimal": true,
+        "selected": 16,
+        "seconds": 0.8986
+      },
+      "qubo": {
+        "variables": 271
+      }
+    }
+  ],
+  "risk": {
+    "labels": "synthetic: seed 0, logit -4 + 0.35 fan_in + 0.5 criticality + 0.3 churn + 1.2 crypto_touch + 0.3 churn*crypto_touch",
+    "seed": 0,
+    "rows": {
+      "train": 1400,
+      "held_out": 600
+    },
+    "features": [
+      "fan_in",
+      "criticality",
+      "churn",
+      "crypto_touch"
+    ],
+    "auc": {
+      "gradient-boosted": 0.7242,
+      "fan-in": 0.5957
+    }
+  },
+  "backends": {
+    "classical": "ran",
+    "quantum-sim": "planned",
+    "qpu": "planned"
+  },
+  "cost": {
+    "usd": 0,
+    "note": "classical solvers on this machine; nothing was sent anywhere"
+  },
+  "environment": {
+    "python": "3.12.3",
+    "machine": "x86_64",
+    "ortools": "9.15.6755",
+    "scikit-learn": "1.9.1",
+    "numpy": "2.5.3"
+  },
+  "digest": "735d36633a6d85cfc1959383316e8dc031e90d98e34cb478c11468e4e8af0fca3e314cc77140ce31c3386242d110cdb3"
+}

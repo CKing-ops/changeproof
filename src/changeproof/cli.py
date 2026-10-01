@@ -9,6 +9,7 @@ import yaml
 from pydantic import ValidationError
 
 from changeproof import __version__
+from changeproof.benchmark import run_benchmark, write_run
 from changeproof.change import change_records
 from changeproof.characterize import DockerRunner, LocalRunner, characterize, replay
 from changeproof.config import Config, load_config
@@ -19,8 +20,10 @@ from changeproof.markets import DEFAULT_MARKET, MARKETS
 from changeproof.oscal import assessment_results, validate_oscal
 from changeproof.predicates import PREDICATE_TYPES, statement
 from changeproof.release import check_subjects, release_statement
+from changeproof.selection import changed_lines, select_tests, selection_problem
 from changeproof.signer import (ALGORITHMS, Policy, check_crypto, generate_key, load_private, load_public, resign,
-                                sign_envelope, verify_envelope)
+                                digest, sign_envelope, verify_envelope)
+from changeproof.solver import cover_qubo
 
 CONFIG_NAME = "changeproof.yaml"
 
@@ -207,6 +210,29 @@ def cmd_characterize(args: argparse.Namespace) -> int:
     return 1 if any(s["untested"] for s in summary.values()) else 0
 
 
+# PURPOSE: PICKS THE SUITE'S TESTS THAT COVER THE EDIT FROM ITS BASE SOURCE TO --HEAD; CAN EXPORT THE QUBO
+def cmd_select(args: argparse.Namespace) -> int:
+    suite = json.loads(Path(args.suite).read_text(encoding="utf-8"))
+    base = Path(args.root) / suite["source"]["file"]
+    if digest(base.read_bytes()) != suite["source"]["digest"]:
+        print(f"error: {base} is not the source the suite was built from", file=sys.stderr)
+        return 2
+    lines = changed_lines(base.read_text(encoding="utf-8"), Path(args.head).read_text(encoding="utf-8"))
+    found = select_tests(suite, lines, "greedy" if args.greedy else "cp-sat")
+    if args.qubo:
+        emit(cover_qubo(selection_problem(suite, lines))[0].to_json(), args.qubo)
+    print(json.dumps({"program": suite["program"], "changed_lines": sorted(lines), "method": found.method,
+                      "optimal": found.optimal, "tests": list(found.selection), "full_suite": len(suite["tests"])},
+                     indent=2))
+    return 0
+
+
+# PURPOSE: RUNS THE SOLVER BENCHMARK AND KEEPS THE RESULT IN ITS OWN FILE
+def cmd_benchmark(args: argparse.Namespace) -> int:
+    print(f"wrote {write_run(run_benchmark(args.seed), Path(args.out))}")
+    return 0
+
+
 # PURPOSE: ADDS --TRUST, --DISTRUST AND --REQUIRE TO A SUBCOMMAND
 def add_policy(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--trust", action="append", required=True, help="trusted public key file; repeatable")
@@ -276,6 +302,19 @@ def build_parser() -> argparse.ArgumentParser:
     chars.add_argument("--replay", action="append", default=[], help="saved suite to re-run on today's source")
     chars.add_argument("--docker", metavar="IMAGE", help="run in this GnuCOBOL image with networking off")
     chars.set_defaults(func=cmd_characterize)
+
+    picks = sub.add_parser("select", help="fewest characterization tests that cover an edit to the suite's program")
+    picks.add_argument("suite", help="suite JSON from characterize --out")
+    picks.add_argument("--head", required=True, help="the program source after the edit")
+    picks.add_argument("--root", default=".", help="root the suite's source file is relative to")
+    picks.add_argument("--greedy", action="store_true", help="greedy baseline instead of the CP-SAT minimum")
+    picks.add_argument("--qubo", help="also write the selection problem here as a QUBO with no source names")
+    picks.set_defaults(func=cmd_select)
+
+    bench = sub.add_parser("benchmark", help="solver quality, runtime, cost and reproducibility, one file per run")
+    bench.add_argument("--out", default="benchmarks/runs", help="folder that keeps one JSON file per run")
+    bench.add_argument("--seed", type=int, default=0)
+    bench.set_defaults(func=cmd_benchmark)
 
     keygen = sub.add_parser("keygen", help="make a signing key pair")
     keygen.add_argument("alg", choices=sorted(ALGORITHMS))

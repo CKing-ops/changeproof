@@ -1,6 +1,6 @@
 """Default-deny egress rules (docs/adr/003-data-egress.md).
 
-Config validation calls these today. The Week 10 solver interface will call the same function
+Config validation calls these, and the solver interface (Week 10) calls the same function
 before any backend flagged remote runs, so there is one rule set, not two. What differs by market
 comes from the market profile (docs/adr/004-market-profiles.md).
 """

@@ -128,6 +128,7 @@
         "line": 18,
         "end_line": 21
       },
+      "decision_line": 18,
       "true_line": 19,
       "false_line": null,
       "covered": [
@@ -145,7 +146,10 @@
         "FEECALC-08",
         "FEECALC-09",
         "FEECALC-10",
-        "FEECALC-11"
+        "FEECALC-11",
+        "FEECALC-12",
+        "FEECALC-13",
+        "FEECALC-14"
       ]
     },
     {
@@ -156,6 +160,7 @@
         "file": "corpus/synthetic/batch/FEECALC.cbl",
         "line": 23
       },
+      "decision_line": 22,
       "true_line": 24,
       "false_line": null,
       "covered": [
@@ -172,7 +177,9 @@
         "FEECALC-08",
         "FEECALC-09",
         "FEECALC-10",
-        "FEECALC-11"
+        "FEECALC-11",
+        "FEECALC-13",
+        "FEECALC-14"
       ]
     },
     {
@@ -183,6 +190,7 @@
         "file": "corpus/synthetic/batch/FEECALC.cbl",
         "line": 25
       },
+      "decision_line": 22,
       "true_line": 26,
       "false_line": null,
       "covered": [
@@ -199,7 +207,9 @@
         "FEECALC-08",
         "FEECALC-09",
         "FEECALC-10",
-        "FEECALC-11"
+        "FEECALC-11",
+        "FEECALC-13",
+        "FEECALC-14"
       ]
     },
     {
@@ -211,6 +221,7 @@
         "line": 31,
         "end_line": 33
       },
+      "decision_line": 31,
       "true_line": 32,
       "false_line": null,
       "covered": [
@@ -226,7 +237,9 @@
         "FEECALC-08",
         "FEECALC-09",
         "FEECALC-10",
-        "FEECALC-11"
+        "FEECALC-11",
+        "FEECALC-13",
+        "FEECALC-14"
       ]
     },
     {
@@ -238,6 +251,7 @@
         "line": 34,
         "end_line": 37
       },
+      "decision_line": 34,
       "true_line": 35,
       "false_line": null,
       "covered": [
@@ -253,7 +267,9 @@
         "FEECALC-08",
         "FEECALC-09",
         "FEECALC-10",
-        "FEECALC-11"
+        "FEECALC-11",
+        "FEECALC-13",
+        "FEECALC-14"
       ]
     },
     {
@@ -265,6 +281,7 @@
         "line": 38,
         "end_line": 40
       },
+      "decision_line": 38,
       "true_line": 39,
       "false_line": null,
       "covered": [
@@ -280,7 +297,9 @@
         "FEECALC-08",
         "FEECALC-09",
         "FEECALC-10",
-        "FEECALC-11"
+        "FEECALC-11",
+        "FEECALC-13",
+        "FEECALC-14"
       ]
     }
   ],
@@ -310,7 +329,17 @@
           "condition": "branch:FEECALC.MAIN-PARA#1",
           "outcome": true
         }
-      ]
+      ],
+      "lines": [
+        13,
+        15,
+        16,
+        17,
+        18,
+        19,
+        21
+      ],
+      "boundaries": []
     },
     {
       "id": "FEECALC-02",
@@ -356,6 +385,28 @@
         {
           "condition": "branch:FEECALC.MAIN-PARA#6",
           "outcome": true
+        }
+      ],
+      "lines": [
+        13,
+        15,
+        16,
+        17,
+        18,
+        22,
+        23,
+        24,
+        31,
+        34,
+        38,
+        39,
+        41
+      ],
+      "boundaries": [
+        {
+          "field": "LK-DAYS-LATE",
+          "value": "30",
+          "condition": "branch:FEECALC.MAIN-PARA#5"
         }
       ]
     },
@@ -404,7 +455,26 @@
           "condition": "branch:FEECALC.MAIN-PARA#6",
           "outcome": false
         }
-      ]
+      ],
+      "lines": [
+        13,
+        15,
+        16,
+        17,
+        18,
+        22,
+        23,
+        25,
+        26,
+        31,
+        32,
+        34,
+        35,
+        36,
+        38,
+        41
+      ],
+      "boundaries": []
     },
     {
       "id": "FEECALC-04",
@@ -439,7 +509,20 @@
           "condition": "branch:FEECALC.MAIN-PARA#3",
           "outcome": false
         }
-      ]
+      ],
+      "lines": [
+        13,
+        15,
+        16,
+        17,
+        18,
+        22,
+        23,
+        25,
+        28,
+        30
+      ],
+      "boundaries": []
     },
     {
       "id": "FEECALC-05",
@@ -485,6 +568,27 @@
         {
           "condition": "branch:FEECALC.MAIN-PARA#6",
           "outcome": false
+        }
+      ],
+      "lines": [
+        13,
+        15,
+        16,
+        17,
+        18,
+        22,
+        23,
+        24,
+        31,
+        34,
+        38,
+        41
+      ],
+      "boundaries": [
+        {
+          "field": "LK-DAYS-LATE",
+          "value": "30",
+          "condition": "branch:FEECALC.MAIN-PARA#5"
         }
       ]
     },
@@ -533,6 +637,28 @@
           "condition": "branch:FEECALC.MAIN-PARA#6",
           "outcome": false
         }
+      ],
+      "lines": [
+        13,
+        15,
+        16,
+        17,
+        18,
+        22,
+        23,
+        24,
+        31,
+        32,
+        34,
+        38,
+        41
+      ],
+      "boundaries": [
+        {
+          "field": "LK-DAYS-LATE",
+          "value": "30",
+          "condition": "branch:FEECALC.MAIN-PARA#5"
+        }
       ]
     },
     {
@@ -579,6 +705,29 @@
         {
           "condition": "branch:FEECALC.MAIN-PARA#6",
           "outcome": true
+        }
+      ],
+      "lines": [
+        13,
+        15,
+        16,
+        17,
+        18,
+        22,
+        23,
+        25,
+        26,
+        31,
+        34,
+        38,
+        39,
+        41
+      ],
+      "boundaries": [
+        {
+          "field": "LK-DAYS-LATE",
+          "value": "30",
+          "condition": "branch:FEECALC.MAIN-PARA#5"
         }
       ]
     },
@@ -627,7 +776,24 @@
           "condition": "branch:FEECALC.MAIN-PARA#6",
           "outcome": false
         }
-      ]
+      ],
+      "lines": [
+        13,
+        15,
+        16,
+        17,
+        18,
+        22,
+        23,
+        24,
+        31,
+        34,
+        35,
+        36,
+        38,
+        41
+      ],
+      "boundaries": []
     },
     {
       "id": "FEECALC-09",
@@ -674,7 +840,25 @@
           "condition": "branch:FEECALC.MAIN-PARA#6",
           "outcome": false
         }
-      ]
+      ],
+      "lines": [
+        13,
+        15,
+        16,
+        17,
+        18,
+        22,
+        23,
+        25,
+        26,
+        31,
+        34,
+        35,
+        36,
+        38,
+        41
+      ],
+      "boundaries": []
     },
     {
       "id": "FEECALC-10",
@@ -721,7 +905,25 @@
           "condition": "branch:FEECALC.MAIN-PARA#6",
           "outcome": false
         }
-      ]
+      ],
+      "lines": [
+        13,
+        15,
+        16,
+        17,
+        18,
+        22,
+        23,
+        24,
+        31,
+        32,
+        34,
+        35,
+        36,
+        38,
+        41
+      ],
+      "boundaries": []
     },
     {
       "id": "FEECALC-11",
@@ -767,6 +969,213 @@
         {
           "condition": "branch:FEECALC.MAIN-PARA#6",
           "outcome": false
+        }
+      ],
+      "lines": [
+        13,
+        15,
+        16,
+        17,
+        18,
+        22,
+        23,
+        25,
+        26,
+        31,
+        32,
+        34,
+        38,
+        41
+      ],
+      "boundaries": []
+    },
+    {
+      "id": "FEECALC-12",
+      "input": {
+        "LK-AMOUNT": "0.00",
+        "LK-CUST-TYPE": "",
+        "LK-DAYS-LATE": "0",
+        "LK-FEE": "-0.01",
+        "LK-REASON": ""
+      },
+      "output": {
+        "LK-AMOUNT": "+0000000.00",
+        "LK-CUST-TYPE": " ",
+        "LK-DAYS-LATE": "000",
+        "LK-FEE": "+0000000.00",
+        "LK-REASON": "NOAMOUNT"
+      },
+      "output_digest": {
+        "sha-384": "f5055660ffaac320a7c11492952b5d202fe2ccaf27c564dbcd06cd1499ba71a178ae579b46a34fc06fab3e5650efd366"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:FEECALC.MAIN-PARA#1",
+          "outcome": true
+        }
+      ],
+      "lines": [
+        13,
+        15,
+        16,
+        17,
+        18,
+        19,
+        21
+      ],
+      "boundaries": [
+        {
+          "field": "LK-AMOUNT",
+          "value": "0.00",
+          "condition": "branch:FEECALC.MAIN-PARA#1"
+        }
+      ]
+    },
+    {
+      "id": "FEECALC-13",
+      "input": {
+        "LK-AMOUNT": "10000.00",
+        "LK-CUST-TYPE": "P",
+        "LK-DAYS-LATE": "30",
+        "LK-FEE": "29.99",
+        "LK-REASON": ""
+      },
+      "output": {
+        "LK-AMOUNT": "+0010000.00",
+        "LK-CUST-TYPE": "P",
+        "LK-DAYS-LATE": "030",
+        "LK-FEE": "+0000150.00",
+        "LK-REASON": "        "
+      },
+      "output_digest": {
+        "sha-384": "a7f627b0d8b6bdf7ca7223341c990f59f317ad6b086c3de4943a342c97e85c5727eb2bf7706d9eb1786fe6bb12e5690a"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:FEECALC.MAIN-PARA#1",
+          "outcome": false
+        },
+        {
+          "condition": "branch:FEECALC.MAIN-PARA#2",
+          "outcome": true
+        },
+        {
+          "condition": "branch:FEECALC.MAIN-PARA#3",
+          "outcome": false
+        },
+        {
+          "condition": "branch:FEECALC.MAIN-PARA#4",
+          "outcome": false
+        },
+        {
+          "condition": "branch:FEECALC.MAIN-PARA#5",
+          "outcome": false
+        },
+        {
+          "condition": "branch:FEECALC.MAIN-PARA#6",
+          "outcome": false
+        }
+      ],
+      "lines": [
+        13,
+        15,
+        16,
+        17,
+        18,
+        22,
+        23,
+        24,
+        31,
+        34,
+        38,
+        41
+      ],
+      "boundaries": [
+        {
+          "field": "LK-AMOUNT",
+          "value": "10000.00",
+          "condition": "branch:FEECALC.MAIN-PARA#4"
+        },
+        {
+          "field": "LK-DAYS-LATE",
+          "value": "30",
+          "condition": "branch:FEECALC.MAIN-PARA#5"
+        }
+      ]
+    },
+    {
+      "id": "FEECALC-14",
+      "input": {
+        "LK-AMOUNT": "29.99",
+        "LK-CUST-TYPE": "P",
+        "LK-DAYS-LATE": "30",
+        "LK-FEE": "2.50",
+        "LK-REASON": ""
+      },
+      "output": {
+        "LK-AMOUNT": "+0000029.99",
+        "LK-CUST-TYPE": "P",
+        "LK-DAYS-LATE": "030",
+        "LK-FEE": "+0000002.50",
+        "LK-REASON": "        "
+      },
+      "output_digest": {
+        "sha-384": "26fea6d4c45351e49f2348786163b1d6ff976ed98ad12f5cca234c39fbde6abff8a047358a9c291b2247f2b8eccf9dd7"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:FEECALC.MAIN-PARA#1",
+          "outcome": false
+        },
+        {
+          "condition": "branch:FEECALC.MAIN-PARA#2",
+          "outcome": true
+        },
+        {
+          "condition": "branch:FEECALC.MAIN-PARA#3",
+          "outcome": false
+        },
+        {
+          "condition": "branch:FEECALC.MAIN-PARA#4",
+          "outcome": false
+        },
+        {
+          "condition": "branch:FEECALC.MAIN-PARA#5",
+          "outcome": false
+        },
+        {
+          "condition": "branch:FEECALC.MAIN-PARA#6",
+          "outcome": true
+        }
+      ],
+      "lines": [
+        13,
+        15,
+        16,
+        17,
+        18,
+        22,
+        23,
+        24,
+        31,
+        34,
+        38,
+        39,
+        41
+      ],
+      "boundaries": [
+        {
+          "field": "LK-DAYS-LATE",
+          "value": "30",
+          "condition": "branch:FEECALC.MAIN-PARA#5"
+        },
+        {
+          "field": "LK-FEE",
+          "value": "2.50",
+          "condition": "branch:FEECALC.MAIN-PARA#6"
         }
       ]
     }
