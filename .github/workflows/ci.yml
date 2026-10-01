@@ -15,8 +15,16 @@ jobs:
       - uses: astral-sh/setup-uv@v6
         with:
           version: "0.8.17"
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.26"
+          cache: false
       - name: Install (network allowed)
         run: uv sync --locked --python 3.12
+      - name: Install OPA for the policy gate (network allowed; go.sum checks the module)
+        run: |
+          go install github.com/open-policy-agent/opa@v1.21.1
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
       - name: Tests with sockets blocked in-process
         run: uv run --offline pytest
       - name: Tests again inside a network namespace with no interfaces

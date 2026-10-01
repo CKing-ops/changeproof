@@ -111,3 +111,18 @@ def test_signing_and_verification_make_no_network_calls(tmp_path):
     assert proc.returncode == 0, proc.stderr
     result = ast.literal_eval(proc.stdout.strip().splitlines()[-1])
     assert result == {"codes": [0, 0, 0, 0, 0], "network_events": []}
+
+
+def test_the_policy_gate_makes_no_network_calls(tmp_path):
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("gate_seed", ROOT / "tests" / "fixtures" / "gate" / "seed.py")
+    seed = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(seed)
+    shas = dict(seed.seed(tmp_path / "repo"))
+    argv = [["gate", shas["add-rsa-2048-key"], "--repo", str(tmp_path / "repo"), "--oscal", str(tmp_path / "ar.json")]]
+    script = f"ARGV = {argv!r}\n" + textwrap.dedent(AUDITED)
+    proc = subprocess.run([sys.executable, "-c", script], capture_output=True, text=True, cwd=tmp_path)
+    assert proc.returncode == 0, proc.stderr
+    result = ast.literal_eval(proc.stdout.strip().splitlines()[-1])
+    assert result == {"codes": [1], "network_events": []}

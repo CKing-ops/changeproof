@@ -86,11 +86,17 @@ CRYPTO = Evidence("impact predicate: touches_crypto when a change touches a cryp
 EQUIVALENCE = Evidence("behavioral-equivalence attestation for code outside the impact set (Weeks 8-9)", PLANNED)
 SIGNED = Evidence("signed attestation, verifiable offline; hybrid signatures survive a distrusted algorithm",
                   "tests/test_signer.py::test_exit_check_hybrid_verifies_when_either_component_is_distrusted")
+GATE_CRYPTO = Evidence("policy gate: no-new-quantum-vulnerable-crypto blocks a change that adds RSA, ECC, DSA or DH",
+                       "tests/test_gate.py::test_exit_check_policy_blocks_a_pr_that_adds_rsa_2048")
+GATE_APPROVALS = Evidence("policy gate: high-criticality-needs-two-approvers",
+                          "tests/test_gate.py::test_a_high_criticality_change_needs_two_independent_approvers")
+OSCAL = Evidence("OSCAL 1.1.2 assessment results, validated against the NIST schema",
+                 "tests/test_gate.py::test_exit_check_oscal_assessment_results_validate")
 TEST_SELECTION = Evidence("test subset selected to cover the impact set (Week 10)", PLANNED)
 
 CONTROLS = (
     Control("soc2", "CC8.1", "change management: changes are authorized, designed, tested, approved and implemented",
-            AICPA_TSC, (RECORD, WHO, WHY, IMPACT, TIERS, EQUIVALENCE, SIGNED)),
+            AICPA_TSC, (RECORD, WHO, WHY, IMPACT, TIERS, GATE_APPROVALS, EQUIVALENCE, SIGNED, OSCAL)),
     Control("iso-27001", "A.8.32", "change management", ISO_27001, (RECORD, WHO, WHY, IMPACT, RELIANT, SIGNED)),
     Control("iso-27001", "A.8.25", "secure development life cycle", ISO_27001, (IMPACT, CRYPTO, SIGNED)),
     Control("iso-27001", "A.8.28", "secure coding", ISO_27001, (CRYPTO,)),
@@ -99,13 +105,13 @@ CONTROLS = (
     Control("dora-rts-ict-risk", "Art. 17(1)(a)", "ICT change management: verification of whether ICT security "
             "requirements have been met", DORA_RTS, (IMPACT, CRYPTO, EQUIVALENCE)),
     Control("dora-rts-ict-risk", "Art. 17(1)(b)", "ICT change management: independence of the functions that approve "
-            "changes from those that request and implement them", DORA_RTS, (WHO,)),
+            "changes from those that request and implement them", DORA_RTS, (WHO, GATE_APPROVALS)),
     Control("dora-rts-ict-risk", "Art. 17(1)(d)", "ICT change management: documentation of purpose and scope, "
             "timeline and expected outcomes", DORA_RTS, (WHY, RECORD, IMPACT)),
     Control("dora-rts-ict-risk", "Art. 17(1)(f)-(g)", "ICT change management: emergency changes, and their review "
             "and approval after implementation", DORA_RTS, (EMERGENCY, WHO)),
     Control("dora-rts-ict-risk", "Art. 17(1)(h)", "ICT change management: potential impact of a change on existing "
-            "ICT security measures", DORA_RTS, (IMPACT, TIERS, CRYPTO)),
+            "ICT security measures", DORA_RTS, (IMPACT, TIERS, CRYPTO, GATE_CRYPTO)),
     Control("dora-rts-ict-risk", "Art. 16(2)-(3)", "ICT systems acquisition, development and maintenance: testing and "
             "approval before use and after maintenance; source code reviews", DORA_RTS,
             (IMPACT, TEST_SELECTION, EQUIVALENCE)),
@@ -118,13 +124,13 @@ CONTROLS = (
     Control("ecb-itrq", "Q23c-e", "changes that caused issues, by cause: inadequate test coverage", ECB_ITRQ,
             (IMPACT, TEST_SELECTION, EQUIVALENCE)),
     Control("ecb-itrq", "Q23a", "emergency changes", ECB_ITRQ, (EMERGENCY, WHO)),
-    Control("nist-800-53-cm", "CM-3", "configuration change control", NIST_800_53, (RECORD, WHO, WHY, SIGNED)),
+    Control("nist-800-53-cm", "CM-3", "configuration change control", NIST_800_53, (RECORD, WHO, WHY, GATE_APPROVALS, SIGNED, OSCAL)),
     Control("nist-800-53-cm", "CM-4", "impact analyses", NIST_800_53, (IMPACT, TIERS, RELIANT)),
     Control("nist-800-53-sc", "SC-12", "cryptographic key establishment and management", NIST_800_53, (CRYPTO,)),
-    Control("nist-800-53-sc", "SC-13", "cryptographic protection", NIST_800_53, (CRYPTO,)),
+    Control("nist-800-53-sc", "SC-13", "cryptographic protection", NIST_800_53, (CRYPTO, GATE_CRYPTO)),
     Control("nist-ssdf", "SP 800-218", "secure software development practices", NIST_SSDF, (RECORD, IMPACT, SIGNED)),
     Control("cnsa2", "CNSA 2.0", "quantum-resistant algorithms for national security systems", NSA_CNSA2,
-            (CRYPTO, SIGNED)),
+            (CRYPTO, GATE_CRYPTO, SIGNED)),
 )
 
 NOT_MAPPED = {  # RENAME: FRAMEWORKS A PROFILE NAMES THAT HAVE NO CONTROLS MAPPED YET, WITH THE REASON

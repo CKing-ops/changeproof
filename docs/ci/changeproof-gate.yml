@@ -1,0 +1,43 @@
+# changeproof policy gate for pull requests (ROADMAP Week 7). Copy to .github/workflows/ in the
+# repository to be checked. Installing needs the network; the gate itself runs in a network
+# namespace with no interfaces, so nothing about the code can leave the runner.
+name: changeproof-gate
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  gate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # the gate reads both sides of the pull request from git history
+      - uses: astral-sh/setup-uv@v6
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.26"
+          cache: false
+      - name: Install changeproof and OPA (network allowed)
+        run: |
+          uv tool install ./tools/changeproof-0.1.0-py3-none-any.whl
+          go install github.com/open-policy-agent/opa@v1.21.1
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+      - name: Check the changeproof release signature (offline)
+        run: >
+          changeproof verify tools/changeproof-release.dsse.json
+          --trust tools/changeproof-release.pub.json --subjects tools
+      - name: Policy gate (no network)
+        run: >
+          sudo unshare --net -- sudo -u "$USER" env "PATH=$PATH" "HOME=$HOME"
+          changeproof gate "${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}"
+          --oscal oscal-assessment-results.json
+      - name: Keep the OSCAL assessment results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: changeproof-oscal
+          path: oscal-assessment-results.json

@@ -12,7 +12,9 @@ from changeproof import __version__
 from changeproof.change import change_records
 from changeproof.config import Config, load_config
 from changeproof.impact import impact
+from changeproof.gate import gate, known_rules
 from changeproof.markets import DEFAULT_MARKET, MARKETS
+from changeproof.oscal import assessment_results, validate_oscal
 from changeproof.predicates import PREDICATE_TYPES, statement
 from changeproof.release import check_subjects, release_statement
 from changeproof.signer import (ALGORITHMS, Policy, check_crypto, generate_key, load_private, load_public, resign,
@@ -58,7 +60,9 @@ def cmd_validate(args: argparse.Namespace) -> int:
             where = ".".join(str(p) for p in err["loc"]) or "(root)"
             print(f"{path}: {where}: {err['msg']}", file=sys.stderr)
         return 1
-    problems = check_crypto(config.crypto)
+    known = known_rules()
+    problems = check_crypto(config.crypto) + [f"policy: unknown rule '{r.rule}' ({', '.join(sorted(known))})"
+                                              for r in config.policy if r.rule not in known]
     for problem in problems:
         print(f"{path}: {problem}", file=sys.stderr)
     if problems:
@@ -93,6 +97,17 @@ def cmd_impact(args: argparse.Namespace) -> int:
                                   [load_private(k) for k in args.key], datetime.now(UTC))
     print(json.dumps(predicate, indent=2))
     return 0
+
+
+# PURPOSE: RUNS THE CONFIGURED POLICY RULES ON A COMMIT OR RANGE; PRINTS THE DECISION; EXIT 1 IF A RULE FAILS
+def cmd_gate(args: argparse.Namespace) -> int:
+    result = gate(Path(args.repo), args.revisions, copybook_dirs=args.copybooks, config_path=args.config)
+    if args.oscal:
+        doc = assessment_results(result, datetime.now(UTC))
+        validate_oscal(doc)
+        Path(args.oscal).write_text(json.dumps(doc, indent=2) + "\n", encoding="utf-8")
+    print(json.dumps(result.decision, indent=2))
+    return 0 if result.decision["ok"] else 1
 
 
 # PURPOSE: WRITES A NEW KEY PAIR; THE PRIVATE FILE IS READABLE BY ITS OWNER ONLY
@@ -195,6 +210,14 @@ def build_parser() -> argparse.ArgumentParser:
     impacts.add_argument("--copybooks", action="append", default=[], help="copybook folder, repo-relative; repeatable")
     impacts.add_argument("--key", action="append", default=[], help="private key file to sign with; repeatable")
     impacts.set_defaults(func=cmd_impact)
+
+    gates = sub.add_parser("gate", help="run the policy rules in changeproof.yaml on a commit or range")
+    gates.add_argument("revisions", help="a commit, or a range such as main..HEAD")
+    gates.add_argument("--repo", default=".")
+    gates.add_argument("--config", default=CONFIG_NAME, help="repo-relative path of the config at the head commit")
+    gates.add_argument("--copybooks", action="append", default=[], help="copybook folder, repo-relative; repeatable")
+    gates.add_argument("--oscal", help="write OSCAL assessment results here, validated against the NIST schema")
+    gates.set_defaults(func=cmd_gate)
 
     keygen = sub.add_parser("keygen", help="make a signing key pair")
     keygen.add_argument("alg", choices=sorted(ALGORITHMS))

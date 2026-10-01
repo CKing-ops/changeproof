@@ -12,7 +12,7 @@ tamper-evident change records. Sources and the full comparison are in `ROADMAP.m
 
 ## Status
 
-Weeks 1-6 (planned capabilities are labeled; proven ones cite their test):
+Weeks 1-7 (planned capabilities are labeled; proven ones cite their test):
 
 - `changeproof init` writes a starter `changeproof.yaml` (`tests/test_cli.py`).
 - `changeproof validate` checks a config against the schema (`tests/test_cli.py`).
@@ -47,6 +47,13 @@ Weeks 1-6 (planned capabilities are labeled; proven ones cite their test):
   and `classical-legacy` profiles. Tampering fails under every profile, and a hybrid signature still
   verifies when either algorithm is distrusted (`tests/test_signer.py`, `tests/test_release.py`,
   `tests/test_cli.py`). Production key custody and certified crypto modules: **planned** (Week 17).
+- Policy gate: `changeproof gate <commit or range>` runs the rules named in `policy:` as OPA/Rego.
+  `no-new-quantum-vulnerable-crypto` blocks a change that adds RSA, ECC, DSA or DH, read from the
+  literals a crypto call is given. `high-criticality-needs-two-approvers` is also enforced.
+  `--oscal` writes OSCAL 1.1.2 assessment results that validate against NIST's schema
+  (`tests/test_gate.py`, `docs/adr/005-policy-gate-and-oscal.md`). A CI job template is in
+  `docs/ci/changeproof-gate.yml`. `equivalence-required-outside-impact-set` reports
+  **not-evaluated** until Weeks 8-9.
 - Adapters for languages other than COBOL: **planned** (Java in Week 11; see `ROADMAP.md`).
 - Equivalence and crypto-inventory evidence: **planned** (Weeks 9, 16).
 
@@ -56,3 +63,6 @@ Weeks 1-6 (planned capabilities are labeled; proven ones cite their test):
 uv sync
 uv run pytest
 ```
+
+`changeproof gate` and its tests need OPA on the `PATH` (or `$CHANGEPROOF_OPA`), the same way
+`change` and `impact` need git: `go install github.com/open-policy-agent/opa@v1.21.1`.
