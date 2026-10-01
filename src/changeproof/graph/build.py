@@ -12,7 +12,7 @@ from changeproof.adapters.base import Entity, IRModule
 from changeproof.adapters.cobol import CobolAdapter
 from changeproof.config import Config
 from changeproof.graph.csd import CsdDefinition, parse_csd
-from changeproof.graph.jcl import JclJob, parse_jcl
+from changeproof.graph.jcl import IMS_PROGRAMS, JclJob, parse_jcl
 from changeproof.graph.model import Edge, Graph, Node
 from changeproof.provenance import Provenance
 
@@ -24,6 +24,16 @@ SCREEN_COMMANDS = frozenset({"SEND", "RECEIVE"})  # RENAME: CICS COMMANDS THAT S
 TRANSACTION_COMMANDS = frozenset({"RETURN", "START"})  # RENAME: CICS COMMANDS THAT NAME THE NEXT TRANSACTION
 SHARED_KINDS = frozenset({"dataset", "table", "cics-file"})  # RENAME: NODES SEVERAL COMPONENTS CAN SHARE
 DD_PREFIX_RE = re.compile(r"^(?:[A-Z]{2}-)*(?:S-)?")  # ASSIGN TO UT-S-NAME style prefixes before the DD name
+CICS_DATA_OPTIONS = {  # RENAME: CICS OPTIONS THAT NAME A DATA ITEM, AND WHETHER THE COMMAND READS OR WRITES IT
+    "INTO": "write", "SET": "write", "FROM": "read", "RIDFLD": "read", "COMMAREA": "read",
+}
+CICS_DATA_RE = re.compile(rf"\b({'|'.join(CICS_DATA_OPTIONS)})\s*\(\s*([A-Z0-9][\w-]*(?:\s+(?:OF|IN)\s+[\w-]+)*)\s*\)",
+                          re.IGNORECASE)
+HOST_VARIABLE_RE = re.compile(r":([A-Z0-9][\w-]*(?:\.[\w-]+)?)", re.IGNORECASE)
+SUBSCRIPT_RE = re.compile(r"\s*\([^)]*\)")
+REDEFINES_RE = re.compile(r"\bREDEFINES\s+([\w-]+)", re.IGNORECASE)
+SQL_TARGET_COMMANDS = frozenset({"SELECT", "FETCH"})  # RENAME: SQL COMMANDS WHOSE INTO LIST IS WRITTEN
+SQL_LIST_ENDS = frozenset({"FROM", "WHERE", "SET", "VALUES", "USING", "FOR"})  # RENAME: WORDS THAT END AN INTO LIST
 
 
 SQL_CLAUSES = frozenset({  # RENAME: KEYWORDS THAT END A FROM LIST
@@ -55,6 +65,34 @@ def sql_tables(text: str) -> list[tuple[str, str]]:
             if j >= len(words) or words[j] != ",":
                 break
             j += 1
+    return found
+
+
+# PURPOSE: FINDS THE ONE DATA ITEM IN A PROGRAM THAT A NAME LIKE "FIELD OF GROUP" REFERS TO, OR THE REASON IT CANNOT
+def find_data(items: list[tuple[str, str]], program: str, ref: str) -> tuple[str | None, str]:
+    name, *qualifiers = re.split(r"\s+(?:OF|IN)\s+", ref.strip().upper())
+    matches = [i for i, n in items if n == name and i.startswith(f"data:{program}.")
+               and set(qualifiers) <= set(i.split(":", 1)[1].split(".")[1:-1])]
+    if len(matches) == 1:
+        return matches[0], ""
+    return None, f"ambiguous: {len(matches)} data items have this name" if matches else "no such data item"
+
+
+# PURPOSE: DATA NAMES AN EXEC CICS OR EXEC SQL BLOCK READS OR WRITES, AS (NAME AS WRITTEN, REF, MODE)
+def exec_data(kind: str, text: str) -> list[tuple[str, str, str]]:
+    if kind == "exec-cics":
+        return [(m.group(2), m.group(2), CICS_DATA_OPTIONS[m.group(1).upper()]) for m in CICS_DATA_RE.finditer(text)]
+    command = text.split(" ", 1)[0].upper()
+    found, mode = [], "read"
+    for word in re.findall(r":?[\w.-]+", text):
+        upper = word.upper()
+        if upper == "INTO" and command in SQL_TARGET_COMMANDS:
+            mode = "write"
+        elif upper in SQL_LIST_ENDS:
+            mode = "read"
+        elif m := HOST_VARIABLE_RE.fullmatch(word):
+            group, _, field = m.group(1).partition(".")
+            found.append((m.group(1), f"{field} OF {group}" if field else group, mode))
     return found
 
 
@@ -104,25 +142,57 @@ class GraphBuilder:
             return (same or paragraphs)[0].id
         return next((e.id for e in facts if e.kind == "section" and e.name == name), None)
 
-    # PURPOSE: LITERALS A DATA ITEM CAN HOLD, FROM ITS VALUE CLAUSE AND FROM MOVES, AS (VALUE, SOURCE FACT ID)
+    # Sources: its VALUE clause, literal MOVEs, MOVEs from other items, and same-picture VALUEs in redefined storage.
+    # PURPOSE: LITERALS A DATA ITEM CAN HOLD, AS (VALUE, SOURCE FACT ID)
     def values_of(self, program: str, data_name: str) -> list[tuple[str, str]]:
         found = {}  # RENAME: LITERAL TO THE FIRST FACT THAT PUTS IT IN THE DATA ITEM
-        for e in self.facts[program]:
-            if e.kind == "data" and e.name == data_name and "value" in e.attributes:
-                found.setdefault(e.attributes["value"].strip().upper(), e.id)
-            elif e.kind == "flow" and "literal" in e.attributes and \
-                    any(t.split()[0] == data_name for t in e.attributes["targets"]):
-                found.setdefault(e.attributes["literal"].strip().upper(), e.id)
+        facts = self.facts[program]
+        by_id = {e.id: e for e in facts if e.kind == "data"}
+        todo, seen = [SUBSCRIPT_RE.sub("", data_name).strip()], set()
+        while todo:
+            name = todo.pop(0)
+            if name in seen:
+                continue
+            seen.add(name)
+            for e in facts:
+                if e.kind == "data" and e.name == name:
+                    if "value" in e.attributes:
+                        found.setdefault(e.attributes["value"].strip().upper(), e.id)
+                    for literal, fact in self.redefined_values(e, by_id):
+                        found.setdefault(literal, fact)
+                elif e.kind == "flow" and any(t.split()[0] == name for t in e.attributes["targets"]):
+                    if "literal" in e.attributes:
+                        found.setdefault(e.attributes["literal"].strip().upper(), e.id)
+                    elif e.attributes["verb"] == "MOVE":
+                        todo += [SUBSCRIPT_RE.sub("", src).split()[0] for src in e.attributes["sources"]]
         return list(found.items())
+
+    # PURPOSE: VALUES OF SAME-PICTURE ITEMS INSIDE THE STORAGE THAT AN ENCLOSING GROUP OF THE ITEM REDEFINES
+    def redefined_values(self, item: Entity, by_id: dict[str, Entity]) -> list[tuple[str, str]]:
+        group = item
+        while group is not None and not (m := REDEFINES_RE.search(group.attributes.get("text", ""))):
+            group = by_id.get(group.attributes.get("parent"))
+        if group is None:
+            return []
+        prefix = f"{group.id.split('#', 1)[0].rsplit('.', 1)[0]}.{m.group(1).upper()}"
+        return [(e.attributes["value"].strip().upper(), e.id) for e in by_id.values()
+                if e.id.startswith(prefix + ".") and "value" in e.attributes
+                and e.attributes.get("picture") == item.attributes.get("picture")]
 
     # PURPOSE: FINDS THE DATA ITEM A NAME LIKE "FIELD OF GROUP" REFERS TO, OR THE REASON IT CANNOT
     def data_item(self, program: str, ref: str) -> tuple[str | None, str]:
-        name, *qualifiers = ref.split(" OF ")
-        matches = [e.id for e in self.facts[program] if e.kind == "data" and e.name == name
-                   and set(qualifiers) <= set(e.id.split(":", 1)[1].split(".")[1:-1])]
-        if len(matches) == 1:
-            return matches[0], ""
-        return None, f"ambiguous: {len(matches)} data items have this name" if matches else "no such data item"
+        return find_data([(e.id, e.name) for e in self.facts[program] if e.kind == "data"], program, ref)
+
+    # PURPOSE: ADDS A USES-DATA EDGE FROM THE PARAGRAPH TO EACH DATA ITEM AN EXEC BLOCK READS OR WRITES
+    def add_uses(self, program: str, e: Entity, src: str) -> None:
+        for written, ref, mode in exec_data(e.kind, e.attributes["text"]):
+            key = f"{e.id}>uses>{written.upper()}>{mode}"
+            item, problem = self.data_item(program, ref)
+            if item:
+                self.edge(key, src, item, "uses-data", e.provenance, mode=mode, ref=written)
+            else:
+                self.unresolved(key, src, f"data:{written.upper()}", "uses-data", e.provenance, problem,
+                                mode=mode, ref=written)
 
     # PURPOSE: TURNS ONE PROGRAM'S IR FACTS INTO NODES AND EDGES
     def add_program(self, program: str) -> None:
@@ -151,8 +221,10 @@ class GraphBuilder:
                     for table, mode in sql_tables(e.attributes["text"]):
                         table_id = self.node(f"table:{table}", "table", table, e.provenance)
                         self.edge(f"{e.id}>{mode}>{table}", src, table_id, f"{mode}-table", e.provenance)
+                    self.add_uses(program, e, src)
                 case "exec-cics":
                     self.add_cics(program, e, src)
+                    self.add_uses(program, e, src)
                 case "data" if e.name != "FILLER":
                     self.node(e.id, "data", e.name, e.provenance,
                               {k: v for k, v in e.attributes.items() if k in ("level", "section", "parent", "picture")})
@@ -167,7 +239,8 @@ class GraphBuilder:
             known = any(f.id == file_id for f in self.facts[program])
             sources.append((file_id if known else None, "no such file", e.attributes["file"]))
         targets = [self.data_item(program, ref) + (ref,) for ref in e.attributes["targets"]]
-        extra = {"verb": e.attributes["verb"]} | ({"corresponding": True} if e.attributes.get("corresponding") else {})
+        extra = {"verb": e.attributes["verb"]} | ({"corresponding": True} if e.attributes.get("corresponding") else {}) \
+            | ({"paragraph": e.attributes["paragraph"]} if "paragraph" in e.attributes else {})
         for src, src_problem, src_ref in sources:
             for dst, dst_problem, dst_ref in targets:
                 key = f"{e.id}>{src_ref}>{dst_ref}"
@@ -298,7 +371,14 @@ class GraphBuilder:
                 else:
                     self.unresolved(f"runs>{step_id}", step_id, f"program:{step.program}", "runs", step.provenance,
                                     "program not in the analyzed code")
-            elif step.proc:
+            for name, where in step.runs:
+                via = "ims-region" if step.program in IMS_PROGRAMS else "tso-run"
+                if name in self.programs:
+                    self.edge(f"runs>{step_id}>{name}", step_id, f"program:{name}", "runs", where, via=via)
+                else:
+                    self.unresolved(f"runs>{step_id}>{name}", step_id, f"program:{name}", "runs", where,
+                                    "program not in the analyzed code", via=via)
+            if step.proc and not step.program:
                 if step.proc in procs:
                     self.edge(f"runs>{step_id}", step_id, f"proc:{step.proc}", "runs-proc", step.provenance)
                 else:
@@ -306,7 +386,8 @@ class GraphBuilder:
                                     "procedure not in the analyzed code")
             files = {  # RENAME: DD NAME TO THE FILE ENTITY THE STEP'S PROGRAM ASSIGNS TO IT
                 DD_PREFIX_RE.sub("", (f.attributes.get("assign") or "").upper()): f.id
-                for f in self.facts.get(step.program or "", []) if f.kind == "file"
+                for program in [step.program, *(name for name, _ in step.runs)]
+                for f in self.facts.get(program or "", []) if f.kind == "file"
             }
             for dd in step.dds:
                 if dd.dataset is None:

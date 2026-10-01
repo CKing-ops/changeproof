@@ -1,0 +1,29 @@
+version: 0.1
+market: general
+system:
+  name: billing-platform
+  owner: platform-engineering
+  classification: confidential
+components:
+  - id: invoice-batch
+    path: src/batch
+    language: cobol
+    criticality: high
+    data_stores: [INVOICES]
+    relied_on_by: [finance-reporting]
+  - id: customer-online
+    path: src/online
+    language: cobol
+    criticality: high
+    relied_on_by: [customer-portal, payment-partner]
+  - id: batch-schedule
+    path: jcl
+    language: jcl
+  - id: cics-definitions
+    path: csd
+    language: cics-csd
+crypto:
+  profile: hybrid
+  signing: [ml-dsa-87, ecdsa-p384]
+  release_signing: lms-sha256-192
+  hash: sha-384

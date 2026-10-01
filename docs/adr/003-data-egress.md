@@ -25,6 +25,10 @@ transfer:
 - **RTS 2024/1774 Art. 6** requires encryption of data in transit, and Art. 6(4) requires crypto
   to keep pace with cryptanalysis, including quantum threats (Recital 9).
 
+RTS 2024/1774 Art. 6, 6(4) and recital 9 were checked against the EUR-Lex text on 2026-10-01 (recital 9
+names encryption in transit and quantum threats). DORA Art. 28(3), Art. 30 and GDPR Chapter V are still
+**unverified**; sources are in `docs/framework-mapping.md` (Other outside references).
+
 Even an "anonymized" optimization problem can reveal system size and dependency topology, which a
 bank may treat as confidential. So egress has to be impossible by default and auditable when
 allowed.

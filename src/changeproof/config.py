@@ -95,7 +95,7 @@ class Egress(Strict):
     data_tier: DataTier = DataTier.PUBLIC
     approved_vendors: list[Identifier] = []
     customer_approval_ref: str | None = None
-    ict_register_ref: str | None = None  # entry in a regulatory vendor register, e.g. DORA Art. 28(3)
+    ict_register_ref: str | None = None  # entry in a regulatory vendor register, e.g. DORA Art. 28(3) (unverified)
     processing_region: ProcessingRegion | None = None
     require_pq_transport: bool = True
 

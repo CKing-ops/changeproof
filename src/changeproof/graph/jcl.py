@@ -10,6 +10,10 @@ from changeproof.provenance import Provenance
 STATEMENT_RE = re.compile(r"^//([A-Z@#$][A-Z0-9@#$.]{0,16})?\s+(JOB|PROC|EXEC|DD)\b\s*(.*)$", re.IGNORECASE)
 CONTINUATION_RE = re.compile(r"^//\s+(\S.*)$")
 MEMBER_RE = re.compile(r"\(.*\)$")  # a PDS member or GDG generation after the dataset name
+RUN_PROGRAM_RE = re.compile(r"\bRUN\s+PROG(?:RAM)?\s*\(\s*([A-Z@#$][A-Z0-9@#$]{0,7})\s*\)", re.IGNORECASE)
+TSO_PROGRAMS = frozenset({"IKJEFT01", "IKJEFT1A", "IKJEFT1B"})  # RENAME: TSO BATCH PROGRAMS THAT RUN WHAT SYSTSIN NAMES
+IMS_PROGRAMS = frozenset({"DFSRRC00"})  # RENAME: IMS REGION CONTROLLERS WHOSE PARM NAMES THE PROGRAM
+IMS_REGIONS = frozenset({"BMP", "DLI", "DBB"})  # RENAME: PARM REGION TYPES WHOSE SECOND FIELD IS THE PROGRAM
 
 
 @dataclass(frozen=True)
@@ -27,6 +31,7 @@ class JclStep:
     proc: str | None
     provenance: Provenance
     dds: list[JclDD] = field(default_factory=list)
+    runs: list[tuple[str, Provenance]] = field(default_factory=list)  # programs the step's program runs in turn
 
 
 @dataclass
@@ -97,6 +102,18 @@ def statements(lines: list[str]):
         yield tuple(current)
 
 
+# PURPOSE: PROGRAMS NAMED BY RUN PROGRAM IN THE TSO INPUT AFTER AN EXEC, UP TO THE NEXT EXEC, JOB OR PROC
+def tso_runs(lines: list[str], after: int, rel: str) -> list[tuple[str, Provenance]]:
+    found = []
+    for number in range(after + 1, len(lines) + 1):
+        line = lines[number - 1][:72]
+        if (m := STATEMENT_RE.match(line)) and m.group(2).upper() in ("EXEC", "JOB", "PROC"):
+            break
+        if not line.startswith("//*") and (m := RUN_PROGRAM_RE.search(line)):
+            found.append((m.group(1).upper(), Provenance(file=rel, line=number)))
+    return found
+
+
 # PURPOSE: PARSES ONE JCL OR PROC MEMBER INTO JOBS, STEPS AND DD STATEMENTS WITH PROVENANCE
 def parse_jcl(path: Path, root: Path) -> list[JclJob]:
     rel = Path(path).relative_to(root).as_posix()  # RENAME: REPO-RELATIVE PATH USED IN PROVENANCE
@@ -109,9 +126,15 @@ def parse_jcl(path: Path, root: Path) -> list[JclJob]:
         if op in ("JOB", "PROC"):
             jobs.append(JclJob(name, op, where))
         elif op == "EXEC" and jobs:
-            program = keywords.get("PGM")
+            program = keywords.get("PGM", "").upper() or None
             proc = keywords.get("PROC") or (values[0].upper() if values and "=" not in values[0] else None)
-            jobs[-1].steps.append(JclStep(name, program.upper() if program else None, proc, where))
+            step = JclStep(name, program, proc, where)
+            fields = keywords.get("PARM", "").strip("()'").upper().split(",")
+            if program in IMS_PROGRAMS and fields[0] in IMS_REGIONS and len(fields) > 1:
+                step.runs.append((fields[1].strip("'"), where))
+            if program in TSO_PROGRAMS:
+                step.runs += tso_runs(lines, last, rel)
+            jobs[-1].steps.append(step)
         elif op == "DD" and jobs and jobs[-1].steps:
             dsn = keywords.get("DSN") or keywords.get("DSNAME")
             dataset = MEMBER_RE.sub("", dsn).upper() if dsn else None

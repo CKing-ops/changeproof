@@ -5,7 +5,7 @@ Market: universal (`general`) is the main path and EU DORA (`eu-dora`) the stron
 
 ## Status
 
-Weeks 1-4 (planned capabilities are labeled; proven ones cite their test):
+Weeks 1-5 (planned capabilities are labeled; proven ones cite their test):
 
 - `changeproof init` writes a starter `changeproof.yaml` (`tests/test_cli.py`).
 - `changeproof validate` checks a config against the schema (`tests/test_cli.py`).
@@ -26,8 +26,16 @@ Weeks 1-4 (planned capabilities are labeled; proven ones cite their test):
 - `changeproof change <commit or range>` prints who/what/when/where/how/why records from a local git
   repository, with requester, implementer and approver kept apart, an emergency flag and ticket IDs
   copied from the commit message (`tests/test_change.py`, `scripts/change_exit_check.py`).
+- `changeproof impact <commit or range>` prints an impact predicate: changed entities, everything that
+  depends on them with a confidence tier (definite, probable, possible) and the path that reached it,
+  the systems that rely on them, a crypto flag and every gap (`tests/test_impact.py`,
+  `scripts/impact_corpus_check.py`).
+- Framework mapping: evidence mapped to SOC 2 and ISO/IEC 27001 first, then DORA and the ECB IT Risk
+  Questionnaire, then the US profile, with each control's source and check status
+  (`docs/framework-mapping.md`, `tests/test_frameworks.py`). Most control numbers are still
+  **unverified** at source.
 - Adapters for languages other than COBOL: **planned** (Java in Week 11; see `ROADMAP.md`).
-- Impact, equivalence and crypto-inventory evidence: **planned** (Weeks 5, 9, 16).
+- Equivalence and crypto-inventory evidence: **planned** (Weeks 9, 16).
 
 ## Development
 

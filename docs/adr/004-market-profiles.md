@@ -21,7 +21,8 @@ changeproof produces:
 - **ISO/IEC 27001:2022** Annex A 8.32 (change management), 8.25 (secure development life cycle),
   8.28 (secure coding) and 8.29 (security testing).
 
-These are named here as anchors for Week 5's framework mapping. Nothing maps evidence to them yet.
+Week 5 maps evidence to them in `docs/framework-mapping.md`, with a source link per control. The
+control numbers and titles above are **unverified** at source until that document says otherwise.
 
 ## Decision
 

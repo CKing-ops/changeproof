@@ -238,8 +238,8 @@ def module_at(tree: Path | None, path: str, copybook_dirs: list[str]) -> IRModul
     return CobolAdapter(copybook_dirs).parse(tree / path, tree)
 
 
-# PURPOSE: BUILDS THE WHAT PART BY PARSING EACH AFFECTED FILE BEFORE AND AFTER THE CHANGE
-def what_of(root: Path, commit: Commit, diffs: list[FileDiff], copybook_dirs: list[str]) -> What:
+# PURPOSE: BUILDS THE WHAT PART BY PARSING EACH AFFECTED FILE IN TWO TREES ALREADY ON DISK
+def what_in(before: Path | None, after: Path, diffs: list[FileDiff], copybook_dirs: list[str]) -> What:
     pairs = {(d.previous_path or d.path, d.path) for d in diffs}  # RENAME: (PATH BEFORE, PATH AFTER) PER FILE
     paths = {p for pair in pairs for p in pair}
     copybooks = {p for p in paths if PurePosixPath(p).suffix.lower() in COPYBOOK_SUFFIXES
@@ -250,22 +250,27 @@ def what_of(root: Path, commit: Commit, diffs: list[FileDiff], copybook_dirs: li
     not_analyzed = {p: "no adapter for this file type" for p in sorted(paths - analyzed)}
     if not pairs and not copybooks:
         return What(entities=[], analyzed=[], not_analyzed=not_analyzed, problems={})
+    names = {PurePosixPath(p).stem.upper() for p in copybooks}
+    copying = programs_copying(after, names) | (programs_copying(before, names) if before else set())
+    pairs |= {(p, p) for p in copying if not any(p in pair for pair in pairs)}
     entities, problems = [], {}
+    for old_path, new_path in sorted(pairs):
+        try:
+            old, new = module_at(before, old_path, copybook_dirs), module_at(after, new_path, copybook_dirs)
+        except CobolSyntaxError as exc:
+            problems[new_path] = "; ".join(f"{where}: {msg}" for where, msg in exc.errors[:3])
+            continue
+        entities += diff_by_id(old, new)
+    return What(entities=entities, analyzed=sorted(analyzed | copying), not_analyzed=not_analyzed,
+                problems=problems)
+
+
+# PURPOSE: BUILDS THE WHAT PART FOR ONE COMMIT, CHECKING OUT EACH SIDE ONLY WHEN SOMETHING NEEDS PARSING
+def what_of(root: Path, commit: Commit, diffs: list[FileDiff], copybook_dirs: list[str]) -> What:
     with tempfile.TemporaryDirectory() as scratch:
         after = checkout_tree(root, commit.sha, Path(scratch) / "after")
         before = checkout_tree(root, commit.parents[0], Path(scratch) / "before") if commit.parents else None
-        names = {PurePosixPath(p).stem.upper() for p in copybooks}
-        copying = programs_copying(after, names) | (programs_copying(before, names) if before else set())
-        pairs |= {(p, p) for p in copying if not any(p in pair for pair in pairs)}
-        for old_path, new_path in sorted(pairs):
-            try:
-                old, new = module_at(before, old_path, copybook_dirs), module_at(after, new_path, copybook_dirs)
-            except CobolSyntaxError as exc:
-                problems[new_path] = "; ".join(f"{where}: {msg}" for where, msg in exc.errors[:3])
-                continue
-            entities += diff_by_id(old, new)
-    return What(entities=entities, analyzed=sorted(analyzed | copying), not_analyzed=not_analyzed,
-                problems=problems)
+        return what_in(before, after, diffs, copybook_dirs)
 
 
 # PURPOSE: BUILDS THE FULL RECORD FOR ONE COMMIT

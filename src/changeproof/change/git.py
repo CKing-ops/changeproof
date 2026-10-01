@@ -118,7 +118,12 @@ def hunks_of(patch: str, before_path: str | None, after_path: str | None) -> lis
 
 # PURPOSE: FILES A COMMIT CHANGED AGAINST ITS FIRST PARENT, WITH LINE COUNTS AND HUNK RANGES
 def file_diffs(root: Path, commit: Commit) -> list[FileDiff]:
-    base = ["--root", commit.sha] if not commit.parents else [commit.parents[0], commit.sha]
+    return tree_diffs(root, commit.parents[0] if commit.parents else None, commit.sha)
+
+
+# PURPOSE: FILES THAT DIFFER BETWEEN TWO COMMITS; NO BEFORE COMMIT MEANS EVERY FILE WAS ADDED
+def tree_diffs(root: Path, before: str | None, after: str) -> list[FileDiff]:
+    base = ["--root", after] if before is None else [before, after]
     statuses = name_status(git(root, "diff-tree", "-r", "-M", "--no-commit-id", "--name-status", "-z", *base))
     counts = {}
     numstat = git(root, "diff-tree", "-r", "-M", "--no-commit-id", "--numstat", "-z", *base).decode("utf-8").split("\0")
@@ -147,6 +152,12 @@ def checkout_tree(root: Path, sha: str, target: Path) -> Path:
     with tarfile.open(fileobj=BytesIO(git(root, "archive", "--format=tar", sha))) as archive:
         archive.extractall(target, filter="data")
     return target
+
+
+# PURPOSE: THE ID GIT GIVES AN EMPTY TREE, USED AS THE BASE OF A RANGE THAT STARTS AT THE FIRST COMMIT
+def empty_tree(root: Path) -> str:
+    return subprocess.run(["git", "-C", str(root), "hash-object", "-t", "tree", "--stdin"], input=b"",
+                          check=True, capture_output=True).stdout.decode().strip()
 
 
 # PURPOSE: THE REPOSITORY'S ORIGIN URL FROM LOCAL CONFIG, OR NONE
