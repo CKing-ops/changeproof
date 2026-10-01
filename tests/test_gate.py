@@ -49,7 +49,8 @@ def test_rego_policy_unit_tests_pass():
 
 def test_every_rule_is_a_rego_package():
     assert known_rules() == {"no-new-quantum-vulnerable-crypto": "rego", "high-criticality-needs-two-approvers": "rego",
-                             "equivalence-required-outside-impact-set": "rego"}
+                             "equivalence-required-outside-impact-set": "rego",
+                             "agent-changes-need-independent-approval": "rego"}
 
 
 def test_exit_check_policy_blocks_a_pr_that_adds_rsa_2048(results, repo):

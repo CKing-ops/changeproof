@@ -1,4 +1,5 @@
 import argparse
+import base64
 import json
 import sys
 from datetime import UTC, datetime
@@ -17,7 +18,9 @@ from changeproof.equivalence import SCOPES, change_subject, equivalence
 from changeproof.impact import impact
 from changeproof.gate import gate, known_rules
 from changeproof.markets import DEFAULT_MARKET, MARKETS
+from changeproof.mcp import serve
 from changeproof.oscal import assessment_results, validate_oscal
+from changeproof.pack import build_pack, verify_pack
 from changeproof.predicates import PREDICATE_TYPES, statement
 from changeproof.release import check_subjects, release_statement
 from changeproof.selection import changed_lines, select_tests, selection_problem
@@ -125,6 +128,34 @@ def cmd_gate(args: argparse.Namespace) -> int:
         Path(args.oscal).write_text(json.dumps(doc, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(result.decision, indent=2))
     return 0 if result.decision["ok"] else 1
+
+
+# PURPOSE: BUILDS A SIGNED EVIDENCE PACK FOR A RELEASE AND PRINTS WHAT IT HOLDS
+def cmd_pack(args: argparse.Namespace) -> int:
+    signed = build_pack(Path(args.repo), args.revisions, Path(args.out), [load_private(k) for k in args.key],
+                        release=args.release, copybook_dirs=args.copybooks, config_path=args.config,
+                        runner=DockerRunner(args.docker) if args.docker else LocalRunner())
+    pack = json.loads(base64.b64decode(signed["payload"]))
+    print(json.dumps({"pack": args.out, "files": len(pack["subject"]) + 1,
+                      "attestations": len(pack["predicate"]["attestations"])}, indent=2))
+    return 0
+
+
+# PURPOSE: VERIFIES A PACK OFFLINE AND REBUILDS ITS REPORT AND OSCAL; EXIT 1 IF ANYTHING DOES NOT MATCH
+def cmd_pack_verify(args: argparse.Namespace) -> int:
+    check = verify_pack(Path(args.pack), [load_public(k) for k in args.trust], policy_of(args))
+    if args.rebuild and check.ok:
+        for name, data in check.rebuilt.items():
+            (Path(args.rebuild) / name).parent.mkdir(parents=True, exist_ok=True)
+            (Path(args.rebuild) / name).write_bytes(data)
+    print(json.dumps({"ok": check.ok, "problems": check.problems, "rebuilt": sorted(check.rebuilt)}, indent=2))
+    return 0 if check.ok else 1
+
+
+# PURPOSE: SERVES THE MCP TOOLS ON STDIN AND STDOUT UNTIL THE CLIENT CLOSES INPUT
+def cmd_mcp(args: argparse.Namespace) -> int:
+    serve(sys.stdin, sys.stdout)
+    return 0
 
 
 # PURPOSE: WRITES A NEW KEY PAIR; THE PRIVATE FILE IS READABLE BY ITS OWNER ONLY
@@ -293,6 +324,26 @@ def build_parser() -> argparse.ArgumentParser:
     equiv.add_argument("--docker", metavar="IMAGE", help="run in this GnuCOBOL image with networking off")
     equiv.add_argument("--key", action="append", default=[], help="private key file to sign with; repeatable")
     equiv.set_defaults(func=cmd_equivalence)
+
+    packs = sub.add_parser("pack", help="signed evidence pack for a release: attestations, PDF report and OSCAL")
+    packs.add_argument("revisions", help="the release as a range, such as v1.3..v1.4, or one commit")
+    packs.add_argument("--out", required=True, help="new folder for the pack")
+    packs.add_argument("--key", action="append", required=True, help="private key file to sign with; repeatable")
+    packs.add_argument("--release", help="release name for the report; defaults to the range")
+    packs.add_argument("--repo", default=".")
+    packs.add_argument("--config", default=CONFIG_NAME, help="repo-relative path of the config at each commit")
+    packs.add_argument("--copybooks", action="append", default=[], help="copybook folder, repo-relative; repeatable")
+    packs.add_argument("--docker", metavar="IMAGE", help="run equivalence tests in this GnuCOBOL image, networking off")
+    packs.set_defaults(func=cmd_pack)
+
+    checks = sub.add_parser("pack-verify", help="verify a pack offline and rebuild its report and OSCAL")
+    checks.add_argument("pack", help="pack folder")
+    add_policy(checks)
+    checks.add_argument("--rebuild", help="write the rebuilt report and OSCAL files into this folder")
+    checks.set_defaults(func=cmd_pack_verify)
+
+    mcp = sub.add_parser("mcp", help="MCP server on stdio: impact, lineage, equivalence_status, crypto_inventory")
+    mcp.set_defaults(func=cmd_mcp)
 
     chars = sub.add_parser("characterize", help="golden tests for COBOL linkage subprograms, run under GnuCOBOL")
     chars.add_argument("programs", nargs="*", help="program source files")

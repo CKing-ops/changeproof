@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:changeproof:predicate:policy-decision:v0.1",
+  "title": "changeproof policy-decision predicate v0.1 (draft)",
+  "description": "The facts the policy rules saw for a change and what each rule decided. Enough to rebuild the OSCAL assessment results without the repository.",
+  "type": "object",
+  "required": ["change", "impact_statement", "facts", "rules", "ok", "opa", "frameworks", "evaluated_at", "engine"],
+  "additionalProperties": false,
+  "$defs": {
+    "located": {
+      "type": "object",
+      "required": ["provenance"],
+      "properties": {"provenance": {"$ref": "urn:changeproof:schema:common:v0.1#/$defs/provenance"}}
+    },
+    "person": {
+      "type": "object",
+      "required": ["id", "source"],
+      "properties": {"id": {"type": "string", "minLength": 1}, "source": {"type": "string", "minLength": 1}}
+    },
+    "message": {
+      "type": "object",
+      "required": ["message", "provenance"],
+      "properties": {
+        "message": {"type": "string", "minLength": 1},
+        "provenance": {"$ref": "urn:changeproof:schema:common:v0.1#/$defs/provenance"}
+      }
+    }
+  },
+  "properties": {
+    "change": {"$ref": "urn:changeproof:schema:common:v0.1#/$defs/change"},
+    "impact_statement": {
+      "description": "Digest of the impact attestation the facts were read from.",
+      "$ref": "urn:changeproof:schema:common:v0.1#/$defs/digest"
+    },
+    "facts": {
+      "type": "object",
+      "required": ["crypto", "components", "approvers", "implementers", "agents"],
+      "properties": {
+        "crypto": {"type": "array", "items": {"$ref": "#/$defs/located"}},
+        "components": {"type": "array", "items": {"$ref": "#/$defs/located"}},
+        "approvers": {"type": "array", "items": {"$ref": "#/$defs/person"}},
+        "implementers": {"type": "array", "items": {"$ref": "#/$defs/person"}},
+        "agents": {"type": "array", "items": {"allOf": [{"$ref": "#/$defs/person"}, {"$ref": "#/$defs/located"}]}},
+        "equivalence": {"type": "object", "required": ["verdict"]}
+      }
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["rule", "status", "deny", "warn"],
+        "additionalProperties": false,
+        "properties": {
+          "rule": {"type": "string", "minLength": 1},
+          "status": {"enum": ["pass", "fail", "inconclusive", "not-evaluated"]},
+          "reason": {"type": "string"},
+          "deny": {"type": "array", "items": {"$ref": "#/$defs/message"}},
+          "warn": {"type": "array", "items": {"$ref": "#/$defs/message"}}
+        }
+      }
+    },
+    "ok": {"type": "boolean"},
+    "opa": {"type": "string", "minLength": 1},
+    "frameworks": {"type": "array", "items": {"type": "string"}},
+    "evaluated_at": {"type": "string", "format": "date-time"},
+    "engine": {"$ref": "urn:changeproof:schema:common:v0.1#/$defs/engine"}
+  }
+}

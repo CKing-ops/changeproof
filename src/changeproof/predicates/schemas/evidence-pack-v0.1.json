@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:changeproof:predicate:evidence-pack:v0.1",
+  "title": "changeproof evidence-pack predicate v0.1 (draft)",
+  "description": "An assessor's pack for a release: which attestations it holds and under which crypto profile it was signed. The report and OSCAL files are rebuilt from the attestations; the statement's subjects carry the digest of every file.",
+  "type": "object",
+  "required": ["release", "change", "crypto", "attestations", "generated_at", "engine"],
+  "additionalProperties": false,
+  "properties": {
+    "release": {"type": "string", "minLength": 1},
+    "change": {"$ref": "urn:changeproof:schema:common:v0.1#/$defs/change"},
+    "crypto": {
+      "type": "object",
+      "required": ["profile", "signed_with"],
+      "additionalProperties": false,
+      "properties": {
+        "profile": {"type": ["string", "null"], "description": "crypto.profile in the config at the release head; null without a config."},
+        "signing": {"type": "array", "items": {"type": "string"}},
+        "release_signing": {"type": "string"},
+        "hash": {"type": "string"},
+        "signed_with": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["alg", "keyid"],
+            "additionalProperties": false,
+            "properties": {"alg": {"type": "string"}, "keyid": {"type": "string"}}
+          }
+        }
+      }
+    },
+    "attestations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["path", "predicate_type", "commit", "payload"],
+        "additionalProperties": false,
+        "properties": {
+          "path": {"type": "string", "minLength": 1},
+          "predicate_type": {"type": "string", "minLength": 1},
+          "commit": {"type": "string", "minLength": 1},
+          "payload": {"$ref": "urn:changeproof:schema:common:v0.1#/$defs/digest"}
+        }
+      }
+    },
+    "generated_at": {"type": "string", "format": "date-time"},
+    "engine": {"$ref": "urn:changeproof:schema:common:v0.1#/$defs/engine"}
+  }
+}

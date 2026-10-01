@@ -1,0 +1,137 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Count 2 /Kids [6 0 R 8 0 R] >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier-Bold /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Title (changeproof evidence pack: card-billing v1.4 \(synthetic\)) /Producer (changeproof) >>
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 7 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> >>
+endobj
+7 0 obj
+<< /Length 4888 >>
+stream
+BT
+/F2 16 Tf 1 0 0 1 56 765.2 Tm (changeproof evidence pack: card-billing v1.4) Tj
+/F2 16 Tf 1 0 0 1 56 744.4 Tm (\(synthetic\)) Tj
+/F1 10 Tf 1 0 0 1 56 731.4 Tm (Repository: card-billing) Tj
+/F1 10 Tf 1 0 0 1 56 718.4 Tm (Commits 96d679cbb195..77ec47e33107: 2 changes. Generated 2026-10-01T12:00:00Z by) Tj
+/F1 10 Tf 1 0 0 1 56 705.4 Tm (changeproof 0.1.0.) Tj
+/F2 12 Tf 1 0 0 1 56 689.8 Tm () Tj
+/F2 12 Tf 1 0 0 1 56 674.2 Tm (How to check this pack) Tj
+/F1 10 Tf 1 0 0 1 56 661.2 Tm (Everything in this report is read from the signed attestations in the) Tj
+/F1 10 Tf 1 0 0 1 56 648.2 Tm (attestations folder, and nothing else. Run: changeproof pack-verify <pack) Tj
+/F1 10 Tf 1 0 0 1 56 635.2 Tm (folder> --trust <public key> ... It verifies every signature offline and) Tj
+/F1 10 Tf 1 0 0 1 56 622.2 Tm (rebuilds this report and the OSCAL files from the attestations; each must match) Tj
+/F1 10 Tf 1 0 0 1 56 609.2 Tm (the digest in pack.dsse.json byte for byte.) Tj
+/F1 10 Tf 1 0 0 1 56 596.2 Tm (Behavioral equivalence means the characterization tests found no difference. It) Tj
+/F1 10 Tf 1 0 0 1 56 583.2 Tm (is evidence from tests, not a proof for all inputs. Programs it could not test) Tj
+/F1 10 Tf 1 0 0 1 56 570.2 Tm (are listed.) Tj
+/F2 12 Tf 1 0 0 1 56 554.6 Tm () Tj
+/F2 12 Tf 1 0 0 1 56 539.0 Tm (Crypto profile) Tj
+/F1 10 Tf 1 0 0 1 56 526.0 Tm (Crypto profile: hybrid) Tj
+/F1 8 Tf 1 0 0 1 56 515.6 Tm (evidence signing: ml-dsa-87, ecdsa-p384; release signing: lms-sha256-192; hash: sha-384) Tj
+/F1 8 Tf 1 0 0 1 56 505.2 Tm (this pack is signed with ml-dsa-87 \(key 5073b4c8ee3559fb\)) Tj
+/F1 8 Tf 1 0 0 1 56 494.8 Tm (this pack is signed with ecdsa-p384 \(key a02be7648ef76978\)) Tj
+/F2 12 Tf 1 0 0 1 56 479.2 Tm () Tj
+/F2 12 Tf 1 0 0 1 56 463.6 Tm (Change 1 of 2: commit 085d6bff07ee) Tj
+/F1 10 Tf 1 0 0 1 56 450.6 Tm (Who and why) Tj
+/F1 8 Tf 1 0 0 1 56 440.2 Tm (author: priya.raman@billing.example \(git author,) Tj
+/F1 8 Tf 1 0 0 1 56 429.8 Tm (    git-commit/085d6bff07ee33704f51327869bb05b835d15bb5:3\)) Tj
+/F1 8 Tf 1 0 0 1 56 419.4 Tm (committer: priya.raman@billing.example \(git committer,) Tj
+/F1 8 Tf 1 0 0 1 56 409.0 Tm (    git-commit/085d6bff07ee33704f51327869bb05b835d15bb5:4\)) Tj
+/F1 8 Tf 1 0 0 1 56 398.6 Tm (approver: dana.okafor@billing.example \(Approved-by trailer,) Tj
+/F1 8 Tf 1 0 0 1 56 388.2 Tm (    git-commit/085d6bff07ee33704f51327869bb05b835d15bb5:9\)) Tj
+/F1 8 Tf 1 0 0 1 56 377.8 Tm (agent: feebot@tools.example \(Assisted-by trailer,) Tj
+/F1 8 Tf 1 0 0 1 56 367.4 Tm (    git-commit/085d6bff07ee33704f51327869bb05b835d15bb5:8\)) Tj
+/F1 8 Tf 1 0 0 1 56 357.0 Tm (ticket: LOAN-2 \(commit subject, git-commit/085d6bff07ee33704f51327869bb05b835d15bb5:6\)) Tj
+/F1 10 Tf 1 0 0 1 56 344.0 Tm (What it touches: 2 entities changed, 2 impacted \(2 definite, 0 probable, 0) Tj
+/F1 10 Tf 1 0 0 1 56 331.0 Tm (possible\), 0 gaps reported. Touches crypto: no.) Tj
+/F1 8 Tf 1 0 0 1 56 320.6 Tm (src/batch/FEECALC.cbl:15-41  paragraph MAIN-PARA \(modified\)) Tj
+/F1 8 Tf 1 0 0 1 56 310.2 Tm (src/batch/FEECALC.cbl:35  flow COMPUTE \(modified\)) Tj
+/F1 8 Tf 1 0 0 1 56 299.8 Tm (src/batch/FEECALC.cbl:11  data LK-FEE \(definite\)) Tj
+/F1 8 Tf 1 0 0 1 56 289.4 Tm (src/batch/FEECALC.cbl:1-41  program FEECALC \(definite\)) Tj
+/F1 8 Tf 1 0 0 1 56 279.0 Tm (relied on by statement-print through batch-fees) Tj
+/F1 10 Tf 1 0 0 1 56 266.0 Tm (Outside the impact set: equivalent. 37 tests \(outside-impact-set\): 37 same, 0) Tj
+/F1 10 Tf 1 0 0 1 56 253.0 Tm (different, 0 errors.) Tj
+/F1 10 Tf 1 0 0 1 56 240.0 Tm (Linked to this change's impact attestation by its digest.) Tj
+/F1 10 Tf 1 0 0 1 56 227.0 Tm (Policy rules \(OPA 1.21.1\): all hold.) Tj
+/F1 8 Tf 1 0 0 1 56 216.6 Tm (no-new-quantum-vulnerable-crypto: pass) Tj
+/F1 8 Tf 1 0 0 1 56 206.2 Tm (agent-changes-need-independent-approval: pass) Tj
+/F1 8 Tf 1 0 0 1 56 195.8 Tm (equivalence-required-outside-impact-set: pass) Tj
+/F2 12 Tf 1 0 0 1 56 180.2 Tm () Tj
+/F2 12 Tf 1 0 0 1 56 164.6 Tm (Change 2 of 2: commit 77ec47e33107) Tj
+/F1 10 Tf 1 0 0 1 56 151.6 Tm (Who and why) Tj
+/F1 8 Tf 1 0 0 1 56 141.2 Tm (author: priya.raman@billing.example \(git author,) Tj
+/F1 8 Tf 1 0 0 1 56 130.8 Tm (    git-commit/77ec47e33107b346431f3194558ae0cebfbf6648:3\)) Tj
+/F1 8 Tf 1 0 0 1 56 120.4 Tm (committer: priya.raman@billing.example \(git committer,) Tj
+/F1 8 Tf 1 0 0 1 56 110.0 Tm (    git-commit/77ec47e33107b346431f3194558ae0cebfbf6648:4\)) Tj
+/F1 8 Tf 1 0 0 1 56 99.6 Tm (agent: noreply@anthropic.com \(Co-authored-by trailer,) Tj
+/F1 8 Tf 1 0 0 1 56 89.2 Tm (    git-commit/77ec47e33107b346431f3194558ae0cebfbf6648:8\)) Tj
+/F1 8 Tf 1 0 0 1 56 78.8 Tm (ticket: LOAN-3 \(commit subject, git-commit/77ec47e33107b346431f3194558ae0cebfbf6648:6\)) Tj
+/F1 10 Tf 1 0 0 1 56 65.8 Tm (What it touches: 2 entities changed, 2 impacted \(2 definite, 0 probable, 0) Tj
+/F1 8 Tf 1 0 0 1 56 28 Tm (page 1 of 2) Tj
+ET
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 9 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> >>
+endobj
+9 0 obj
+<< /Length 2142 >>
+stream
+BT
+/F1 10 Tf 1 0 0 1 56 773.0 Tm (possible\), 0 gaps reported. Touches crypto: no.) Tj
+/F1 8 Tf 1 0 0 1 56 762.6 Tm (src/batch/FEECALC.cbl:15-41  paragraph MAIN-PARA \(modified\)) Tj
+/F1 8 Tf 1 0 0 1 56 752.2 Tm (src/batch/FEECALC.cbl:24  flow COMPUTE \(modified\)) Tj
+/F1 8 Tf 1 0 0 1 56 741.8 Tm (src/batch/FEECALC.cbl:11  data LK-FEE \(definite\)) Tj
+/F1 8 Tf 1 0 0 1 56 731.4 Tm (src/batch/FEECALC.cbl:1-41  program FEECALC \(definite\)) Tj
+/F1 8 Tf 1 0 0 1 56 721.0 Tm (relied on by statement-print through batch-fees) Tj
+/F1 10 Tf 1 0 0 1 56 708.0 Tm (Outside the impact set: equivalent. 37 tests \(outside-impact-set\): 37 same, 0) Tj
+/F1 10 Tf 1 0 0 1 56 695.0 Tm (different, 0 errors.) Tj
+/F1 10 Tf 1 0 0 1 56 682.0 Tm (Linked to this change's impact attestation by its digest.) Tj
+/F1 10 Tf 1 0 0 1 56 669.0 Tm (Policy rules \(OPA 1.21.1\): a rule fails.) Tj
+/F1 8 Tf 1 0 0 1 56 658.6 Tm (no-new-quantum-vulnerable-crypto: pass) Tj
+/F1 8 Tf 1 0 0 1 56 648.2 Tm (agent-changes-need-independent-approval: fail) Tj
+/F1 8 Tf 1 0 0 1 56 637.8 Tm (  deny: noreply@anthropic.com took part in this change and no independent approver is recorded) Tj
+/F1 8 Tf 1 0 0 1 56 627.4 Tm (    \(git-commit/77ec47e33107b346431f3194558ae0cebfbf6648:8\)) Tj
+/F1 8 Tf 1 0 0 1 56 617.0 Tm (equivalence-required-outside-impact-set: pass) Tj
+/F2 12 Tf 1 0 0 1 56 601.4 Tm () Tj
+/F2 12 Tf 1 0 0 1 56 585.8 Tm (Attestations) Tj
+/F1 8 Tf 1 0 0 1 56 575.4 Tm (attestations/01-085d6bff07ee-impact.dsse.json  77359f3d00dad9a10e67240e) Tj
+/F1 8 Tf 1 0 0 1 56 565.0 Tm (attestations/01-085d6bff07ee-policy-decision.dsse.json  c6a973920683f1cbef4b53fb) Tj
+/F1 8 Tf 1 0 0 1 56 554.6 Tm (attestations/01-085d6bff07ee-behavioral-equivalence.dsse.json  f0556c1636b3a80bb7b8b8d5) Tj
+/F1 8 Tf 1 0 0 1 56 544.2 Tm (attestations/02-77ec47e33107-impact.dsse.json  4721986ff9247ded6b541314) Tj
+/F1 8 Tf 1 0 0 1 56 533.8 Tm (attestations/02-77ec47e33107-policy-decision.dsse.json  4a44cca1f5db708a1764342a) Tj
+/F1 8 Tf 1 0 0 1 56 523.4 Tm (attestations/02-77ec47e33107-behavioral-equivalence.dsse.json  6d154016d1f07db47824e7da) Tj
+/F1 8 Tf 1 0 0 1 56 28 Tm (page 2 of 2) Tj
+ET
+endstream
+endobj
+xref
+0 10
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000127 00000 n 
+0000000222 00000 n 
+0000000322 00000 n 
+0000000435 00000 n 
+0000000571 00000 n 
+0000005511 00000 n 
+0000005647 00000 n 
+trailer
+<< /Size 10 /Root 1 0 R /Info 5 0 R >>
+startxref
+7841
+%%EOF

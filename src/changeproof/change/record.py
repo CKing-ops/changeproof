@@ -18,7 +18,7 @@ from changeproof.adapters.cobol import CobolAdapter
 from changeproof.adapters.cobol.parse import CobolSyntaxError
 from changeproof.adapters.java import JavaAdapter, JavaSyntaxError
 from changeproof.change.git import Commit, FileDiff, Ident, checkout_tree, commits_in, file_diffs, origin_url, read_commit
-from changeproof.change.message import Trailer, person, tickets, trailers
+from changeproof.change.message import Trailer, agent_trailers, person, tickets, trailers
 from changeproof.config import Config
 from changeproof.graph.jcl import jcl_module
 from changeproof.provenance import Provenance
@@ -56,6 +56,7 @@ class Who(Model):
     requester: Person | None
     approvers: list[Person]
     reviewers: list[Person]
+    agents: list[Person]  # AI agents named in agent trailers, or as co-authors at a known agent address
     independent: bool | None  # no approver is the implementer; None when no approver is recorded
 
 
@@ -192,7 +193,10 @@ def who_of(commit: Commit, found: list[Trailer]) -> Who:
     independent = not any(same_person(a, implementer) for a in approvers) if approvers else None
     return Who(implementer=implementer, committer=from_ident(commit.committer),
                requester=requesters[0] if requesters else None, approvers=approvers,
-               reviewers=people(found, ROLE_TRAILERS["reviewer"]), independent=independent)
+               reviewers=people(found, ROLE_TRAILERS["reviewer"]),
+               agents=[Person(name=name, email=email, provenance=t.provenance)
+                       for t in agent_trailers(found) for name, email in [person(t.value)]],
+               independent=independent)
 
 
 # PURPOSE: BUILDS THE WHY PART FROM THE SUBJECT, TICKET IDS AND CHANGE-TYPE TRAILER

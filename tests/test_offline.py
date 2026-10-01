@@ -137,3 +137,29 @@ def test_characterization_makes_no_network_calls(tmp_path):
     assert proc.returncode == 0, proc.stderr
     result = ast.literal_eval(proc.stdout.strip().splitlines()[-1])
     assert result == {"codes": [0, 0], "network_events": []}
+
+
+def test_the_evidence_pack_and_the_mcp_server_make_no_network_calls(tmp_path):
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("pack_seed", ROOT / "tests" / "fixtures" / "pack" / "seed.py")
+    seed = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(seed)
+    repo = tmp_path / "repo"
+    shas = seed.seed(repo)
+    keys = [x for alg in ("ml-dsa-87", "ecdsa-p384") for x in ("--key", str(tmp_path / f"{alg}.key"))]
+    argv = [["keygen", alg, "--out", str(tmp_path / alg)] for alg in ("ml-dsa-87", "ecdsa-p384")]
+    argv += [["pack", shas["co-authored"], "--repo", str(repo), "--out", str(tmp_path / "pack"), *keys],
+             ["pack-verify", str(tmp_path / "pack"), "--trust", str(tmp_path / "ml-dsa-87.pub.json")],
+             ["mcp"]]
+    requests = [{"jsonrpc": "2.0", "id": n, "method": "tools/call", "params": {"name": name, "arguments": args}}
+                for n, (name, args) in enumerate([("impact", {"repo": str(repo), "revisions": shas["assisted"]}),
+                                                  ("crypto_inventory", {"repo": str(repo)})])]
+    script = f"ARGV = {argv!r}\n" + textwrap.dedent(AUDITED)
+    proc = subprocess.run([sys.executable, "-c", script], capture_output=True, text=True, cwd=tmp_path,
+                          input="".join(json.dumps(r) + "\n" for r in requests))
+    assert proc.returncode == 0, proc.stderr
+    lines = proc.stdout.strip().splitlines()
+    assert ast.literal_eval(lines[-1]) == {"codes": [0, 0, 0, 0, 0], "network_events": []}
+    replies = [json.loads(line) for line in lines if line.startswith('{"jsonrpc"')]
+    assert [r["result"]["isError"] for r in replies] == [False, False]

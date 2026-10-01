@@ -27,6 +27,7 @@ changeproof = "changeproof.cli:main"
 
 [dependency-groups]
 dev = [
+    "pypdf>=6,<7",
     "pytest>=8",
     "pytest-socket>=0.8",
 ]
