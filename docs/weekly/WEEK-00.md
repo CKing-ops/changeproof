@@ -25,18 +25,21 @@ Kill gate: fewer than 4 of 12 name the gap, or no auditor interest → re-scope 
 
 ## Desk research (2026-09-27)
 
-Public sources read on 2026-09-27. Quotes came through a web-fetch summary and should be checked
-against the original before they go into anything external.
+Public sources read on 2026-09-27. The fact-check re-read the ECB, KPMG, EY, EU PQC, CAST,
+OpenText and Kosli pages at source on 2026-10-01, and each is marked **checked 2026-10-01** below
+by the project's fact-check. Those reads still went through
+a fetch tool, so re-read the quoted phrases in a browser before they go into anything external.
 
 ### Demand: supervisors are asking for exactly this evidence
 
 1. **The ECB will run a targeted review of ICT change management in 2026-28.** Its supervisory
    priorities say the primary root cause of unplanned downtime in banks often lies in ICT system
-   changes, and that operational and ICT risk get the worst average SREP scores.
+   changes, and that operational and ICT risk get the worst average SREP scores. The page gives no
+   bank count or dates for the review. **Checked 2026-10-01.**
    Source: [ECB supervisory priorities 2026-28](https://www.bankingsupervision.europa.eu/framework/priorities/html/ssm.supervisory_priorities202511.en.html).
 2. **KPMG reports that the review covers more than 30 banks** through a questionnaire,
-   supporting evidence and follow-up requests (KPMG's figure, not the ECB's; **unverified**, not yet
-   checked against KPMG's page). KPMG names deficiencies including insufficient documentation and
+   supporting evidence and follow-up requests (KPMG's figure, not the ECB's, so cite KPMG for it;
+   **checked 2026-10-01** against KPMG's page). KPMG names deficiencies including insufficient documentation and
    audit trails, and poor alignment between defined process and practice.
    Source: [KPMG ECB Office, ICT change management](https://kpmg.com/xx/en/our-insights/ecb-office/kpmg-european-central-bank-office-fs/ict-change-management.html).
 3. **The ECB's 2026 IT Risk Questionnaire asks every significant bank** how many changes to
@@ -46,7 +49,7 @@ against the original before they go into anything external.
    Source: [ECB ITRQ 2026](https://www.bankingsupervision.europa.eu/activities/srep/2026/html/ssm.srep_ITRQ2026.en.pdf).
 4. **First-cycle DORA audits moved from checking policies to testing whether controls work in
    practice**, with findings on incomplete CMDBs (critical functions not mapped to assets) and
-   testing programmes that omit critical systems.
+   testing programmes that omit critical systems. **Checked 2026-10-01.**
    Source: [EY, lessons from the first DORA audits](https://www.ey.com/en_ch/insights/cybersecurity/lessons-learned-from-the-first-cycle-of-dora-audits).
 
 How this maps to changeproof: "unexpected interdependencies" is the impact evidence (Weeks 3-5),
@@ -56,8 +59,11 @@ except IR provenance (Week 2, PR #4).
 
 ### Competition: process evidence and code analysis exist, but not joined
 
-- **Kosli** records SDLC process evidence (approvals, pipeline runs, what was deployed where) and
-  lists banks as customers. Its page does not claim code-level impact or equivalence analysis.
+- **Kosli** records SDLC process evidence (approvals, pipeline runs, what was deployed where)
+  across commits, pipelines and runtime environments in a "tamper-evident database", and lists
+  banks as customers. Its page does not claim code-level impact or equivalence analysis. Because
+  Kosli already sells tamper-evident change records, signed evidence on its own is not a
+  differentiator for changeproof. **Checked 2026-10-01.**
   Source: [Kosli change management](https://www.kosli.com/release-change-management-automation/).
   This matches the roadmap's "complement, don't compete" position: changeproof attestations can
   feed Kosli.
@@ -98,11 +104,11 @@ Both are vendor surveys, so treat the percentages as indicative.
 
 | Tool | What it does (per the source read) | Signed per-change evidence | Behavioural equivalence | Source |
 |---|---|---|---|---|
-| CAST Imaging for Mainframe | maps dependencies between programs, transactions, data stores and batch jobs; positioned for modernisation planning | not mentioned | not mentioned | [product page](https://mainframemodernization.org/products/cast-imaging-mainframe/) |
-| OpenText Enterprise Analyzer | parses COBOL, PL/I, Natural, JCL, CICS BMS; call graphs, data flow and impact analysis reports; positioned for modernisation planning | not mentioned | not mentioned | [product page](https://mainframemodernization.org/products/opentext-enterprise-analyzer/) |
+| CAST Imaging for Mainframe | maps dependencies between programs, transactions, data stores and batch jobs; positioned for modernisation planning | not mentioned | not mentioned | [product listing](https://mainframemodernization.org/products/cast-imaging-mainframe/), checked 2026-10-01 |
+| OpenText Enterprise Analyzer | parses COBOL, PL/I, Natural, JCL, CICS BMS; call graphs, data flow and impact analysis reports; positioned for modernisation planning | not mentioned | not mentioned | [product listing](https://mainframemodernization.org/products/opentext-enterprise-analyzer/), checked 2026-10-01 |
 | ServiceNow Change Management | computes change risk from conditions on change-record fields (Risk Calculator) or an optional risk assessment; widely used for DORA workflows | process record, not code evidence | no | [ServiceNow docs](https://www.servicenow.com/docs/bundle/zurich-it-service-management/page/product/change-management/concept/change-risk-conflict-analysis.html), [community guide](https://www.servicenow.com/community/developer-articles/getting-started-with-servicenow-change-request-risk-calculation/ta-p/2362172) |
 | IBM ADDI (from the first pass) | COBOL impact analysis, can run in CI/CD | not described | not described | above |
-| Kosli (from the first pass) | SDLC process evidence, bank customers | process, not code | no | above |
+| Kosli (from the first pass) | SDLC process evidence in a tamper-evident store, bank customers | tamper-evident, but process, not code | no | above, checked 2026-10-01 |
 
 Reading across (inferred): CAST, OpenText and IBM are code-analysis tools sold for modernisation.
 ServiceNow and Kosli hold the process record auditors see. None of the sources read shows a
@@ -110,7 +116,15 @@ per-change, signed record that joins code-level impact to proof of preserved beh
 ties its output to DORA Art. 17 or the ITRQ root causes. That join is changeproof's position,
 and it fits the roadmap's "complement, don't compete" strategy: impact and equivalence
 attestations that a ServiceNow change request or Kosli can reference. Product pages summarise;
-none of these vendors' full documentation was read.
+none of these vendors' full documentation was read. The ServiceNow and IBM ADDI rows were not
+re-read on 2026-10-01 and stay **unverified** at source.
+
+Update 2026-10-01: IBM watsonx Code Assistant for Z already generates unit tests "to compare
+semantic equivalence of new Java service to original COBOL code"
+([product page](https://www.ibm.com/products/watsonx-code-assistant-z)). That is equivalence for
+COBOL-to-Java translation, not for ordinary maintenance changes, but it means behavioural
+equivalence alone is not ours either. The position is the join of the two halves per change; see
+`ROADMAP.md` (Positioning).
 
 Implication for the build: code-analysis rivals already map programs, transactions, data stores,
 batch jobs, JCL and CICS. Matching that graph is table stakes for Week 3, not a differentiator.
@@ -144,15 +158,16 @@ batch jobs, JCL and CICS. Matching that graph is table stakes for Week 3, not a 
 
 ## Regulatory hooks the questions rely on
 
-Checked against the published texts on 2026-09-27:
+The RTS articles below were checked against the EUR-Lex full text on 2026-10-01
+(`docs/weekly/WEEK-05.md`); the PQC roadmap was checked on the Commission's page the same day:
 
 - **DORA ICT risk management RTS, Delegated Regulation (EU) 2024/1774.** Art. 16 requires testing
   and approval of ICT systems before use and after maintenance, and source code review with static
   and dynamic testing. Art. 17 (ICT change management) requires verification that ICT security
   requirements were met, independence between approving and implementing a change, and
   documentation of each change's purpose, scope, timeline and expected outcomes, plus fall-back
-  procedures. Source: [EUR-Lex, OJ L 2024/1774](https://eur-lex.europa.eu/eli/reg_del/2024/1774/oj/eng).
-- **EU PQC roadmap** (NIS Cooperation Group, published 23 June 2025): Member States start the
+  procedures. Source: [EUR-Lex, OJ L 2024/1774](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202401774).
+- **EU PQC roadmap** (issued by the Member States with Commission support, published 23 June 2025): Member States start the
   transition by the end of 2026, and critical infrastructure should be on PQC no later than the
   end of 2030. Source: [European Commission](https://digital-strategy.ec.europa.eu/en/news/eu-reinforces-its-cybersecurity-post-quantum-cryptography).
 
