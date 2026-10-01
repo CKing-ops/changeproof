@@ -12,6 +12,8 @@ from changeproof.graph.model import Edge, Graph
 
 # PURPOSE: WORDS OF WHICH AT LEAST ONE MUST APPEAR IN THE LINES AN EDGE CITES
 def anchors(edge: Edge, names: dict[str, str]) -> list[str]:
+    if "anchor" in edge.attributes:  # the builder named the word itself
+        return [edge.attributes["anchor"]]
     match edge.kind:
         case "contains":
             return ["EXEC"] if edge.dst.startswith("step:") else [names[edge.dst]]
@@ -54,10 +56,11 @@ def anchors(edge: Edge, names: dict[str, str]) -> list[str]:
 def check_edges(graph: Graph, root: Path) -> list[str]:
     names = {n.id: n.name for n in graph.nodes}
 
-    # PURPOSE: READS A SOURCE FILE ONCE, UPPERCASED
+    # PURPOSE: READS A SOURCE FILE ONCE, UPPERCASED, SPLIT ONLY AT LINE FEEDS AS THE PARSERS COUNT THEM
     @cache
     def lines_of(file: str) -> tuple[str, ...]:
-        return tuple((Path(root) / file).read_text(encoding="latin-1").upper().splitlines())
+        text = (Path(root) / file).read_text(encoding="latin-1").upper()
+        return tuple(text.replace("\r\n", "\n").removesuffix("\n").split("\n"))
 
     problems = []
     for edge in graph.edges:

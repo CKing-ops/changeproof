@@ -14,9 +14,10 @@ import yaml
 from changeproof import __version__
 from changeproof.adapters.cobol import CobolAdapter
 from changeproof.adapters.cobol.parse import CobolSyntaxError
+from changeproof.adapters.java import JavaAdapter, JavaSyntaxError
 from changeproof.change.git import checkout_tree, commits_in, empty_tree, origin_url, read_commit, tree_diffs
 from changeproof.change.message import trailers
-from changeproof.change.record import JCL_SUFFIXES, PROGRAM_SUFFIXES, What, what_in, who_of, why_of
+from changeproof.change.record import JAVA_SUFFIXES, JCL_SUFFIXES, PROGRAM_SUFFIXES, What, what_in, who_of, why_of
 from changeproof.config import Config, load_config
 from changeproof.graph import graph_from
 from changeproof.graph.csd import parse_csd
@@ -45,6 +46,11 @@ def system_graph(tree: Path, copybook_dirs: list[str], config: Config | None) ->
             modules.append(adapter.parse(tree / path, tree))
         except CobolSyntaxError as exc:
             failed[path] = "; ".join(f"{where}: {msg}" for where, msg in exc.errors[:3])
+    for path in files_with(tree, JAVA_SUFFIXES, []):
+        try:
+            modules.append(JavaAdapter().parse(tree / path, tree))
+        except JavaSyntaxError as exc:
+            failed[path] = str(exc)
     jobs = [job for path in files_with(tree, JCL_SUFFIXES, []) for job in parse_jcl(tree / path, tree)]
     csd = [d for path in files_with(tree, CSD_SUFFIXES, []) for d in parse_csd(tree / path, tree)]
     return graph_from(modules, jobs, config, csd), failed
@@ -170,7 +176,8 @@ def run_impact(root: Path, revisions: str, copybook_dirs: list[str] = (), config
         "unresolved": gaps(walk, graph, best, what, failed),
         "engine": {"name": "changeproof", "version": __version__,
                    "adapters": [{"language": "cobol", "version": __version__, "parser": "antlr4-cobol85"},
-                                {"language": "jcl", "version": __version__}]},
+                                {"language": "jcl", "version": __version__},
+                                {"language": "java", "version": __version__, "parser": "tree-sitter-java"}]},
     }
     validate_predicate(PREDICATE_TYPES["impact"], predicate)
     return ImpactRun(predicate, what, config, PurePosixPath(config_path).as_posix(), component_at)

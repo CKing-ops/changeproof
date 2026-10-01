@@ -16,6 +16,7 @@ from pydantic import BaseModel, ConfigDict
 from changeproof.adapters.base import EntityChange, IRModule, diff_by_id
 from changeproof.adapters.cobol import CobolAdapter
 from changeproof.adapters.cobol.parse import CobolSyntaxError
+from changeproof.adapters.java import JavaAdapter, JavaSyntaxError
 from changeproof.change.git import Commit, FileDiff, Ident, checkout_tree, commits_in, file_diffs, origin_url, read_commit
 from changeproof.change.message import Trailer, person, tickets, trailers
 from changeproof.config import Config
@@ -25,6 +26,7 @@ from changeproof.provenance import Provenance
 PROGRAM_SUFFIXES = frozenset({".cbl", ".cob", ".cobol"})  # RENAME: COBOL PROGRAM FILE EXTENSIONS, LOWERCASE
 COPYBOOK_SUFFIXES = frozenset({".cpy", ".copy"})  # RENAME: COPYBOOK FILE EXTENSIONS, LOWERCASE
 JCL_SUFFIXES = frozenset({".jcl", ".prc", ".proc"})  # RENAME: JCL AND PROC FILE EXTENSIONS, LOWERCASE
+JAVA_SUFFIXES = frozenset({".java"})  # RENAME: JAVA SOURCE FILE EXTENSIONS, LOWERCASE
 ROLE_TRAILERS = {  # RENAME: TRAILER THAT NAMES EACH ROLE; THE IMPLEMENTER IS ALWAYS THE COMMIT AUTHOR
     "requester": "requested-by", "approver": "approved-by", "reviewer": "reviewed-by",
 }
@@ -235,6 +237,8 @@ def module_at(tree: Path | None, path: str, copybook_dirs: list[str]) -> IRModul
         return None
     if PurePosixPath(path).suffix.lower() in JCL_SUFFIXES:
         return jcl_module(tree / path, tree)
+    if PurePosixPath(path).suffix.lower() in JAVA_SUFFIXES:
+        return JavaAdapter().parse(tree / path, tree)
     return CobolAdapter(copybook_dirs).parse(tree / path, tree)
 
 
@@ -244,7 +248,7 @@ def what_in(before: Path | None, after: Path, diffs: list[FileDiff], copybook_di
     paths = {p for pair in pairs for p in pair}
     copybooks = {p for p in paths if PurePosixPath(p).suffix.lower() in COPYBOOK_SUFFIXES
                  or any(p.startswith(d.rstrip("/") + "/") for d in copybook_dirs)}
-    parsable = PROGRAM_SUFFIXES | JCL_SUFFIXES
+    parsable = PROGRAM_SUFFIXES | JCL_SUFFIXES | JAVA_SUFFIXES
     pairs = {(a, b) for a, b in pairs if b not in copybooks and PurePosixPath(b).suffix.lower() in parsable}
     analyzed = copybooks | {p for pair in pairs for p in pair}
     not_analyzed = {p: "no adapter for this file type" for p in sorted(paths - analyzed)}
@@ -257,7 +261,7 @@ def what_in(before: Path | None, after: Path, diffs: list[FileDiff], copybook_di
     for old_path, new_path in sorted(pairs):
         try:
             old, new = module_at(before, old_path, copybook_dirs), module_at(after, new_path, copybook_dirs)
-        except CobolSyntaxError as exc:
+        except (CobolSyntaxError, JavaSyntaxError) as exc:
             problems[new_path] = "; ".join(f"{where}: {msg}" for where, msg in exc.errors[:3])
             continue
         entities += diff_by_id(old, new)

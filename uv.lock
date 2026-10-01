@@ -82,6 +82,8 @@ dependencies = [
     { name = "pyyaml" },
     { name = "referencing" },
     { name = "scikit-learn" },
+    { name = "tree-sitter" },
+    { name = "tree-sitter-java" },
 ]
 
 [package.dev-dependencies]
@@ -109,6 +111,8 @@ requires-dist = [
     { name = "pyyaml", specifier = ">=6.0,<7" },
     { name = "referencing", specifier = ">=0.36,<1" },
     { name = "scikit-learn", specifier = ">=1.9,<2" },
+    { name = "tree-sitter", specifier = ">=0.26,<0.27" },
+    { name = "tree-sitter-java", specifier = "==0.23.5" },
 ]
 
 [package.metadata.requires-dev]

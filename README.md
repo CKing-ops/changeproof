@@ -14,7 +14,7 @@ tamper-evident change records. Sources and the full comparison are in `ROADMAP.m
 
 ## Status
 
-Weeks 1-10 (planned capabilities are labeled; proven ones cite their test):
+Weeks 1-11 (planned capabilities are labeled; proven ones cite their test):
 
 - `changeproof init` writes a starter `changeproof.yaml` (`tests/test_cli.py`).
 - `changeproof validate` checks a config against the schema (`tests/test_cli.py`).
@@ -85,7 +85,13 @@ Weeks 1-10 (planned capabilities are labeled; proven ones cite their test):
 - QUBO and Ising export of both problems, with names stripped; on small instances the QUBO minimum
   equals the classical optimum (`tests/test_solver.py`). `changeproof benchmark` stores quality,
   runtime, cost and a reproducibility digest per run in `benchmarks/runs/` (`tests/test_benchmark.py`).
-- Adapters for languages other than COBOL: **planned** (Java in Week 11; see `ROADMAP.md`).
+- Java adapter: tree-sitter-java parses classes, methods, fields, calls and JCA crypto calls with
+  `file:line` provenance; Java changes get the same graph, impact predicate and policy gate as COBOL.
+  Six seeded changes match their hand-marked impact, and on 16 Apache Commons Lang commits every
+  changed entity lies in a changed hunk and every graph edge cites its line
+  (`tests/test_java_adapter.py`, `tests/test_java_impact.py`, `tests/test_java_corpus.py`,
+  `docs/adr/009-java-adapter.md`). Running Java for equivalence tests: **planned**. Other
+  languages: **planned**.
 - Crypto-inventory evidence: **planned** (Week 16).
 
 ## Development

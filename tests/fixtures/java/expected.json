@@ -1,0 +1,59 @@
+{
+  "_note": "Written by hand from the code before the engine was run. Node ids name the Java entity; impacted lists every class and method a reviewer would retest.",
+  "fee-rate": {
+    "changed": ["field:com.example.pay.core.FeeCalculator.RATE_BASIS_POINTS"],
+    "impacted": [
+      "method:com.example.pay.core.FeeCalculator.fee(long)",
+      "class:com.example.pay.core.FeeCalculator",
+      "method:com.example.pay.core.PaymentService.pay(Payment)",
+      "class:com.example.pay.core.PaymentService",
+      "method:com.example.pay.core.RecurringPaymentService.payMonthly(Payment)",
+      "class:com.example.pay.core.RecurringPaymentService"
+    ],
+    "crypto": false
+  },
+  "ledger-absolute": {
+    "changed": ["method:com.example.pay.core.Ledger.post(long)"],
+    "impacted": [
+      "class:com.example.pay.core.Ledger",
+      "method:com.example.pay.core.PaymentService.pay(Payment)",
+      "method:com.example.pay.core.PaymentService.refund(Payment)",
+      "class:com.example.pay.core.PaymentService",
+      "method:com.example.pay.core.RecurringPaymentService.payMonthly(Payment)",
+      "class:com.example.pay.core.RecurringPaymentService"
+    ],
+    "crypto": false
+  },
+  "rsa-receipts": {
+    "changed": [
+      "method:com.example.pay.crypto.ReceiptSigner.<init>()",
+      "method:com.example.pay.crypto.ReceiptSigner.sign(String)"
+    ],
+    "impacted": [
+      "class:com.example.pay.crypto.ReceiptSigner",
+      "method:com.example.pay.core.PaymentService.pay(Payment)",
+      "class:com.example.pay.core.PaymentService",
+      "method:com.example.pay.core.RecurringPaymentService.payMonthly(Payment)",
+      "class:com.example.pay.core.RecurringPaymentService"
+    ],
+    "crypto": true
+  },
+  "audit-header": {
+    "changed": ["field:com.example.pay.report.AuditExport.HEADER"],
+    "impacted": [
+      "method:com.example.pay.report.AuditExport.header()",
+      "class:com.example.pay.report.AuditExport"
+    ],
+    "crypto": false
+  },
+  "refund-cap": {
+    "changed": ["method:com.example.pay.core.FeeCalculator.maxRefund(long)"],
+    "impacted": ["class:com.example.pay.core.FeeCalculator"],
+    "crypto": false
+  },
+  "comment-only": {
+    "changed": [],
+    "impacted": [],
+    "crypto": false
+  }
+}

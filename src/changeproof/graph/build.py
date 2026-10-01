@@ -12,6 +12,7 @@ from changeproof.adapters.base import Entity, IRModule
 from changeproof.adapters.cobol import CobolAdapter
 from changeproof.config import Config
 from changeproof.graph.csd import CsdDefinition, parse_csd
+from changeproof.graph.java import add_java
 from changeproof.graph.jcl import IMS_PROGRAMS, JclJob, parse_jcl
 from changeproof.graph.model import Edge, Graph, Node
 from changeproof.provenance import Provenance
@@ -22,6 +23,7 @@ CICS_FILE_COMMANDS = frozenset({  # RENAME: CICS COMMANDS THAT READ OR WRITE A F
 })
 SCREEN_COMMANDS = frozenset({"SEND", "RECEIVE"})  # RENAME: CICS COMMANDS THAT SEND OR RECEIVE A BMS MAP
 TRANSACTION_COMMANDS = frozenset({"RETURN", "START"})  # RENAME: CICS COMMANDS THAT NAME THE NEXT TRANSACTION
+UNIT_KINDS = frozenset({"program", "class"})  # RENAME: NODES THAT CARRY THEIR COMPONENT'S SETTINGS
 SHARED_KINDS = frozenset({"dataset", "table", "cics-file"})  # RENAME: NODES SEVERAL COMPONENTS CAN SHARE
 DD_PREFIX_RE = re.compile(r"^(?:[A-Z]{2}-)*(?:S-)?")  # ASSIGN TO UT-S-NAME style prefixes before the DD name
 CICS_DATA_OPTIONS = {  # RENAME: CICS OPTIONS THAT NAME A DATA ITEM, AND WHETHER THE COMMAND READS OR WRITES IT
@@ -407,7 +409,7 @@ class GraphBuilder:
             if node.kind not in SHARED_KINDS and node.kind not in ("unresolved", "crypto-service")
         }
         for node_id, node in self.nodes.items():
-            if node.kind == "program" and (c := owner[node_id]):
+            if node.kind in UNIT_KINDS and (c := owner[node_id]):
                 meta = {"id": c.id, "criticality": str(c.criticality), "data_stores": c.data_stores,
                         "relied_on_by": c.relied_on_by}
                 self.nodes[node_id] = node.model_copy(update={"attributes": node.attributes | {"component": meta}})
@@ -449,13 +451,14 @@ class GraphBuilder:
 def graph_from(modules: list[IRModule], jobs: list[JclJob], config: Config | None = None,
                csd: list[CsdDefinition] = ()) -> Graph:
     builder = GraphBuilder()
-    builder.index(modules)
+    builder.index([m for m in modules if m.language != "java"])
     builder.add_csd(list(csd))
     for program in sorted(builder.programs):
         builder.add_program(program)
     procs = {j.name for j in jobs if j.kind == "PROC"}
     for job in jobs:
         builder.add_job(job, procs)
+    add_java(builder, [m for m in modules if m.language == "java"])
     if config:
         builder.add_components(config)
     return builder.graph()

@@ -29,6 +29,8 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y --no-install-recommends gnucobol3=3.1.2-5.1ubuntu1
       - name: Build the GnuCOBOL runner image (network allowed)
         run: docker build -t changeproof-gnucobol docker/gnucobol
+      - name: Fetch the pinned Java corpus for the Week 11 exit check (network allowed)
+        run: uv run --offline python scripts/fetch_java_corpus.py
       - name: Tests with sockets blocked in-process
         run: uv run --offline pytest
       - name: Tests again inside a network namespace with no interfaces
