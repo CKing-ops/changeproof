@@ -45,9 +45,10 @@ DORA = Source(  # RENAME: DORA REGULATION SOURCE
     "Regulation (EU) 2022/2554 (DORA), EUR-Lex",
     "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32022R2554",
 )
-DORA_RTS = Source(  # RENAME: DORA RTS ON ICT RISK MANAGEMENT SOURCE
+DORA_RTS = Source(  # RENAME: DORA RTS ON ICT RISK MANAGEMENT SOURCE, ARTICLES 6, 7, 16, 17 AND RECITAL 9 READ
     "Commission Delegated Regulation (EU) 2024/1774, EUR-Lex",
     "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202401774",
+    checked="2026-10-01",
 )
 ECB_ITRQ = Source(  # RENAME: ECB IT RISK QUESTIONNAIRE SOURCE, CHECKED BY THE 2026-09-27 FACT-CHECK
     "ECB Banking Supervision, IT Risk Questionnaire 2026",
@@ -94,15 +95,20 @@ CONTROLS = (
     Control("iso-27001", "A.8.28", "secure coding", ISO_27001, (CRYPTO,)),
     Control("iso-27001", "A.8.29", "security testing in development and acceptance", ISO_27001,
             (IMPACT, TEST_SELECTION, EQUIVALENCE)),
-    Control("dora-rts-ict-risk", "Art. 17(1)(a)", "ICT change management: verify that ICT security requirements are met",
-            DORA_RTS, (IMPACT, CRYPTO, EQUIVALENCE)),
-    Control("dora-rts-ict-risk", "Art. 17(1)(b)", "ICT change management: approval independent of implementation",
-            DORA_RTS, (WHO,)),
-    Control("dora-rts-ict-risk", "Art. 17(1)(d)", "ICT change management: purpose, scope and expected outcome documented",
-            DORA_RTS, (WHY, RECORD, IMPACT)),
-    Control("dora-rts-ict-risk", "Art. 16", "ICT systems acquisition, development and maintenance: testing before use",
-            DORA_RTS, (IMPACT, TEST_SELECTION, EQUIVALENCE)),
-    Control("dora", "Art. 9", "protection and prevention, including ICT change management policies", DORA,
+    Control("dora-rts-ict-risk", "Art. 17(1)(a)", "ICT change management: verification of whether ICT security "
+            "requirements have been met", DORA_RTS, (IMPACT, CRYPTO, EQUIVALENCE)),
+    Control("dora-rts-ict-risk", "Art. 17(1)(b)", "ICT change management: independence of the functions that approve "
+            "changes from those that request and implement them", DORA_RTS, (WHO,)),
+    Control("dora-rts-ict-risk", "Art. 17(1)(d)", "ICT change management: documentation of purpose and scope, "
+            "timeline and expected outcomes", DORA_RTS, (WHY, RECORD, IMPACT)),
+    Control("dora-rts-ict-risk", "Art. 17(1)(f)-(g)", "ICT change management: emergency changes, and their review "
+            "and approval after implementation", DORA_RTS, (EMERGENCY, WHO)),
+    Control("dora-rts-ict-risk", "Art. 17(1)(h)", "ICT change management: potential impact of a change on existing "
+            "ICT security measures", DORA_RTS, (IMPACT, TIERS, CRYPTO)),
+    Control("dora-rts-ict-risk", "Art. 16(2)-(3)", "ICT systems acquisition, development and maintenance: testing and "
+            "approval before use and after maintenance; source code reviews", DORA_RTS,
+            (IMPACT, TEST_SELECTION, EQUIVALENCE)),
+    Control("dora", "Art. 9(4)(e)", "ICT change management procedures (cited by RTS 2024/1774 Art. 17(1))", DORA,
             (RECORD, IMPACT)),
     Control("dora", "Art. 28(3)", "register of information on ICT third-party contractual arrangements", DORA,
             (RELIANT,)),
@@ -134,7 +140,8 @@ REFERENCES = (  # RENAME: OTHER OUTSIDE REFERENCES IN THE REPO, AS (WHERE, REFER
      Source("Regulation (EU) 2016/679 (GDPR), EUR-Lex",
             "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32016R0679")),
     ("docs/adr/002-crypto-agility.md, docs/adr/003-data-egress.md",
-     "RTS 2024/1774 Art. 6 and 6(4): encryption policy, including updating cryptography", DORA_RTS),
+     "RTS 2024/1774 Art. 6 (encryption and cryptographic controls) and 6(4) (updating cryptography on the basis of "
+     "developments in cryptanalysis)", DORA_RTS),
     ("docs/adr/002-crypto-agility.md", "RTS 2024/1774 Art. 7: cryptographic key management", DORA_RTS),
     ("docs/adr/002-crypto-agility.md", "RTS 2024/1774 recital 9: threats from quantum advancements", DORA_RTS),
 )

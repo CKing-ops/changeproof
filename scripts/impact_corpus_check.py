@@ -33,7 +33,8 @@ COPYBOOK_DIRS = sorted(  # RENAME: CARDDEMO FOLDERS SEARCHED FOR COPYBOOKS AND D
 )
 CONFIG = ROOT / "docs" / "examples" / "carddemo.yaml"
 REPORT = ROOT / "docs" / "weekly" / "week05-carddemo-impact.json"
-GATE_KINDS = frozenset({"program", "step", "job", "transaction"})  # RENAME: NODE KINDS THE ORACLE CAN JUDGE
+GATE_KINDS = frozenset({"program", "step", "job", "proc", "transaction"})  # RENAME: NODE KINDS THE ORACLE CAN JUDGE
+TIERS = ("definite", "probable", "possible")
 COPY_RE = re.compile(r"\b(?:COPY|INCLUDE)\s+['\"]?([A-Z0-9@#$-]+)")
 
 
@@ -81,14 +82,14 @@ class Oracle:
         pattern = re.compile(rf"\b(?:COPY|INCLUDE)\s+['\"]?{re.escape(book)}\b")
         return {p for p, text in self.programs.items() if pattern.search(text)}
 
-    # PURPOSE: (JOB, STEP) PAIRS WHOSE STEP RUNS A PROGRAM, DIRECTLY OR THROUGH IKJEFT01 OR DFSRRC00
+    # PURPOSE: (JOB OR PROC ID, STEP) PAIRS WHOSE STEP RUNS A PROGRAM, DIRECTLY OR THROUGH IKJEFT01 OR DFSRRC00
     def steps(self, name: str) -> set[tuple[str, str]]:
         found = set()
         for lines in self.jcl.values():
             job = step = None
             for line in lines:
-                if m := re.match(r"^//([A-Z0-9@#$]+)\s+(?:JOB|PROC)\b", line):
-                    job = m.group(1)
+                if m := re.match(r"^//([A-Z0-9@#$]+)\s+(JOB|PROC)\b", line):
+                    job = f"{m.group(2).lower()}:{m.group(1)}"
                 elif m := re.match(r"^//([A-Z0-9@#$]+)\s+EXEC\s+(.*)", line):
                     step = m.group(1)
                     if re.search(rf"PGM={name}\b", m.group(2)):
@@ -112,7 +113,7 @@ class Oracle:
                 todo.append(caller)
         found = {f"program:{p}" for p in reached}
         for p in reached:
-            found |= {f"step:{job}.{step}" for job, step in self.steps(p)} | {f"job:{job}" for job, _ in self.steps(p)}
+            found |= {f"step:{job.split(':', 1)[1]}.{step}" for job, step in self.steps(p)} | {job for job, _ in self.steps(p)}
             found |= {f"transaction:{t}" for t in self.transactions(p)}
         return found
 
@@ -157,7 +158,7 @@ def main() -> int:
 def check(modules) -> int:
     jcl_paths = sorted(p for p in CORPUS.glob("app/**/*") if p.suffix.lower() in (".jcl", ".prc"))
     jobs = [job for path in jcl_paths for job in parse_jcl(path, CORPUS)]
-    csd = [d for path in CORPUS.glob("app/**/*.csd") for d in parse_csd(path, CORPUS)]
+    csd = [d for path in CORPUS.glob("app/**/*") if path.suffix.lower() == ".csd" for d in parse_csd(path, CORPUS)]
     graph = graph_from(modules, jobs, load_config(CONFIG), csd)
     walk = ImpactWalk(graph)
     oracle = Oracle()
@@ -172,7 +173,8 @@ def check(modules) -> int:
         total += len(expected)
         rows.append({"seed": name, "expected": len(expected), "found": len(expected) - len(missed), "missed": missed,
                      "engine_only": sorted(set(engine) - expected),
-                     "tiers": {t: sum(1 for n in expected if engine.get(n) == t) for t in ("definite", "probable", "possible")}})
+                     "tiers": {t: sum(1 for n in expected if engine.get(n) == t) for t in TIERS},
+                     "engine_only_tiers": {t: sum(1 for n in set(engine) - expected if engine[n] == t) for t in TIERS}})
     recall = hit / total
     REPORT.write_text(json.dumps({"seeds": len(rows), "expected": total, "found": hit, "recall": round(recall, 4),
                                   "rows": rows}, indent=1) + "\n")

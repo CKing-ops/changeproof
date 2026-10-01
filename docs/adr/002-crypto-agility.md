@@ -22,8 +22,8 @@ make the signing algorithm a moving target:
   high-risk systems with PQC no later than end of 2030, and to finish as far as feasible by 2035.
   Finance counts among the vital sectors that roadmap puts first.
 
-The article and recital numbers in this list are **unverified** against the regulation text; their
-source links and check status are in `docs/framework-mapping.md` (Other outside references).
+The RTS 2024/1774 references (Art. 6(4), Art. 7, recital 9) were checked against the EUR-Lex text on
+2026-10-01; see `docs/framework-mapping.md` (Other outside references).
 
 So the algorithms acceptable for evidence signatures will change at least twice: classical
 (ECDSA P-384) to hybrid (classical + ML-DSA-87) to post-quantum only. Evidence has long retention
