@@ -10,6 +10,7 @@ from pydantic import ValidationError
 
 from changeproof import __version__
 from changeproof.change import change_records
+from changeproof.characterize import DockerRunner, LocalRunner, characterize, replay
 from changeproof.config import Config, load_config
 from changeproof.impact import impact
 from changeproof.gate import gate, known_rules
@@ -169,6 +170,30 @@ def cmd_resign(args: argparse.Namespace) -> int:
     return 0
 
 
+# PURPOSE: BUILDS GOLDEN SUITES FOR COBOL SUBPROGRAMS, OR REPLAYS SAVED ONES; EXIT 1 ON A GAP OR A DIFFERENCE
+def cmd_characterize(args: argparse.Namespace) -> int:
+    runner = DockerRunner(args.docker) if args.docker else LocalRunner()
+    root = Path(args.root)
+    if args.replay:
+        found = {s: replay(json.loads(Path(s).read_text(encoding="utf-8")), root, runner, args.copybooks)
+                 for s in args.replay}
+        print(json.dumps(found, indent=2))
+        return 1 if any(found.values()) else 0
+    summary = {}  # RENAME: PROGRAM NAME TO ITS COVERAGE SUMMARY
+    for program in args.programs:
+        suite = characterize(Path(program), root, runner, args.copybooks)
+        if args.out:
+            Path(args.out).mkdir(parents=True, exist_ok=True)
+            (Path(args.out) / f"{suite['program']}.json").write_text(json.dumps(suite, indent=2) + "\n",
+                                                                      encoding="utf-8")
+        conditions = suite["conditions"]
+        summary[suite["program"]] = {"conditions": len(conditions), "tests": len(suite["tests"]), "runs": suite["runs"],
+                                     "both_ways": sum(len(c["covered"]) == 2 for c in conditions),
+                                     "untested": [c["id"] for c in conditions if not c["tests"]]}
+    print(json.dumps(summary, indent=2))
+    return 1 if any(s["untested"] for s in summary.values()) else 0
+
+
 # PURPOSE: ADDS --TRUST, --DISTRUST AND --REQUIRE TO A SUBCOMMAND
 def add_policy(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--trust", action="append", required=True, help="trusted public key file; repeatable")
@@ -218,6 +243,15 @@ def build_parser() -> argparse.ArgumentParser:
     gates.add_argument("--copybooks", action="append", default=[], help="copybook folder, repo-relative; repeatable")
     gates.add_argument("--oscal", help="write OSCAL assessment results here, validated against the NIST schema")
     gates.set_defaults(func=cmd_gate)
+
+    chars = sub.add_parser("characterize", help="golden tests for COBOL linkage subprograms, run under GnuCOBOL")
+    chars.add_argument("programs", nargs="*", help="program source files")
+    chars.add_argument("--root", default=".", help="repo root; suites cite files relative to it")
+    chars.add_argument("--copybooks", action="append", default=[], help="copybook folder, root-relative; repeatable")
+    chars.add_argument("--out", help="folder for one suite JSON per program; without it only the summary prints")
+    chars.add_argument("--replay", action="append", default=[], help="saved suite to re-run on today's source")
+    chars.add_argument("--docker", metavar="IMAGE", help="run in this GnuCOBOL image with networking off")
+    chars.set_defaults(func=cmd_characterize)
 
     keygen = sub.add_parser("keygen", help="make a signing key pair")
     keygen.add_argument("alg", choices=sorted(ALGORITHMS))

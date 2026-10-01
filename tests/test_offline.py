@@ -126,3 +126,14 @@ def test_the_policy_gate_makes_no_network_calls(tmp_path):
     assert proc.returncode == 0, proc.stderr
     result = ast.literal_eval(proc.stdout.strip().splitlines()[-1])
     assert result == {"codes": [1], "network_events": []}
+
+
+def test_characterization_makes_no_network_calls(tmp_path):
+    suite = ROOT / "docs" / "weekly" / "week08-golden" / "INTCALC.json"
+    argv = [["characterize", str(ROOT / "corpus" / "synthetic" / "batch" / "INTCALC.cbl"), "--root", str(ROOT),
+             "--out", str(tmp_path)], ["characterize", "--replay", str(suite), "--root", str(ROOT)]]
+    script = f"ARGV = {argv!r}\n" + textwrap.dedent(AUDITED)
+    proc = subprocess.run([sys.executable, "-c", script], capture_output=True, text=True, cwd=tmp_path)
+    assert proc.returncode == 0, proc.stderr
+    result = ast.literal_eval(proc.stdout.strip().splitlines()[-1])
+    assert result == {"codes": [0, 0], "network_events": []}

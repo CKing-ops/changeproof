@@ -155,11 +155,6 @@ def test_diff_ignores_moved_lines_and_catches_a_picture_change(adapter, module, 
     assert str(changed[0].entity.provenance) == "copy/PAYWS.cpy:4"
 
 
-def test_run_is_planned_for_week_8(adapter, module):
-    with pytest.raises(NotImplementedError, match="Week 8"):
-        adapter.run(module, {})
-
-
 def test_perform_is_a_fact_with_its_statement_line(by_id):
     perform = by_id["perform:PAYCALC.MAIN-PARA.CALC-PARA#1"]
     assert at(perform) == "src/PAYCALC.cbl:25"
