@@ -46,7 +46,8 @@ class Reached:
 STATIC_KINDS = {  # RENAME: EDGES WALKED FROM TARGET BACK TO SOURCE, WITH THE NAME OF THAT STEP
     "contains": "contained-in", "performs": "performed-by", "goes-to": "gone-to-from", "calls": "called-by",
     "includes": "included-by", "declares": "declared-by", "runs": "run-by", "runs-proc": "run-by",
-    "starts": "started-by", "uses-screen": "screen-of",
+    "starts": "started-by", "uses-screen": "screen-of", "extends": "extended-by", "implements": "implemented-by",
+    "uses-field": "used-by",
 }
 CICS_READS = frozenset({"READ", "READNEXT", "READPREV", "STARTBR"})  # RENAME: CICS FILE COMMANDS THAT READ
 CICS_WRITES = frozenset({"WRITE", "REWRITE", "DELETE"})  # RENAME: CICS FILE COMMANDS THAT WRITE
@@ -104,7 +105,7 @@ class ImpactWalk:
             for ref in e.attributes["targets"]:
                 if (item := find_data(self.data, program_of(e.id), ref)[0]) is not None:
                     found.append((item, "value", Step(e.id, item, "writes", e.provenance)))
-        paragraph = e.attributes.get("paragraph")
+        paragraph = e.attributes.get("paragraph") or e.attributes.get("scope")  # the enclosing node, in any language
         if paragraph in self.nodes and paragraph != e.id:
             found.append((paragraph, "node", Step(e.id, paragraph, "contained-in", e.provenance)))
         if program in self.nodes and program != e.id:

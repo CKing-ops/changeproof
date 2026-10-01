@@ -40,6 +40,8 @@ installed metadata.
 | threadpoolctl (Week 10, needed by scikit-learn) | 3.7.0 | BSD-3-Clause |
 | cloudpickle (Week 10, needed by joblib) | 3.1.2 | BSD-3-Clause |
 | narwhals (Week 10, needed by scikit-learn) | 2.26.0 | MIT |
+| tree-sitter (py-tree-sitter; Week 11: Java adapter, before that the spike only) | 0.26.0 | MIT |
+| tree-sitter-java (Week 11: Java adapter grammar) | 0.23.5 | MIT |
 
 ## Vendored generated code and data (shipped)
 
@@ -88,7 +90,7 @@ installed metadata.
 | Set | Source | License | In repo? |
 |---|---|---|---|
 | AWS CardDemo | aws-samples/aws-mainframe-modernization-carddemo `59cc6c2f` | Apache-2.0 (LICENSE and NOTICE kept) | yes, `corpus/carddemo/` |
-| Apache Commons Lang 3.17.0 (Java sample for `spike/mainstream_spike.py`) | apache/commons-lang `29ccc766` | Apache-2.0 | no, fetched by `spike/build.sh` |
+| Apache Commons Lang (Java sample for `spike/mainstream_spike.py`, and the Week 11 exit check with 41 commits of history) | apache/commons-lang `29ccc766` | Apache-2.0 | no, fetched by `spike/build.sh` and `scripts/fetch_java_corpus.py` |
 | Python standard library and npm 10.9.7 JavaScript (read in place for the same spike) | local Python 3.12 and Node 22 installs | PSF-2.0; Artistic-2.0 (npm) and its dependencies' licenses | no, read where installed; only counts are recorded |
 | NIST CCVS85 COBOL test suite | `newcob.val` via the GnuCOBOL project's download mirror | US government work, public domain | no, fetched by `scripts/fetch_corpus.py` |
 

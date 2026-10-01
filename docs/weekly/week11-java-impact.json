@@ -1,0 +1,282 @@
+{
+  "project": "apache/commons-lang",
+  "head": "29ccc7665f3bc5d84155a3092ab2209a053324e6",
+  "license": "Apache-2.0",
+  "commits": 16,
+  "parse_failures": {},
+  "graph": {
+    "nodes": 12630,
+    "edges": 145144,
+    "edge_kinds": {
+      "calls": 120613,
+      "extends": 335,
+      "implements": 76,
+      "contains": 11874,
+      "uses-crypto": 2,
+      "uses-field": 12244
+    },
+    "calls_resolved": 110668,
+    "calls_unresolved": 9945,
+    "provenance_problems": []
+  },
+  "changes_outside_hunks": 0,
+  "rows": [
+    {
+      "commit": "0d9bda8967905c657dafc0a051eb72e10c623c45",
+      "subject": "Javadoc",
+      "java_files": 1,
+      "changed": {},
+      "impacted": {},
+      "touches_crypto": false,
+      "unresolved": 0,
+      "outside_hunks": [],
+      "problems": {},
+      "seconds": 18.4
+    },
+    {
+      "commit": "f3de6a4633976753c931fb008e7de704581a49fd",
+      "subject": "Deprecate static RandomUtils.next*() methods in favor or .secure() and .insecure() versions",
+      "java_files": 1,
+      "changed": {
+        "method": 11
+      },
+      "impacted": {
+        "definite": 46
+      },
+      "touches_crypto": false,
+      "unresolved": 1,
+      "outside_hunks": [],
+      "problems": {},
+      "seconds": 20.0
+    },
+    {
+      "commit": "69cb996265ba603e0be5b1c98097775f2467a6c2",
+      "subject": "Deprecate static RandomStringUtils.random*() methods in favor or .secure() and .insecure() versions",
+      "java_files": 1,
+      "changed": {
+        "method": 19
+      },
+      "impacted": {
+        "definite": 22,
+        "probable": 36
+      },
+      "touches_crypto": false,
+      "unresolved": 1,
+      "outside_hunks": [],
+      "problems": {},
+      "seconds": 17.2
+    },
+    {
+      "commit": "07dd0ca548790ff1431b8a0d24718948fa2a1f50",
+      "subject": "Javadoc",
+      "java_files": 1,
+      "changed": {},
+      "impacted": {},
+      "touches_crypto": false,
+      "unresolved": 0,
+      "outside_hunks": [],
+      "problems": {},
+      "seconds": 18.0
+    },
+    {
+      "commit": "f92016c288410dd085ac4fdfab68375e7b18651b",
+      "subject": "[LANG-1750] Using RandomStringUtils.insecure() still leads to using the secure() random",
+      "java_files": 2,
+      "changed": {
+        "method": 21,
+        "call": 20
+      },
+      "impacted": {
+        "definite": 66,
+        "probable": 22
+      },
+      "touches_crypto": false,
+      "unresolved": 1,
+      "outside_hunks": [],
+      "problems": {},
+      "seconds": 18.5
+    },
+    {
+      "commit": "50587e0e00b24807ac866768200b6a15a4d75ef6",
+      "subject": "Better internal names",
+      "java_files": 1,
+      "changed": {
+        "call": 9,
+        "field-ref": 7,
+        "field": 6,
+        "crypto-call": 2,
+        "method": 3
+      },
+      "impacted": {
+        "definite": 79,
+        "probable": 48
+      },
+      "touches_crypto": true,
+      "unresolved": 0,
+      "outside_hunks": [],
+      "problems": {},
+      "seconds": 17.2
+    },
+    {
+      "commit": "17c32087ad475b043e373e56f2a489d79046334d",
+      "subject": "Random[String]Utils.secure() now uses SecureRandom() instead of SecureRandom.getInstanceStrong()",
+      "java_files": 2,
+      "changed": {
+        "call": 5,
+        "field": 2,
+        "method": 4,
+        "field-ref": 3,
+        "crypto-call": 1
+      },
+      "impacted": {
+        "definite": 89,
+        "probable": 48
+      },
+      "touches_crypto": true,
+      "unresolved": 3,
+      "outside_hunks": [],
+      "problems": {},
+      "seconds": 16.0
+    },
+    {
+      "commit": "ee2041464e60082a601d72be329bac57bc67328f",
+      "subject": "Let existing catch clause handle the NPE edge case",
+      "java_files": 2,
+      "changed": {
+        "method": 12,
+        "call": 24
+      },
+      "impacted": {
+        "definite": 50,
+        "probable": 5
+      },
+      "touches_crypto": false,
+      "unresolved": 0,
+      "outside_hunks": [],
+      "problems": {},
+      "seconds": 17.4
+    },
+    {
+      "commit": "dcba60a56927cc7f392528d0d093f0b0b3d9d486",
+      "subject": "Javadoc",
+      "java_files": 1,
+      "changed": {},
+      "impacted": {},
+      "touches_crypto": false,
+      "unresolved": 0,
+      "outside_hunks": [],
+      "problems": {},
+      "seconds": 16.7
+    },
+    {
+      "commit": "df4be6cd6e2a8bba13095a4415cfbc80abfbbe5b",
+      "subject": "Fix typos in comments",
+      "java_files": 1,
+      "changed": {},
+      "impacted": {},
+      "touches_crypto": false,
+      "unresolved": 0,
+      "outside_hunks": [],
+      "problems": {},
+      "seconds": 16.6
+    },
+    {
+      "commit": "328f2aedfb8643c3e1e74b5aec9e3628c3cbf2e7",
+      "subject": "Add CalendarUtils.toLocalDateTime(Calendar)",
+      "java_files": 2,
+      "changed": {
+        "import": 8,
+        "method": 3,
+        "call": 27,
+        "field-ref": 1,
+        "field": 1
+      },
+      "impacted": {
+        "definite": 2
+      },
+      "touches_crypto": false,
+      "unresolved": 1,
+      "outside_hunks": [],
+      "problems": {},
+      "seconds": 17.4
+    },
+    {
+      "commit": "666ad13656c690b310fc2c6487dd60b6ed72a5ed",
+      "subject": "Add CalendarUtils.toZonedDateTime(Calendar)",
+      "java_files": 2,
+      "changed": {
+        "import": 2,
+        "call": 30,
+        "method": 5,
+        "field-ref": 1
+      },
+      "impacted": {
+        "definite": 4
+      },
+      "touches_crypto": false,
+      "unresolved": 1,
+      "outside_hunks": [],
+      "problems": {},
+      "seconds": 15.0
+    },
+    {
+      "commit": "bfa3c06361fa7bfcf35f8b3136f48a46c2b2c241",
+      "subject": "Add CalendarUtils.toOffsetDateTime(Calendar)",
+      "java_files": 2,
+      "changed": {
+        "import": 2,
+        "method": 3,
+        "call": 26,
+        "field-ref": 1
+      },
+      "impacted": {
+        "definite": 2
+      },
+      "touches_crypto": false,
+      "unresolved": 1,
+      "outside_hunks": [],
+      "problems": {},
+      "seconds": 16.1
+    },
+    {
+      "commit": "5d3c269193614161daae75946b3f632c65a6d8a8",
+      "subject": "Javadoc",
+      "java_files": 2,
+      "changed": {},
+      "impacted": {},
+      "touches_crypto": false,
+      "unresolved": 0,
+      "outside_hunks": [],
+      "problems": {},
+      "seconds": 17.0
+    },
+    {
+      "commit": "f3b9aca3acaee99524daca774fa1ac42d0f7fd4e",
+      "subject": "Sort members",
+      "java_files": 1,
+      "changed": {},
+      "impacted": {},
+      "touches_crypto": false,
+      "unresolved": 0,
+      "outside_hunks": [],
+      "problems": {},
+      "seconds": 16.2
+    },
+    {
+      "commit": "d2eff05cd0e8e50be033240b377a46f1293e3ccc",
+      "subject": "Remove unused exception from deprecated StringUtils.toString(byte[], String)",
+      "java_files": 1,
+      "changed": {
+        "method": 1
+      },
+      "impacted": {
+        "definite": 3
+      },
+      "touches_crypto": false,
+      "unresolved": 1,
+      "outside_hunks": [],
+      "problems": {},
+      "seconds": 17.3
+    }
+  ]
+}

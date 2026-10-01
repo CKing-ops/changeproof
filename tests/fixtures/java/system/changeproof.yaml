@@ -1,0 +1,28 @@
+version: 0.1
+market: general
+system:
+  name: payments-service
+  owner: payments-engineering
+  classification: confidential
+components:
+  - id: payments-core
+    path: src/main/java/com/example/pay/core
+    language: java
+    criticality: high
+    relied_on_by: [card-network, merchant-portal]
+  - id: payments-crypto
+    path: src/main/java/com/example/pay/crypto
+    language: java
+    criticality: high
+  - id: reporting
+    path: src/main/java/com/example/pay/report
+    language: java
+    criticality: low
+    relied_on_by: [finance-reporting]
+crypto:
+  profile: hybrid
+  signing: [ml-dsa-87, ecdsa-p384]
+  release_signing: lms-sha256-192
+  hash: sha-384
+policy:
+  - rule: no-new-quantum-vulnerable-crypto
