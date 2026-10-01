@@ -60,7 +60,7 @@ byte that Python's `splitlines` counts as a line break, and the anchor of static
 
 Ada or C are left for `us-defense` if it is reopened, as the roadmap says. ADR 009 records the design.
 
-The whole suite passes with sockets blocked: TESTCOUNT tests, 4 of which skip unless the Commons
+The whole suite passes with sockets blocked: 440 tests, 4 of which skip unless the Commons
 Lang corpus has been fetched (CI fetches it).
 
 ## Outside facts (project rule 6)
