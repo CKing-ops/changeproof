@@ -25,6 +25,9 @@ transfer:
 - **RTS 2024/1774 Art. 6** requires encryption of data in transit, and Art. 6(4) requires crypto
   to keep pace with cryptanalysis, including quantum threats (Recital 9).
 
+The article and recital numbers in this list are **unverified** against the regulation text; their
+source links and check status are in `docs/framework-mapping.md` (Other outside references).
+
 Even an "anonymized" optimization problem can reveal system size and dependency topology, which a
 bank may treat as confidential. So egress has to be impossible by default and auditable when
 allowed.

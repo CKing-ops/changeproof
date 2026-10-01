@@ -44,9 +44,9 @@ EU_DORA = MarketProfile(
     classifications=("public", "internal", "confidential", "restricted"),
     default_classification="internal",
     no_egress_classifications=frozenset({"restricted"}),
-    customer_egress_needs=("customer_approval_ref", "ict_register_ref"),  # DORA Art. 28(3) register
-    allowed_regions=frozenset({"eea", "adequacy"}),  # DORA Art. 30, GDPR Chapter V
-    frameworks=("dora", "dora-rts-ict-risk", "eu-pqc-roadmap", "gdpr"),
+    customer_egress_needs=("customer_approval_ref", "ict_register_ref"),  # DORA Art. 28(3) register, unverified
+    allowed_regions=frozenset({"eea", "adequacy"}),  # DORA Art. 30, GDPR Chapter V, unverified
+    frameworks=("dora", "dora-rts-ict-risk", "ecb-itrq", "eu-pqc-roadmap", "gdpr"),
 )
 
 MARKETS = {p.name: p for p in (GENERAL, US_DEFENSE, EU_DORA)}  # RENAME: MARKET NAME TO PROFILE
