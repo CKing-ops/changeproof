@@ -109,7 +109,8 @@ def test_tampering_with_any_file_fails_the_check(built, keys, tmp_path, target):
     if target == "report":
         (copy / REPORT).write_bytes((copy / REPORT).read_bytes().replace(b"hybrid", b"hybrlD"))
     elif target == "oscal":
-        path = next((copy / "oscal").iterdir())
+        path = copy / "oscal" / f"02-{shas['co-authored'][:12]}.json"
+        assert "not-satisfied" in path.read_text()
         path.write_text(path.read_text().replace("not-satisfied", "satisfied"))
     else:
         path = copy / "attestations" / f"02-{shas['co-authored'][:12]}-policy-decision.dsse.json"
