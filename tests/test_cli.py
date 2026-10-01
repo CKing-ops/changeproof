@@ -1,3 +1,4 @@
+import base64
 import importlib.util
 import json
 from pathlib import Path
@@ -103,3 +104,70 @@ def test_impact_prints_the_predicate_for_a_commit(tmp_path, capsys):
     predicate = json.loads(capsys.readouterr().out)
     assert predicate["touches_crypto"] is True
     assert {"program:INVSIGN", "job:INVJOB"} <= {i["id"] for i in predicate["impacted"]}
+
+
+def test_validate_checks_algorithms_against_the_signer_registry(tmp_path, capsys):
+    data = yaml.safe_load(EXAMPLE.read_text())
+    data["crypto"]["signing"] = ["ml-dsa-78", "ecdsa-p384"]
+    bad = tmp_path / "changeproof.yaml"
+    bad.write_text(yaml.safe_dump(data))
+    assert main(["validate", str(bad)]) == 1
+    assert "crypto.signing: unknown algorithm 'ml-dsa-78'" in capsys.readouterr().err
+
+
+def test_keygen_sign_verify_and_resign(tmp_path, capsys):
+    for alg in ("ml-dsa-87", "ecdsa-p384"):
+        assert main(["keygen", alg, "--out", str(tmp_path / alg)]) == 0
+    payload = tmp_path / "statement.json"
+    payload.write_text(json.dumps({"_type": "https://in-toto.io/Statement/v1", "subject": [], "predicate": {}}))
+    signed, resigned, log = tmp_path / "signed.json", tmp_path / "resigned.json", tmp_path / "resign.log"
+    trust = ["--trust", str(tmp_path / "ml-dsa-87.pub.json"), "--trust", str(tmp_path / "ecdsa-p384.pub.json")]
+    assert main(["sign", str(payload), "--key", str(tmp_path / "ecdsa-p384.key"), "-o", str(signed)]) == 0
+    assert main(["verify", str(signed), *trust]) == 0
+    assert main(["verify", str(signed), *trust, "--distrust", "ecdsa-p384"]) == 1
+    assert main(["resign", str(signed), "--key", str(tmp_path / "ml-dsa-87.key"), *trust, "--log", str(log),
+                 "-o", str(resigned)]) == 0
+    capsys.readouterr()
+    assert main(["verify", str(resigned), *trust, "--distrust", "ecdsa-p384"]) == 0
+    report = json.loads(capsys.readouterr().out)
+    assert report["ok"] is True
+    assert [s["status"] for s in report["signatures"]] == ["distrusted", "valid"]
+    assert json.loads(signed.read_text())["payload"] == json.loads(resigned.read_text())["payload"]
+    assert len(log.read_text().splitlines()) == 1
+
+
+def test_release_signs_artifacts_and_verify_checks_them(tmp_path, capsys):
+    assert main(["keygen", "lms-sha256-192", "--out", str(tmp_path / "release")]) == 0
+    wheel = tmp_path / "changeproof-0.1.0-py3-none-any.whl"
+    wheel.write_bytes(b"wheel")
+    envelope = tmp_path / "release.dsse.json"
+    assert main(["release", str(wheel), "--root", str(tmp_path), "--key", str(tmp_path / "release.key"),
+                 "-o", str(envelope)]) == 0
+    trust = ["--trust", str(tmp_path / "release.pub.json"), "--subjects", str(tmp_path)]
+    assert main(["verify", str(envelope), *trust]) == 0
+    wheel.write_bytes(b"wheel, swapped")
+    capsys.readouterr()
+    assert main(["verify", str(envelope), *trust]) == 1
+    assert json.loads(capsys.readouterr().out)["subjects"] == ["changeproof-0.1.0-py3-none-any.whl: digest differs"]
+
+
+def test_impact_signs_its_statement_with_the_given_keys(tmp_path, capsys):
+    spec = importlib.util.spec_from_file_location("impact_seed", Path(__file__).parent / "fixtures" / "impact" / "seed.py")
+    seed = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(seed)
+    shas = dict(seed.seed(tmp_path / "repo"))
+    for alg in ("ml-dsa-87", "ecdsa-p384"):
+        main(["keygen", alg, "--out", str(tmp_path / alg)])
+    capsys.readouterr()
+    head = shas["hmac-instead-of-signature"]
+    assert main(["impact", head, "--repo", str(tmp_path / "repo"), "--copybooks", "copy",
+                 "--key", str(tmp_path / "ml-dsa-87.key"), "--key", str(tmp_path / "ecdsa-p384.key")]) == 0
+    envelope = json.loads(capsys.readouterr().out)
+    assert [s["alg"] for s in envelope["signatures"]] == ["ml-dsa-87", "ecdsa-p384"]
+    stmt = json.loads(base64.b64decode(envelope["payload"]))
+    assert stmt["predicateType"] == "urn:changeproof:predicate:impact:v0.1"
+    assert stmt["subject"][0]["digest"] == {"gitCommit": head}
+    path = tmp_path / "impact.json"
+    path.write_text(json.dumps(envelope))
+    assert main(["verify", str(path), "--trust", str(tmp_path / "ml-dsa-87.pub.json"),
+                 "--trust", str(tmp_path / "ecdsa-p384.pub.json")]) == 0

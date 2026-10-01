@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:changeproof:predicate:release:v0.1",
+  "title": "changeproof release predicate v0.1 (draft)",
+  "description": "A release of the engine itself. The artifacts and their digests are the statement's subjects.",
+  "type": "object",
+  "required": ["product"],
+  "additionalProperties": false,
+  "properties": {
+    "product": {
+      "type": "object",
+      "required": ["name", "version"],
+      "additionalProperties": false,
+      "properties": {"name": {"const": "changeproof"}, "version": {"type": "string", "minLength": 1}}
+    }
+  }
+}

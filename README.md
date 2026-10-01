@@ -12,7 +12,7 @@ tamper-evident change records. Sources and the full comparison are in `ROADMAP.m
 
 ## Status
 
-Weeks 1-5 (planned capabilities are labeled; proven ones cite their test):
+Weeks 1-6 (planned capabilities are labeled; proven ones cite their test):
 
 - `changeproof init` writes a starter `changeproof.yaml` (`tests/test_cli.py`).
 - `changeproof validate` checks a config against the schema (`tests/test_cli.py`).
@@ -41,6 +41,12 @@ Weeks 1-5 (planned capabilities are labeled; proven ones cite their test):
   Questionnaire, then the US profile, with each control's source and check status
   (`docs/framework-mapping.md`, `tests/test_frameworks.py`). Most control numbers are still
   **unverified** at source.
+- Signed evidence: a signer interface owns all cryptography, with ECDSA P-384, ML-DSA-87 and LMS
+  registered. `changeproof impact --key` signs the impact statement; `sign`, `release`, `verify`
+  (offline) and `resign` (countersign without altering) work under the `hybrid`, `nist-pqc`, `cnsa2`
+  and `classical-legacy` profiles. Tampering fails under every profile, and a hybrid signature still
+  verifies when either algorithm is distrusted (`tests/test_signer.py`, `tests/test_release.py`,
+  `tests/test_cli.py`). Production key custody and certified crypto modules: **planned** (Week 17).
 - Adapters for languages other than COBOL: **planned** (Java in Week 11; see `ROADMAP.md`).
 - Equivalence and crypto-inventory evidence: **planned** (Weeks 9, 16).
 

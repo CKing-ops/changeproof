@@ -84,7 +84,8 @@ RECORD = Evidence("change record: who, what, when, where and how for every commi
 CRYPTO = Evidence("impact predicate: touches_crypto when a change touches a crypto call",
                   "tests/test_impact.py::test_crypto_flag")
 EQUIVALENCE = Evidence("behavioral-equivalence attestation for code outside the impact set (Weeks 8-9)", PLANNED)
-SIGNED = Evidence("signed attestation, verifiable offline (Week 6)", PLANNED)
+SIGNED = Evidence("signed attestation, verifiable offline; hybrid signatures survive a distrusted algorithm",
+                  "tests/test_signer.py::test_exit_check_hybrid_verifies_when_either_component_is_distrusted")
 TEST_SELECTION = Evidence("test subset selected to cover the impact set (Week 10)", PLANNED)
 
 CONTROLS = (

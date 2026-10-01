@@ -24,6 +24,7 @@ def test_predicate_types_are_versioned_uris():
         "impact": "urn:changeproof:predicate:impact:v0.1",
         "behavioral-equivalence": "urn:changeproof:predicate:behavioral-equivalence:v0.1",
         "crypto-inventory": "urn:changeproof:predicate:crypto-inventory:v0.1",
+        "release": "urn:changeproof:predicate:release:v0.1",
     }
 
 

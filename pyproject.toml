@@ -13,6 +13,8 @@ dependencies = [
     "jsonschema>=4.26,<5",
     "referencing>=0.36,<1",
     "networkx>=3.4,<4",
+    "cryptography>=50.0.2,<51",
+    "pyhsslms==2.0.0",
 ]
 
 [project.scripts]

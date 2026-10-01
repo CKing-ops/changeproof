@@ -40,3 +40,18 @@ def test_purpose_tags_are_capitalized():
         if tag in line and line.split(tag, 1)[1] != line.split(tag, 1)[1].upper()
     ]
     assert lowercase == []
+
+
+CRYPTO_MODULES = {"hashlib", "hmac", "secrets", "cryptography", "pyhsslms", "oqs", "nacl", "Crypto", "ecdsa"}
+
+
+def test_crypto_libraries_are_imported_only_by_the_signer():
+    offenders = []
+    for path in python_files():
+        if "signer" in path.parts:
+            continue
+        for node in ast.walk(ast.parse(path.read_text(encoding="utf-8"))):
+            names = [a.name for a in node.names] if isinstance(node, ast.Import) else \
+                [node.module] if isinstance(node, ast.ImportFrom) and node.module and node.level == 0 else []
+            offenders += [f"{path.relative_to(ROOT)}: {n}" for n in names if n.split(".")[0] in CRYPTO_MODULES]
+    assert offenders == []

@@ -7,7 +7,7 @@ import jsonschema
 from referencing import Registry, Resource
 
 STATEMENT_TYPE = "https://in-toto.io/Statement/v1"
-PREDICATE_NAMES = ("impact", "behavioral-equivalence", "crypto-inventory")  # RENAME: DRAFT PREDICATES SHIPPED IN V0.1
+PREDICATE_NAMES = ("impact", "behavioral-equivalence", "crypto-inventory", "release")  # RENAME: DRAFT PREDICATES SHIPPED IN V0.1
 PREDICATE_TYPES = {name: f"urn:changeproof:predicate:{name}:v0.1" for name in PREDICATE_NAMES}
 
 
