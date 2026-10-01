@@ -25,7 +25,17 @@ jobs:
         run: |
           go install github.com/open-policy-agent/opa@v1.21.1
           echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+      - name: Install GnuCOBOL for characterization tests (network allowed)
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends gnucobol3=3.1.2-5.1ubuntu1
+      - name: Build the GnuCOBOL runner image (network allowed)
+        run: docker build -t changeproof-gnucobol docker/gnucobol
       - name: Tests with sockets blocked in-process
         run: uv run --offline pytest
       - name: Tests again inside a network namespace with no interfaces
         run: sudo unshare --net -- sudo -u "$USER" env "PATH=$PATH" "HOME=$HOME" uv run --offline pytest -p no:cacheprovider
+      - name: Golden suites replay in the container with networking off
+        run: |
+          uv run --offline changeproof characterize --root . --docker changeproof-gnucobol \
+            --replay docs/weekly/week08-golden/FEECALC.json \
+            --replay docs/weekly/week08-golden/RISKSCR.json \
+            --replay docs/weekly/week08-golden/INTCALC.json

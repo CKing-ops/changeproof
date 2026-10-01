@@ -1,0 +1,934 @@
+{
+  "program": "INTCALC",
+  "source": {
+    "file": "corpus/synthetic/batch/INTCALC.cbl",
+    "digest": {
+      "sha-384": "096d32957fabd3b2f7349b49f1c3ae369e50c5af598dd104e3888d1e3f8b94eb798f4ec66e39404e634706e32ca215eb"
+    }
+  },
+  "runner": {
+    "kind": "local",
+    "cobc": "cobc (GnuCOBOL) 3.1.2.0"
+  },
+  "fields": [
+    {
+      "name": "LK-PRINCIPAL",
+      "picture": "S9(9)V99",
+      "provenance": {
+        "file": "corpus/synthetic/batch/INTCALC.cbl",
+        "line": 9
+      },
+      "candidates": [
+        "-0.01",
+        "0.00",
+        "0.01",
+        "0.04",
+        "0.05",
+        "0.06",
+        "1.09",
+        "1.10",
+        "1.11",
+        "364.99",
+        "365.00",
+        "365.01",
+        "4999.99",
+        "5000.00",
+        "5000.01",
+        "99999.99",
+        "100000.00",
+        "100000.01",
+        "999999999.99"
+      ]
+    },
+    {
+      "name": "LK-RATE-CODE",
+      "picture": "XX",
+      "provenance": {
+        "file": "corpus/synthetic/batch/INTCALC.cbl",
+        "line": 10
+      },
+      "candidates": [
+        "",
+        "ST",
+        "PR",
+        "VP"
+      ]
+    },
+    {
+      "name": "LK-DAYS",
+      "picture": "9(4)",
+      "provenance": {
+        "file": "corpus/synthetic/batch/INTCALC.cbl",
+        "line": 11
+      },
+      "candidates": [
+        "0",
+        "1",
+        "364",
+        "365",
+        "366",
+        "4999",
+        "5000",
+        "5001",
+        "9999"
+      ]
+    },
+    {
+      "name": "LK-INTEREST",
+      "picture": "S9(9)V99",
+      "provenance": {
+        "file": "corpus/synthetic/batch/INTCALC.cbl",
+        "line": 12
+      },
+      "candidates": [
+        "-0.01",
+        "0.00",
+        "0.01",
+        "0.04",
+        "0.05",
+        "0.06",
+        "1.09",
+        "1.10",
+        "1.11",
+        "364.99",
+        "365.00",
+        "365.01",
+        "4999.99",
+        "5000.00",
+        "5000.01",
+        "99999.99",
+        "100000.00",
+        "100000.01",
+        "999999999.99"
+      ]
+    },
+    {
+      "name": "LK-STATUS",
+      "picture": "XX",
+      "provenance": {
+        "file": "corpus/synthetic/batch/INTCALC.cbl",
+        "line": 13
+      },
+      "candidates": [
+        ""
+      ]
+    }
+  ],
+  "conditions": [
+    {
+      "id": "branch:INTCALC.MAIN-PARA#1",
+      "kind": "when",
+      "condition": "LK-RATE-CODE = 'ST'",
+      "provenance": {
+        "file": "corpus/synthetic/batch/INTCALC.cbl",
+        "line": 20
+      },
+      "true_line": 21,
+      "false_line": null,
+      "covered": [
+        true,
+        false
+      ],
+      "tests": [
+        "INTCALC-01",
+        "INTCALC-02",
+        "INTCALC-03",
+        "INTCALC-04",
+        "INTCALC-05",
+        "INTCALC-06",
+        "INTCALC-07",
+        "INTCALC-08",
+        "INTCALC-09",
+        "INTCALC-10",
+        "INTCALC-11",
+        "INTCALC-12",
+        "INTCALC-13"
+      ]
+    },
+    {
+      "id": "branch:INTCALC.MAIN-PARA#2",
+      "kind": "when",
+      "condition": "LK-RATE-CODE = 'PR'",
+      "provenance": {
+        "file": "corpus/synthetic/batch/INTCALC.cbl",
+        "line": 22
+      },
+      "true_line": 23,
+      "false_line": null,
+      "covered": [
+        true,
+        false
+      ],
+      "tests": [
+        "INTCALC-01",
+        "INTCALC-02",
+        "INTCALC-03",
+        "INTCALC-04",
+        "INTCALC-05",
+        "INTCALC-06",
+        "INTCALC-07",
+        "INTCALC-08",
+        "INTCALC-09",
+        "INTCALC-10",
+        "INTCALC-11",
+        "INTCALC-12",
+        "INTCALC-13"
+      ]
+    },
+    {
+      "id": "branch:INTCALC.MAIN-PARA#3",
+      "kind": "when",
+      "condition": "LK-RATE-CODE = 'VP'",
+      "provenance": {
+        "file": "corpus/synthetic/batch/INTCALC.cbl",
+        "line": 24
+      },
+      "true_line": 25,
+      "false_line": null,
+      "covered": [
+        true,
+        false
+      ],
+      "tests": [
+        "INTCALC-01",
+        "INTCALC-02",
+        "INTCALC-03",
+        "INTCALC-04",
+        "INTCALC-05",
+        "INTCALC-06",
+        "INTCALC-07",
+        "INTCALC-08",
+        "INTCALC-09",
+        "INTCALC-10",
+        "INTCALC-11",
+        "INTCALC-12",
+        "INTCALC-13"
+      ]
+    },
+    {
+      "id": "branch:INTCALC.MAIN-PARA#4",
+      "kind": "if",
+      "condition": "LK-DAYS = 0",
+      "provenance": {
+        "file": "corpus/synthetic/batch/INTCALC.cbl",
+        "line": 30,
+        "end_line": 33
+      },
+      "true_line": 31,
+      "false_line": null,
+      "covered": [
+        true,
+        false
+      ],
+      "tests": [
+        "INTCALC-02",
+        "INTCALC-03",
+        "INTCALC-04",
+        "INTCALC-05",
+        "INTCALC-06",
+        "INTCALC-07",
+        "INTCALC-08",
+        "INTCALC-09",
+        "INTCALC-10",
+        "INTCALC-11",
+        "INTCALC-12",
+        "INTCALC-13"
+      ]
+    },
+    {
+      "id": "branch:INTCALC.MAIN-PARA#5",
+      "kind": "if",
+      "condition": "LK-DAYS > 365",
+      "provenance": {
+        "file": "corpus/synthetic/batch/INTCALC.cbl",
+        "line": 34,
+        "end_line": 38
+      },
+      "true_line": 35,
+      "false_line": 37,
+      "covered": [
+        true,
+        false
+      ],
+      "tests": [
+        "INTCALC-02",
+        "INTCALC-03",
+        "INTCALC-07",
+        "INTCALC-08",
+        "INTCALC-09",
+        "INTCALC-10",
+        "INTCALC-11",
+        "INTCALC-12",
+        "INTCALC-13"
+      ]
+    },
+    {
+      "id": "branch:INTCALC.MAIN-PARA#6",
+      "kind": "if",
+      "condition": "LK-PRINCIPAL >= 100000",
+      "provenance": {
+        "file": "corpus/synthetic/batch/INTCALC.cbl",
+        "line": 41,
+        "end_line": 43
+      },
+      "true_line": 42,
+      "false_line": null,
+      "covered": [
+        true,
+        false
+      ],
+      "tests": [
+        "INTCALC-02",
+        "INTCALC-03",
+        "INTCALC-07",
+        "INTCALC-08",
+        "INTCALC-09",
+        "INTCALC-10",
+        "INTCALC-11",
+        "INTCALC-12",
+        "INTCALC-13"
+      ]
+    },
+    {
+      "id": "branch:INTCALC.MAIN-PARA#7",
+      "kind": "if",
+      "condition": "LK-INTEREST > 5000",
+      "provenance": {
+        "file": "corpus/synthetic/batch/INTCALC.cbl",
+        "line": 44,
+        "end_line": 47
+      },
+      "true_line": 45,
+      "false_line": null,
+      "covered": [
+        true,
+        false
+      ],
+      "tests": [
+        "INTCALC-02",
+        "INTCALC-03",
+        "INTCALC-07",
+        "INTCALC-08",
+        "INTCALC-09",
+        "INTCALC-10",
+        "INTCALC-11",
+        "INTCALC-12",
+        "INTCALC-13"
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "id": "INTCALC-01",
+      "input": {
+        "LK-PRINCIPAL": "-0.01",
+        "LK-RATE-CODE": "",
+        "LK-DAYS": "0",
+        "LK-INTEREST": "-0.01",
+        "LK-STATUS": ""
+      },
+      "output": {
+        "LK-PRINCIPAL": "-000000000.01",
+        "LK-RATE-CODE": "  ",
+        "LK-DAYS": "0000",
+        "LK-INTEREST": "+000000000.00",
+        "LK-STATUS": "E1"
+      },
+      "output_digest": {
+        "sha-384": "d6517cd47614747e34971a43cc19dd6f90d794540512a5b29661c478d31b3b2c79a88565b7e3fc1cf4b90eed27f442d0"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#1",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#2",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#3",
+          "outcome": false
+        }
+      ]
+    },
+    {
+      "id": "INTCALC-02",
+      "input": {
+        "LK-PRINCIPAL": "364.99",
+        "LK-RATE-CODE": "PR",
+        "LK-DAYS": "366",
+        "LK-INTEREST": "364.99",
+        "LK-STATUS": ""
+      },
+      "output": {
+        "LK-PRINCIPAL": "+000000364.99",
+        "LK-RATE-CODE": "PR",
+        "LK-DAYS": "0366",
+        "LK-INTEREST": "+000000015.51",
+        "LK-STATUS": "OK"
+      },
+      "output_digest": {
+        "sha-384": "c9a339b808741962f921611c2ac528796080fbed0feb320075f66e6dec72aea6025d65b5e7de520dcf4b7d7055b0fc92"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#1",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#2",
+          "outcome": true
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#3",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#4",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#5",
+          "outcome": true
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#6",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#7",
+          "outcome": false
+        }
+      ]
+    },
+    {
+      "id": "INTCALC-03",
+      "input": {
+        "LK-PRINCIPAL": "999999999.99",
+        "LK-RATE-CODE": "VP",
+        "LK-DAYS": "9999",
+        "LK-INTEREST": "999999999.99",
+        "LK-STATUS": ""
+      },
+      "output": {
+        "LK-PRINCIPAL": "+999999999.99",
+        "LK-RATE-CODE": "VP",
+        "LK-DAYS": "9999",
+        "LK-INTEREST": "+000005000.00",
+        "LK-STATUS": "CP"
+      },
+      "output_digest": {
+        "sha-384": "a3cf514344b03849ad7f6ed8e52c0b52916733a3c348a9abf7de4339344d6470af72f2e705253169cd6690c1d509d6ff"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#1",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#2",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#3",
+          "outcome": true
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#4",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#5",
+          "outcome": true
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#6",
+          "outcome": true
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#7",
+          "outcome": true
+        }
+      ]
+    },
+    {
+      "id": "INTCALC-04",
+      "input": {
+        "LK-PRINCIPAL": "-0.01",
+        "LK-RATE-CODE": "ST",
+        "LK-DAYS": "0",
+        "LK-INTEREST": "-0.01",
+        "LK-STATUS": ""
+      },
+      "output": {
+        "LK-PRINCIPAL": "-000000000.01",
+        "LK-RATE-CODE": "ST",
+        "LK-DAYS": "0000",
+        "LK-INTEREST": "+000000000.00",
+        "LK-STATUS": "E2"
+      },
+      "output_digest": {
+        "sha-384": "41bf899d279a74f024e0e30ac9abb5f6817401e53a08ec83a8601f331929f1ba8e6f0c869a70d3fbf17b5c8573138581"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#1",
+          "outcome": true
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#2",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#3",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#4",
+          "outcome": true
+        }
+      ]
+    },
+    {
+      "id": "INTCALC-05",
+      "input": {
+        "LK-PRINCIPAL": "-0.01",
+        "LK-RATE-CODE": "PR",
+        "LK-DAYS": "0",
+        "LK-INTEREST": "-0.01",
+        "LK-STATUS": ""
+      },
+      "output": {
+        "LK-PRINCIPAL": "-000000000.01",
+        "LK-RATE-CODE": "PR",
+        "LK-DAYS": "0000",
+        "LK-INTEREST": "+000000000.00",
+        "LK-STATUS": "E2"
+      },
+      "output_digest": {
+        "sha-384": "20564d2475f60330ce1e1f920e130676133db27089fe920c327d83d3a5252ec76b15f19aa48ec64dc1ddd9aed1c8ecd7"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#1",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#2",
+          "outcome": true
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#3",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#4",
+          "outcome": true
+        }
+      ]
+    },
+    {
+      "id": "INTCALC-06",
+      "input": {
+        "LK-PRINCIPAL": "-0.01",
+        "LK-RATE-CODE": "VP",
+        "LK-DAYS": "0",
+        "LK-INTEREST": "-0.01",
+        "LK-STATUS": ""
+      },
+      "output": {
+        "LK-PRINCIPAL": "-000000000.01",
+        "LK-RATE-CODE": "VP",
+        "LK-DAYS": "0000",
+        "LK-INTEREST": "+000000000.00",
+        "LK-STATUS": "E2"
+      },
+      "output_digest": {
+        "sha-384": "bba8fa69e791e6f6762baffefe2a1dcb74726b04c6fd3f0f38a9d9d6f5dd5ca11081bc816d43a03b8b5adc765312db34"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#1",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#2",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#3",
+          "outcome": true
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#4",
+          "outcome": true
+        }
+      ]
+    },
+    {
+      "id": "INTCALC-07",
+      "input": {
+        "LK-PRINCIPAL": "100000.00",
+        "LK-RATE-CODE": "PR",
+        "LK-DAYS": "366",
+        "LK-INTEREST": "364.99",
+        "LK-STATUS": ""
+      },
+      "output": {
+        "LK-PRINCIPAL": "+000100000.00",
+        "LK-RATE-CODE": "PR",
+        "LK-DAYS": "0366",
+        "LK-INTEREST": "+000004675.00",
+        "LK-STATUS": "OK"
+      },
+      "output_digest": {
+        "sha-384": "c7b106ffa0b8d4313a04c4c6d7ad7e72dfe6a3061510b723aefdaf7c4e3046f915ef9705076c93348480252e1109a8e0"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#1",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#2",
+          "outcome": true
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#3",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#4",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#5",
+          "outcome": true
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#6",
+          "outcome": true
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#7",
+          "outcome": false
+        }
+      ]
+    },
+    {
+      "id": "INTCALC-08",
+      "input": {
+        "LK-PRINCIPAL": "999999999.99",
+        "LK-RATE-CODE": "PR",
+        "LK-DAYS": "366",
+        "LK-INTEREST": "364.99",
+        "LK-STATUS": ""
+      },
+      "output": {
+        "LK-PRINCIPAL": "+999999999.99",
+        "LK-RATE-CODE": "PR",
+        "LK-DAYS": "0366",
+        "LK-INTEREST": "+000005000.00",
+        "LK-STATUS": "CP"
+      },
+      "output_digest": {
+        "sha-384": "e8915ad0a6cbadd653bb4e892c752552f34d113c5de4dedbffac9af9ecffcd554e32eca86420dc5a8d1e23944ab1d07e"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#1",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#2",
+          "outcome": true
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#3",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#4",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#5",
+          "outcome": true
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#6",
+          "outcome": true
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#7",
+          "outcome": true
+        }
+      ]
+    },
+    {
+      "id": "INTCALC-09",
+      "input": {
+        "LK-PRINCIPAL": "364.99",
+        "LK-RATE-CODE": "ST",
+        "LK-DAYS": "366",
+        "LK-INTEREST": "364.99",
+        "LK-STATUS": ""
+      },
+      "output": {
+        "LK-PRINCIPAL": "+000000364.99",
+        "LK-RATE-CODE": "ST",
+        "LK-DAYS": "0366",
+        "LK-INTEREST": "+000000012.77",
+        "LK-STATUS": "OK"
+      },
+      "output_digest": {
+        "sha-384": "81f7e2c4107061f0b12e0484ca4e4ace79c8d328beb5d47cf2371172e0a42dfde92b49e434309b39f585b40395aa1944"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#1",
+          "outcome": true
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#2",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#3",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#4",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#5",
+          "outcome": true
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#6",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#7",
+          "outcome": false
+        }
+      ]
+    },
+    {
+      "id": "INTCALC-10",
+      "input": {
+        "LK-PRINCIPAL": "364.99",
+        "LK-RATE-CODE": "VP",
+        "LK-DAYS": "366",
+        "LK-INTEREST": "364.99",
+        "LK-STATUS": ""
+      },
+      "output": {
+        "LK-PRINCIPAL": "+000000364.99",
+        "LK-RATE-CODE": "VP",
+        "LK-DAYS": "0366",
+        "LK-INTEREST": "+000000018.25",
+        "LK-STATUS": "OK"
+      },
+      "output_digest": {
+        "sha-384": "f962935046339eb84278d937f9a605d185b6538069456f79ddeeb28dcad335310eaeab2e0ffdbeaec62da5ebbcdefe4e"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#1",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#2",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#3",
+          "outcome": true
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#4",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#5",
+          "outcome": true
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#6",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#7",
+          "outcome": false
+        }
+      ]
+    },
+    {
+      "id": "INTCALC-11",
+      "input": {
+        "LK-PRINCIPAL": "364.99",
+        "LK-RATE-CODE": "PR",
+        "LK-DAYS": "1",
+        "LK-INTEREST": "364.99",
+        "LK-STATUS": ""
+      },
+      "output": {
+        "LK-PRINCIPAL": "+000000364.99",
+        "LK-RATE-CODE": "PR",
+        "LK-DAYS": "0001",
+        "LK-INTEREST": "+000000000.04",
+        "LK-STATUS": "OK"
+      },
+      "output_digest": {
+        "sha-384": "a3536c2974a6cc83ef75fb01210db8081bf540d6ac932a023c5271bc27c9c05bb6ad62a488dbdc576b69b5feb0d12ed5"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#1",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#2",
+          "outcome": true
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#3",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#4",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#5",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#6",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#7",
+          "outcome": false
+        }
+      ]
+    },
+    {
+      "id": "INTCALC-12",
+      "input": {
+        "LK-PRINCIPAL": "999999999.99",
+        "LK-RATE-CODE": "ST",
+        "LK-DAYS": "9999",
+        "LK-INTEREST": "999999999.99",
+        "LK-STATUS": ""
+      },
+      "output": {
+        "LK-PRINCIPAL": "+999999999.99",
+        "LK-RATE-CODE": "ST",
+        "LK-DAYS": "9999",
+        "LK-INTEREST": "+000005000.00",
+        "LK-STATUS": "CP"
+      },
+      "output_digest": {
+        "sha-384": "2e7cacd47ce65d93aa2dadc2534af59bbfd5c83e987bc1116310b354b08311da09373e8f69bba03e6a44784c34cb0fd4"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#1",
+          "outcome": true
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#2",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#3",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#4",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#5",
+          "outcome": true
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#6",
+          "outcome": true
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#7",
+          "outcome": true
+        }
+      ]
+    },
+    {
+      "id": "INTCALC-13",
+      "input": {
+        "LK-PRINCIPAL": "999999999.99",
+        "LK-RATE-CODE": "VP",
+        "LK-DAYS": "1",
+        "LK-INTEREST": "999999999.99",
+        "LK-STATUS": ""
+      },
+      "output": {
+        "LK-PRINCIPAL": "+999999999.99",
+        "LK-RATE-CODE": "VP",
+        "LK-DAYS": "0001",
+        "LK-INTEREST": "+000005000.00",
+        "LK-STATUS": "CP"
+      },
+      "output_digest": {
+        "sha-384": "7265e498aa832f2490990610f484e29a783fb043e62da150359d6f54eff307b8cddfdebc5d50baa81fe0f2fc4ed1e0a4"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#1",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#2",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#3",
+          "outcome": true
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#4",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#5",
+          "outcome": false
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#6",
+          "outcome": true
+        },
+        {
+          "condition": "branch:INTCALC.MAIN-PARA#7",
+          "outcome": true
+        }
+      ]
+    }
+  ],
+  "runs": 144
+}

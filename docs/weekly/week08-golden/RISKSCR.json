@@ -1,0 +1,1708 @@
+{
+  "program": "RISKSCR",
+  "source": {
+    "file": "corpus/synthetic/batch/RISKSCR.cbl",
+    "digest": {
+      "sha-384": "a7980ea6b6e82dd7ade09f68a08449ce77b3cc41221a868598cf43da14a0f08bc0f0664309df8f4fbd9a27428e657013"
+    }
+  },
+  "runner": {
+    "kind": "local",
+    "cobc": "cobc (GnuCOBOL) 3.1.2.0"
+  },
+  "fields": [
+    {
+      "name": "LK-BALANCE",
+      "picture": "S9(9)V99",
+      "provenance": {
+        "file": "corpus/synthetic/batch/RISKSCR.cbl",
+        "line": 10
+      },
+      "candidates": [
+        "-0.01",
+        "0.00",
+        "0.01",
+        "1.99",
+        "2.00",
+        "2.01",
+        "9.99",
+        "10.00",
+        "10.01",
+        "14.99",
+        "15.00",
+        "15.01",
+        "19.99",
+        "20.00",
+        "20.01",
+        "39.99",
+        "40.00",
+        "40.01",
+        "49.99",
+        "50.00",
+        "50.01",
+        "69.99",
+        "70.00",
+        "70.01",
+        "89.99",
+        "90.00",
+        "90.01",
+        "99.99",
+        "100.00",
+        "100.01",
+        "999999999.99"
+      ]
+    },
+    {
+      "name": "LK-LIMIT",
+      "picture": "S9(9)V99",
+      "provenance": {
+        "file": "corpus/synthetic/batch/RISKSCR.cbl",
+        "line": 11
+      },
+      "candidates": [
+        "-0.01",
+        "0.00",
+        "0.01",
+        "1.99",
+        "2.00",
+        "2.01",
+        "9.99",
+        "10.00",
+        "10.01",
+        "14.99",
+        "15.00",
+        "15.01",
+        "19.99",
+        "20.00",
+        "20.01",
+        "39.99",
+        "40.00",
+        "40.01",
+        "49.99",
+        "50.00",
+        "50.01",
+        "69.99",
+        "70.00",
+        "70.01",
+        "89.99",
+        "90.00",
+        "90.01",
+        "99.99",
+        "100.00",
+        "100.01",
+        "999999999.99"
+      ]
+    },
+    {
+      "name": "LK-MISSED",
+      "picture": "9(2)",
+      "provenance": {
+        "file": "corpus/synthetic/batch/RISKSCR.cbl",
+        "line": 12
+      },
+      "candidates": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "9",
+        "10",
+        "11",
+        "14",
+        "15",
+        "16",
+        "19",
+        "20",
+        "21",
+        "39",
+        "40",
+        "41",
+        "49",
+        "50",
+        "51",
+        "69",
+        "70",
+        "71",
+        "89",
+        "90",
+        "91",
+        "99"
+      ]
+    },
+    {
+      "name": "LK-YEARS",
+      "picture": "9(2)",
+      "provenance": {
+        "file": "corpus/synthetic/batch/RISKSCR.cbl",
+        "line": 13
+      },
+      "candidates": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "9",
+        "10",
+        "11",
+        "14",
+        "15",
+        "16",
+        "19",
+        "20",
+        "21",
+        "39",
+        "40",
+        "41",
+        "49",
+        "50",
+        "51",
+        "69",
+        "70",
+        "71",
+        "89",
+        "90",
+        "91",
+        "99"
+      ]
+    },
+    {
+      "name": "LK-SCORE",
+      "picture": "9(3)",
+      "provenance": {
+        "file": "corpus/synthetic/batch/RISKSCR.cbl",
+        "line": 14
+      },
+      "candidates": [
+        "0"
+      ]
+    },
+    {
+      "name": "LK-GRADE",
+      "picture": "X",
+      "provenance": {
+        "file": "corpus/synthetic/batch/RISKSCR.cbl",
+        "line": 15
+      },
+      "candidates": [
+        ""
+      ]
+    }
+  ],
+  "conditions": [
+    {
+      "id": "branch:RISKSCR.MAIN-PARA#1",
+      "kind": "if",
+      "condition": "LK-LIMIT > 0",
+      "provenance": {
+        "file": "corpus/synthetic/batch/RISKSCR.cbl",
+        "line": 20,
+        "end_line": 24
+      },
+      "true_line": 21,
+      "false_line": 23,
+      "covered": [
+        true,
+        false
+      ],
+      "tests": [
+        "RISKSCR-01",
+        "RISKSCR-02",
+        "RISKSCR-03",
+        "RISKSCR-04",
+        "RISKSCR-05",
+        "RISKSCR-06",
+        "RISKSCR-07",
+        "RISKSCR-08",
+        "RISKSCR-09",
+        "RISKSCR-10",
+        "RISKSCR-11",
+        "RISKSCR-12",
+        "RISKSCR-13",
+        "RISKSCR-14",
+        "RISKSCR-15",
+        "RISKSCR-16",
+        "RISKSCR-17",
+        "RISKSCR-18",
+        "RISKSCR-19",
+        "RISKSCR-20",
+        "RISKSCR-21"
+      ]
+    },
+    {
+      "id": "branch:RISKSCR.MAIN-PARA#2",
+      "kind": "if",
+      "condition": "WS-UTIL >= 90",
+      "provenance": {
+        "file": "corpus/synthetic/batch/RISKSCR.cbl",
+        "line": 25,
+        "end_line": 31
+      },
+      "true_line": 26,
+      "false_line": 28,
+      "covered": [
+        true,
+        false
+      ],
+      "tests": [
+        "RISKSCR-01",
+        "RISKSCR-02",
+        "RISKSCR-03",
+        "RISKSCR-04",
+        "RISKSCR-05",
+        "RISKSCR-06",
+        "RISKSCR-07",
+        "RISKSCR-08",
+        "RISKSCR-09",
+        "RISKSCR-10",
+        "RISKSCR-11",
+        "RISKSCR-12",
+        "RISKSCR-13",
+        "RISKSCR-14",
+        "RISKSCR-15",
+        "RISKSCR-16",
+        "RISKSCR-17",
+        "RISKSCR-18",
+        "RISKSCR-19",
+        "RISKSCR-20",
+        "RISKSCR-21"
+      ]
+    },
+    {
+      "id": "branch:RISKSCR.MAIN-PARA#3",
+      "kind": "if",
+      "condition": "WS-UTIL >= 50",
+      "provenance": {
+        "file": "corpus/synthetic/batch/RISKSCR.cbl",
+        "line": 28,
+        "end_line": 30
+      },
+      "true_line": 29,
+      "false_line": null,
+      "covered": [
+        true,
+        false
+      ],
+      "tests": [
+        "RISKSCR-04",
+        "RISKSCR-08",
+        "RISKSCR-09",
+        "RISKSCR-14",
+        "RISKSCR-15",
+        "RISKSCR-16",
+        "RISKSCR-17",
+        "RISKSCR-18",
+        "RISKSCR-19",
+        "RISKSCR-20",
+        "RISKSCR-21"
+      ]
+    },
+    {
+      "id": "branch:RISKSCR.MAIN-PARA#4",
+      "kind": "until",
+      "condition": "WS-I > LK-MISSED",
+      "provenance": {
+        "file": "corpus/synthetic/batch/RISKSCR.cbl",
+        "line": 32,
+        "end_line": 34
+      },
+      "true_line": null,
+      "false_line": 33,
+      "covered": [
+        true,
+        false
+      ],
+      "tests": [
+        "RISKSCR-01",
+        "RISKSCR-02",
+        "RISKSCR-03",
+        "RISKSCR-04",
+        "RISKSCR-05",
+        "RISKSCR-06",
+        "RISKSCR-07",
+        "RISKSCR-08",
+        "RISKSCR-09",
+        "RISKSCR-10",
+        "RISKSCR-11",
+        "RISKSCR-12",
+        "RISKSCR-13",
+        "RISKSCR-14",
+        "RISKSCR-15",
+        "RISKSCR-16",
+        "RISKSCR-17",
+        "RISKSCR-18",
+        "RISKSCR-19",
+        "RISKSCR-20",
+        "RISKSCR-21"
+      ]
+    },
+    {
+      "id": "branch:RISKSCR.MAIN-PARA#5",
+      "kind": "if",
+      "condition": "LK-YEARS < 2",
+      "provenance": {
+        "file": "corpus/synthetic/batch/RISKSCR.cbl",
+        "line": 35,
+        "end_line": 37
+      },
+      "true_line": 36,
+      "false_line": null,
+      "covered": [
+        true,
+        false
+      ],
+      "tests": [
+        "RISKSCR-01",
+        "RISKSCR-02",
+        "RISKSCR-03",
+        "RISKSCR-04",
+        "RISKSCR-05",
+        "RISKSCR-06",
+        "RISKSCR-07",
+        "RISKSCR-08",
+        "RISKSCR-09",
+        "RISKSCR-10",
+        "RISKSCR-11",
+        "RISKSCR-12",
+        "RISKSCR-13",
+        "RISKSCR-14",
+        "RISKSCR-15",
+        "RISKSCR-16",
+        "RISKSCR-17",
+        "RISKSCR-18",
+        "RISKSCR-19",
+        "RISKSCR-20",
+        "RISKSCR-21"
+      ]
+    },
+    {
+      "id": "branch:RISKSCR.MAIN-PARA#6",
+      "kind": "when",
+      "condition": "WS-SCORE >= 70",
+      "provenance": {
+        "file": "corpus/synthetic/batch/RISKSCR.cbl",
+        "line": 39
+      },
+      "true_line": 40,
+      "false_line": null,
+      "covered": [
+        true,
+        false
+      ],
+      "tests": [
+        "RISKSCR-01",
+        "RISKSCR-02",
+        "RISKSCR-03",
+        "RISKSCR-04",
+        "RISKSCR-05",
+        "RISKSCR-06",
+        "RISKSCR-07",
+        "RISKSCR-08",
+        "RISKSCR-09",
+        "RISKSCR-10",
+        "RISKSCR-11",
+        "RISKSCR-12",
+        "RISKSCR-13",
+        "RISKSCR-14",
+        "RISKSCR-15",
+        "RISKSCR-16",
+        "RISKSCR-17",
+        "RISKSCR-18",
+        "RISKSCR-19",
+        "RISKSCR-20",
+        "RISKSCR-21"
+      ]
+    },
+    {
+      "id": "branch:RISKSCR.MAIN-PARA#7",
+      "kind": "when",
+      "condition": "WS-SCORE >= 40",
+      "provenance": {
+        "file": "corpus/synthetic/batch/RISKSCR.cbl",
+        "line": 41
+      },
+      "true_line": 42,
+      "false_line": null,
+      "covered": [
+        true,
+        false
+      ],
+      "tests": [
+        "RISKSCR-01",
+        "RISKSCR-02",
+        "RISKSCR-03",
+        "RISKSCR-04",
+        "RISKSCR-05",
+        "RISKSCR-06",
+        "RISKSCR-07",
+        "RISKSCR-08",
+        "RISKSCR-09",
+        "RISKSCR-10",
+        "RISKSCR-11",
+        "RISKSCR-12",
+        "RISKSCR-13",
+        "RISKSCR-14",
+        "RISKSCR-15",
+        "RISKSCR-16",
+        "RISKSCR-17",
+        "RISKSCR-18",
+        "RISKSCR-19",
+        "RISKSCR-20",
+        "RISKSCR-21"
+      ]
+    },
+    {
+      "id": "branch:RISKSCR.MAIN-PARA#8",
+      "kind": "when",
+      "condition": "WS-SCORE >= 20",
+      "provenance": {
+        "file": "corpus/synthetic/batch/RISKSCR.cbl",
+        "line": 43
+      },
+      "true_line": 44,
+      "false_line": null,
+      "covered": [
+        true,
+        false
+      ],
+      "tests": [
+        "RISKSCR-01",
+        "RISKSCR-02",
+        "RISKSCR-03",
+        "RISKSCR-04",
+        "RISKSCR-05",
+        "RISKSCR-06",
+        "RISKSCR-07",
+        "RISKSCR-08",
+        "RISKSCR-09",
+        "RISKSCR-10",
+        "RISKSCR-11",
+        "RISKSCR-12",
+        "RISKSCR-13",
+        "RISKSCR-14",
+        "RISKSCR-15",
+        "RISKSCR-16",
+        "RISKSCR-17",
+        "RISKSCR-18",
+        "RISKSCR-19",
+        "RISKSCR-20",
+        "RISKSCR-21"
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "id": "RISKSCR-01",
+      "input": {
+        "LK-BALANCE": "-0.01",
+        "LK-LIMIT": "-0.01",
+        "LK-MISSED": "0",
+        "LK-YEARS": "0",
+        "LK-SCORE": "0",
+        "LK-GRADE": ""
+      },
+      "output": {
+        "LK-BALANCE": "-000000000.01",
+        "LK-LIMIT": "-000000000.01",
+        "LK-MISSED": "00",
+        "LK-YEARS": "00",
+        "LK-SCORE": "050",
+        "LK-GRADE": "C"
+      },
+      "output_digest": {
+        "sha-384": "789edd5b83a4814a6e1107f18778158e43e0d79b3a91f9ffdbb71d5f804df0ed754f8939fbe600704172dd483db343e4"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#1",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#2",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#4",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#5",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#6",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#7",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#8",
+          "outcome": false
+        }
+      ]
+    },
+    {
+      "id": "RISKSCR-02",
+      "input": {
+        "LK-BALANCE": "39.99",
+        "LK-LIMIT": "39.99",
+        "LK-MISSED": "39",
+        "LK-YEARS": "39",
+        "LK-SCORE": "0",
+        "LK-GRADE": ""
+      },
+      "output": {
+        "LK-BALANCE": "+000000039.99",
+        "LK-LIMIT": "+000000039.99",
+        "LK-MISSED": "39",
+        "LK-YEARS": "39",
+        "LK-SCORE": "625",
+        "LK-GRADE": "D"
+      },
+      "output_digest": {
+        "sha-384": "e81b4f0f6137645711b46712569d0ca8fb3bbddf76b2f7198b030bd66b7cd0df83676c9924756f264e7aa3ced4c8411e"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#1",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#2",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#4",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#4",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#5",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#6",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#7",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#8",
+          "outcome": false
+        }
+      ]
+    },
+    {
+      "id": "RISKSCR-03",
+      "input": {
+        "LK-BALANCE": "-0.01",
+        "LK-LIMIT": "0.01",
+        "LK-MISSED": "0",
+        "LK-YEARS": "0",
+        "LK-SCORE": "0",
+        "LK-GRADE": ""
+      },
+      "output": {
+        "LK-BALANCE": "-000000000.01",
+        "LK-LIMIT": "+000000000.01",
+        "LK-MISSED": "00",
+        "LK-YEARS": "00",
+        "LK-SCORE": "050",
+        "LK-GRADE": "C"
+      },
+      "output_digest": {
+        "sha-384": "12e47f54e881aeb304e8fd5d6811b235e54e7e52694a79005ef9a2ff47fd96a1d51c146e03599c2ff6ab97b855b1011a"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#1",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#2",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#4",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#5",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#6",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#7",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#8",
+          "outcome": false
+        }
+      ]
+    },
+    {
+      "id": "RISKSCR-04",
+      "input": {
+        "LK-BALANCE": "-0.01",
+        "LK-LIMIT": "1.99",
+        "LK-MISSED": "0",
+        "LK-YEARS": "0",
+        "LK-SCORE": "0",
+        "LK-GRADE": ""
+      },
+      "output": {
+        "LK-BALANCE": "-000000000.01",
+        "LK-LIMIT": "+000000001.99",
+        "LK-MISSED": "00",
+        "LK-YEARS": "00",
+        "LK-SCORE": "010",
+        "LK-GRADE": "A"
+      },
+      "output_digest": {
+        "sha-384": "53757608b7f2d083e68e79087505da8745e7e181683692caa666c9baeaf852b251b89278a911646af701235cef95cd39"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#1",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#2",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#3",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#4",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#5",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#6",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#7",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#8",
+          "outcome": false
+        }
+      ]
+    },
+    {
+      "id": "RISKSCR-05",
+      "input": {
+        "LK-BALANCE": "-0.01",
+        "LK-LIMIT": "-0.01",
+        "LK-MISSED": "1",
+        "LK-YEARS": "0",
+        "LK-SCORE": "0",
+        "LK-GRADE": ""
+      },
+      "output": {
+        "LK-BALANCE": "-000000000.01",
+        "LK-LIMIT": "-000000000.01",
+        "LK-MISSED": "01",
+        "LK-YEARS": "00",
+        "LK-SCORE": "065",
+        "LK-GRADE": "C"
+      },
+      "output_digest": {
+        "sha-384": "71d17613c8e424120fb42639682273925263051f99b73d8945e433201b011f5c3dd5d3a7f2bee0173e7f32628b58853d"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#1",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#2",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#4",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#4",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#5",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#6",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#7",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#8",
+          "outcome": false
+        }
+      ]
+    },
+    {
+      "id": "RISKSCR-06",
+      "input": {
+        "LK-BALANCE": "-0.01",
+        "LK-LIMIT": "-0.01",
+        "LK-MISSED": "2",
+        "LK-YEARS": "0",
+        "LK-SCORE": "0",
+        "LK-GRADE": ""
+      },
+      "output": {
+        "LK-BALANCE": "-000000000.01",
+        "LK-LIMIT": "-000000000.01",
+        "LK-MISSED": "02",
+        "LK-YEARS": "00",
+        "LK-SCORE": "080",
+        "LK-GRADE": "D"
+      },
+      "output_digest": {
+        "sha-384": "4ded284a3df8bb37f6f2b435c7a80f39933a8acf859443c7db860ed531ee7e26b011a98362cf244f3b167459b2767289"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#1",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#2",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#4",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#4",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#5",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#6",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#7",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#8",
+          "outcome": false
+        }
+      ]
+    },
+    {
+      "id": "RISKSCR-07",
+      "input": {
+        "LK-BALANCE": "-0.01",
+        "LK-LIMIT": "-0.01",
+        "LK-MISSED": "0",
+        "LK-YEARS": "2",
+        "LK-SCORE": "0",
+        "LK-GRADE": ""
+      },
+      "output": {
+        "LK-BALANCE": "-000000000.01",
+        "LK-LIMIT": "-000000000.01",
+        "LK-MISSED": "00",
+        "LK-YEARS": "02",
+        "LK-SCORE": "040",
+        "LK-GRADE": "C"
+      },
+      "output_digest": {
+        "sha-384": "7232837c60a418c9843211a8c8f315b8f91f72439b0b852459856eecce76b2dc393922899d15eaaf51db41b46586126d"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#1",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#2",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#4",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#5",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#6",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#7",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#8",
+          "outcome": false
+        }
+      ]
+    },
+    {
+      "id": "RISKSCR-08",
+      "input": {
+        "LK-BALANCE": "-0.01",
+        "LK-LIMIT": "39.99",
+        "LK-MISSED": "39",
+        "LK-YEARS": "39",
+        "LK-SCORE": "0",
+        "LK-GRADE": ""
+      },
+      "output": {
+        "LK-BALANCE": "-000000000.01",
+        "LK-LIMIT": "+000000039.99",
+        "LK-MISSED": "39",
+        "LK-YEARS": "39",
+        "LK-SCORE": "585",
+        "LK-GRADE": "D"
+      },
+      "output_digest": {
+        "sha-384": "db3bf315af48b6c4c51efafcf6bdc00edee425f7d65292c0b2c40b926fe90857417c75c9f3af60f749b0e6b672804798"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#1",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#2",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#3",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#4",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#4",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#5",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#6",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#7",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#8",
+          "outcome": false
+        }
+      ]
+    },
+    {
+      "id": "RISKSCR-09",
+      "input": {
+        "LK-BALANCE": "20.00",
+        "LK-LIMIT": "39.99",
+        "LK-MISSED": "39",
+        "LK-YEARS": "39",
+        "LK-SCORE": "0",
+        "LK-GRADE": ""
+      },
+      "output": {
+        "LK-BALANCE": "+000000020.00",
+        "LK-LIMIT": "+000000039.99",
+        "LK-MISSED": "39",
+        "LK-YEARS": "39",
+        "LK-SCORE": "605",
+        "LK-GRADE": "D"
+      },
+      "output_digest": {
+        "sha-384": "be9bd15070014081bedb7cebbf9faa9b544096987e10eccc4808aaaa278cf42f815f2c6026535919eea7a3de68d70487"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#1",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#2",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#3",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#4",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#4",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#5",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#6",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#7",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#8",
+          "outcome": false
+        }
+      ]
+    },
+    {
+      "id": "RISKSCR-10",
+      "input": {
+        "LK-BALANCE": "39.99",
+        "LK-LIMIT": "-0.01",
+        "LK-MISSED": "39",
+        "LK-YEARS": "39",
+        "LK-SCORE": "0",
+        "LK-GRADE": ""
+      },
+      "output": {
+        "LK-BALANCE": "+000000039.99",
+        "LK-LIMIT": "-000000000.01",
+        "LK-MISSED": "39",
+        "LK-YEARS": "39",
+        "LK-SCORE": "625",
+        "LK-GRADE": "D"
+      },
+      "output_digest": {
+        "sha-384": "6f0b79581245b2e55e95700bea2580b16923db8a68c6a921df2d5ea31831a5fe3fa12b18fc2c7d92e911f971b8b4e1e0"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#1",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#2",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#4",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#4",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#5",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#6",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#7",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#8",
+          "outcome": false
+        }
+      ]
+    },
+    {
+      "id": "RISKSCR-11",
+      "input": {
+        "LK-BALANCE": "39.99",
+        "LK-LIMIT": "39.99",
+        "LK-MISSED": "0",
+        "LK-YEARS": "39",
+        "LK-SCORE": "0",
+        "LK-GRADE": ""
+      },
+      "output": {
+        "LK-BALANCE": "+000000039.99",
+        "LK-LIMIT": "+000000039.99",
+        "LK-MISSED": "00",
+        "LK-YEARS": "39",
+        "LK-SCORE": "040",
+        "LK-GRADE": "C"
+      },
+      "output_digest": {
+        "sha-384": "6fa67596a661906a57824967fe3202778608e231634fc083f5e759dae9b3db6fcbb3f45da4d2457513269124cd5badfb"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#1",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#2",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#4",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#5",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#6",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#7",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#8",
+          "outcome": false
+        }
+      ]
+    },
+    {
+      "id": "RISKSCR-12",
+      "input": {
+        "LK-BALANCE": "39.99",
+        "LK-LIMIT": "39.99",
+        "LK-MISSED": "1",
+        "LK-YEARS": "39",
+        "LK-SCORE": "0",
+        "LK-GRADE": ""
+      },
+      "output": {
+        "LK-BALANCE": "+000000039.99",
+        "LK-LIMIT": "+000000039.99",
+        "LK-MISSED": "01",
+        "LK-YEARS": "39",
+        "LK-SCORE": "055",
+        "LK-GRADE": "C"
+      },
+      "output_digest": {
+        "sha-384": "d04a26072b445318b4e109eec72c4ae6fcdb3ecc6881f8a71b32779de4effccebe62fc943d3c3eeb54f5faedc4a54ad8"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#1",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#2",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#4",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#4",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#5",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#6",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#7",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#8",
+          "outcome": false
+        }
+      ]
+    },
+    {
+      "id": "RISKSCR-13",
+      "input": {
+        "LK-BALANCE": "39.99",
+        "LK-LIMIT": "39.99",
+        "LK-MISSED": "39",
+        "LK-YEARS": "0",
+        "LK-SCORE": "0",
+        "LK-GRADE": ""
+      },
+      "output": {
+        "LK-BALANCE": "+000000039.99",
+        "LK-LIMIT": "+000000039.99",
+        "LK-MISSED": "39",
+        "LK-YEARS": "00",
+        "LK-SCORE": "635",
+        "LK-GRADE": "D"
+      },
+      "output_digest": {
+        "sha-384": "87d919047691a8ed7136bf9012da61f910db56ab57ef5f2b3c56efbc306c949c02f1cf73e040bea2c06e7996606c21bb"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#1",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#2",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#4",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#4",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#5",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#6",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#7",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#8",
+          "outcome": false
+        }
+      ]
+    },
+    {
+      "id": "RISKSCR-14",
+      "input": {
+        "LK-BALANCE": "-0.01",
+        "LK-LIMIT": "1.99",
+        "LK-MISSED": "1",
+        "LK-YEARS": "0",
+        "LK-SCORE": "0",
+        "LK-GRADE": ""
+      },
+      "output": {
+        "LK-BALANCE": "-000000000.01",
+        "LK-LIMIT": "+000000001.99",
+        "LK-MISSED": "01",
+        "LK-YEARS": "00",
+        "LK-SCORE": "025",
+        "LK-GRADE": "B"
+      },
+      "output_digest": {
+        "sha-384": "8e15f948ab7d5bfa9acce97bdaef0493186aa5198730f70c0ec6416f6a249d56b95f7a63237cb8c30c4cb31436956f02"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#1",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#2",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#3",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#4",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#4",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#5",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#6",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#7",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#8",
+          "outcome": true
+        }
+      ]
+    },
+    {
+      "id": "RISKSCR-15",
+      "input": {
+        "LK-BALANCE": "-0.01",
+        "LK-LIMIT": "1.99",
+        "LK-MISSED": "2",
+        "LK-YEARS": "0",
+        "LK-SCORE": "0",
+        "LK-GRADE": ""
+      },
+      "output": {
+        "LK-BALANCE": "-000000000.01",
+        "LK-LIMIT": "+000000001.99",
+        "LK-MISSED": "02",
+        "LK-YEARS": "00",
+        "LK-SCORE": "040",
+        "LK-GRADE": "C"
+      },
+      "output_digest": {
+        "sha-384": "2fc76d8fb913dcfcef62eafb9658d842d93fe6fc38b1335f4348e5425892e52cf750c37f1ade0799f5263e78bde33f38"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#1",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#2",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#3",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#4",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#4",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#5",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#6",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#7",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#8",
+          "outcome": false
+        }
+      ]
+    },
+    {
+      "id": "RISKSCR-16",
+      "input": {
+        "LK-BALANCE": "-0.01",
+        "LK-LIMIT": "1.99",
+        "LK-MISSED": "9",
+        "LK-YEARS": "0",
+        "LK-SCORE": "0",
+        "LK-GRADE": ""
+      },
+      "output": {
+        "LK-BALANCE": "-000000000.01",
+        "LK-LIMIT": "+000000001.99",
+        "LK-MISSED": "09",
+        "LK-YEARS": "00",
+        "LK-SCORE": "145",
+        "LK-GRADE": "D"
+      },
+      "output_digest": {
+        "sha-384": "1228b057313a1bb5cdc7b58e5231ab3896b8b164c3d5dd4bff9ed7ee9be6f6263d27e9acccf7e6200fb038f08071cce6"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#1",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#2",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#3",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#4",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#4",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#5",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#6",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#7",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#8",
+          "outcome": false
+        }
+      ]
+    },
+    {
+      "id": "RISKSCR-17",
+      "input": {
+        "LK-BALANCE": "-0.01",
+        "LK-LIMIT": "1.99",
+        "LK-MISSED": "0",
+        "LK-YEARS": "2",
+        "LK-SCORE": "0",
+        "LK-GRADE": ""
+      },
+      "output": {
+        "LK-BALANCE": "-000000000.01",
+        "LK-LIMIT": "+000000001.99",
+        "LK-MISSED": "00",
+        "LK-YEARS": "02",
+        "LK-SCORE": "000",
+        "LK-GRADE": "A"
+      },
+      "output_digest": {
+        "sha-384": "1c072d6ab001f9adc449babeb09928558fcc704dbd7c09cf27926652d2e603f3aa9bd5727a8487e7f9428cc843cce409"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#1",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#2",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#3",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#4",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#5",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#6",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#7",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#8",
+          "outcome": false
+        }
+      ]
+    },
+    {
+      "id": "RISKSCR-18",
+      "input": {
+        "LK-BALANCE": "20.00",
+        "LK-LIMIT": "39.99",
+        "LK-MISSED": "0",
+        "LK-YEARS": "39",
+        "LK-SCORE": "0",
+        "LK-GRADE": ""
+      },
+      "output": {
+        "LK-BALANCE": "+000000020.00",
+        "LK-LIMIT": "+000000039.99",
+        "LK-MISSED": "00",
+        "LK-YEARS": "39",
+        "LK-SCORE": "020",
+        "LK-GRADE": "B"
+      },
+      "output_digest": {
+        "sha-384": "9797e0d3858bcee4ec996b943b78989d1c717090f1efa7eb646e23a26fb8c5120418de2451eac61e90d80094ce1ef044"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#1",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#2",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#3",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#4",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#5",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#6",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#7",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#8",
+          "outcome": true
+        }
+      ]
+    },
+    {
+      "id": "RISKSCR-19",
+      "input": {
+        "LK-BALANCE": "20.00",
+        "LK-LIMIT": "39.99",
+        "LK-MISSED": "1",
+        "LK-YEARS": "39",
+        "LK-SCORE": "0",
+        "LK-GRADE": ""
+      },
+      "output": {
+        "LK-BALANCE": "+000000020.00",
+        "LK-LIMIT": "+000000039.99",
+        "LK-MISSED": "01",
+        "LK-YEARS": "39",
+        "LK-SCORE": "035",
+        "LK-GRADE": "B"
+      },
+      "output_digest": {
+        "sha-384": "af9c4d42a6b9d34d13c3d2d1e487dc30370b22b7441f801700d7fda6ceba2c300f03cf9aa2f13af9ee78dfcea4427e08"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#1",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#2",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#3",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#4",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#4",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#5",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#6",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#7",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#8",
+          "outcome": true
+        }
+      ]
+    },
+    {
+      "id": "RISKSCR-20",
+      "input": {
+        "LK-BALANCE": "20.00",
+        "LK-LIMIT": "39.99",
+        "LK-MISSED": "2",
+        "LK-YEARS": "39",
+        "LK-SCORE": "0",
+        "LK-GRADE": ""
+      },
+      "output": {
+        "LK-BALANCE": "+000000020.00",
+        "LK-LIMIT": "+000000039.99",
+        "LK-MISSED": "02",
+        "LK-YEARS": "39",
+        "LK-SCORE": "050",
+        "LK-GRADE": "C"
+      },
+      "output_digest": {
+        "sha-384": "7e8c3d6e7b29ee55aab75753204f48dad2c11030d6f669a1784f75e618d9a0be9f6799fe4fefacd1ab09167357b804c0"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#1",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#2",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#3",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#4",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#4",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#5",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#6",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#7",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#8",
+          "outcome": false
+        }
+      ]
+    },
+    {
+      "id": "RISKSCR-21",
+      "input": {
+        "LK-BALANCE": "20.00",
+        "LK-LIMIT": "39.99",
+        "LK-MISSED": "39",
+        "LK-YEARS": "0",
+        "LK-SCORE": "0",
+        "LK-GRADE": ""
+      },
+      "output": {
+        "LK-BALANCE": "+000000020.00",
+        "LK-LIMIT": "+000000039.99",
+        "LK-MISSED": "39",
+        "LK-YEARS": "00",
+        "LK-SCORE": "615",
+        "LK-GRADE": "D"
+      },
+      "output_digest": {
+        "sha-384": "61e3da3da934faed08c0d699f2c33c89efec575dd6ae232ec0f8df0810645f87a908a08919e77c025821659298cc3796"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#1",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#2",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#3",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#4",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#4",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#5",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#6",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#7",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#8",
+          "outcome": false
+        }
+      ]
+    }
+  ],
+  "runs": 493
+}

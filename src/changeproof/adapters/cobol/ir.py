@@ -104,6 +104,24 @@ def data_refs(ctx: ParserRuleContext) -> list[str]:
     return found
 
 
+# PURPOSE: DATA AND CONDITION NAMES A CONDITION READS, IN ORDER, WITHOUT REPEATS
+def condition_refs(ctx: ParserRuleContext) -> list[str]:
+    found = []
+    stack = [ctx]
+    while stack:
+        node = stack.pop()
+        if not isinstance(node, ParserRuleContext):
+            continue
+        if isinstance(node, P.ConditionNameReferenceContext):
+            found.append(node.conditionName().getText().upper())
+            continue
+        if isinstance(node, P.QualifiedDataNameContext):
+            found.append(qualified_name(node))
+            continue
+        stack.extend(reversed(node.children or []))
+    return list(dict.fromkeys(found))
+
+
 # PURPOSE: RENDERS A QUALIFIED DATA NAME AS "NAME OF GROUP OF RECORD"
 def qualified_name(node: P.QualifiedDataNameContext) -> str:
     format1 = node.qualifiedDataNameFormat1()
@@ -188,6 +206,9 @@ class Builder:
             case P.ProgramUnitContext():
                 self.program = node.identificationDivision().programIdParagraph().programName().getText().upper()
                 self.add("program", self.program, self.program, self.span(node), {})
+                self.program_entity = self.entities[-1]  # RENAME: PROGRAM ENTITY, GIVEN ITS USING LIST LATER
+            case P.ProcedureDivisionUsingClauseContext():
+                self.program_entity.attributes.update(using=condition_refs(node))
             case P.ProcedureSectionContext():
                 name = node.procedureSectionHeader().sectionName().getText().upper()
                 self.section_id = self.add("section", f"{self.program}.{name}", name, self.span(node), {})
@@ -206,6 +227,13 @@ class Builder:
                 self.enter_call(node)
             case P.PerformProcedureStatementContext():
                 self.enter_perform(node)
+                self.add_until(node, node.performType(), [])
+            case P.IfStatementContext():
+                self.enter_if(node)
+            case P.EvaluateStatementContext():
+                self.enter_evaluate(node)
+            case P.PerformInlineStatementContext():
+                self.add_until(node, node.performType(), node.statement())
             case P.GoToStatementSimpleContext():
                 self.add_jump("goto", node.procedureName(), node)
             case P.GoToDependingOnStatementContext():
@@ -308,6 +336,53 @@ class Builder:
         targets = node.procedureName()
         thru = {"thru": (targets[1].paragraphName() or targets[1].sectionName()).getText().upper()} if len(targets) > 1 else {}
         self.add_jump("perform", targets[0], node, thru)
+
+    # PURPOSE: FIRST SOURCE LINE OF A STATEMENT LIST, OR NONE WHEN IT IS EMPTY
+    def first_line(self, statements: list) -> int | None:
+        return self.span(statements[0]).line if statements else None
+
+    # PURPOSE: ADDS A BRANCH: ONE DECISION, ITS CONDITION, AND THE LINES THAT RUN ON EACH OUTCOME
+    def add_branch(self, node: ParserRuleContext, kind: str, condition: str, refs: list[str],
+                   true_line: int | None, false_line: int | None, extra: dict | None = None) -> None:
+        attributes = {"kind": kind, "condition": condition, "refs": refs, "true_line": true_line,
+                      "false_line": false_line} | (extra or {})
+        if self.paragraph_id:
+            attributes["paragraph"] = self.paragraph_id
+        self.add("branch", self.owner(), kind.upper(), self.span(node), attributes, numbered=True)
+
+    # PURPOSE: RECORDS AN IF, WITH THE FIRST LINE OF ITS THEN AND ELSE PARTS
+    def enter_if(self, node: P.IfStatementContext) -> None:
+        otherwise = node.ifElse()
+        self.add_branch(node, "if", self.text(node.condition()), condition_refs(node.condition()),
+                        self.first_line(node.ifThen().statement()),
+                        self.first_line(otherwise.statement()) if otherwise else None)
+
+    # PURPOSE: RECORDS EACH WHEN OF AN EVALUATE AS A BRANCH, JOINING THE SUBJECT TO A WHEN VALUE
+    def enter_evaluate(self, node: P.EvaluateStatementContext) -> None:
+        select = node.evaluateSelect()
+        subject = self.text(select)
+        decision = self.span(node).line
+        for phrase in node.evaluateWhenPhrase():
+            for when in phrase.evaluateWhen():
+                value = when.evaluateCondition()
+                if subject.upper() == "TRUE":
+                    text, refs = self.text(value), condition_refs(value)
+                else:
+                    text = f"{subject} = {self.text(value)}"
+                    refs = condition_refs(select) + [r for r in condition_refs(value) if r not in condition_refs(select)]
+                self.add_branch(when, "when", text, refs, self.first_line(phrase.statement()), None,
+                                {"decision_line": decision})
+
+    # PURPOSE: RECORDS THE UNTIL CONDITION OF A PERFORM; FALSE RUNS THE BODY, TRUE ENDS THE LOOP
+    def add_until(self, node: ParserRuleContext, perform_type, body: list) -> None:
+        if perform_type is None:
+            return
+        until = perform_type.performUntil()
+        if until is None and perform_type.performVarying():
+            until = perform_type.performVarying().performVaryingClause().performVaryingPhrase().performUntil()
+        if until is not None:
+            self.add_branch(node, "until", self.text(until.condition()), condition_refs(until.condition()),
+                            None, self.first_line(body))
 
     # PURPOSE: ADDS A PERFORM OR GO TO ENTITY NAMING ITS TARGET AS WRITTEN
     def add_jump(self, kind: str, target: P.ProcedureNameContext, node: ParserRuleContext, extra: dict | None = None) -> None:

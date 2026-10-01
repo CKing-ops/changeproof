@@ -39,6 +39,7 @@ installed metadata.
 | Tool | Used for | License | Note |
 |---|---|---|---|
 | OPA (Open Policy Agent) 1.21.1 (Week 7) | `changeproof gate` runs `opa eval` on the bundled Rego rules | Apache-2.0 (read from its module's LICENSE) | Run as a separate process; built with `go install github.com/open-policy-agent/opa@v1.21.1`, checked by Go's checksum database. No OPA code is copied or shipped. |
+| GnuCOBOL 3.1.2 (Ubuntu package `gnucobol3=3.1.2-5.1ubuntu1`) (Week 8) | `changeproof characterize` compiles the program under test and a generated driver with `cobc`, then runs them | compiler GPL-3.0-or-later; runtime library `libcob` LGPL-3.0-or-later (read from the package's Debian copyright file, `/usr/share/doc/gnucobol3/copyright`) | Run as a separate process, on the machine or in the image from `docker/gnucobol/Dockerfile`. The test binaries it builds link `libcob`; they live in a temporary folder and are deleted after the run. No GnuCOBOL code is copied, linked into changeproof or shipped. |
 | git (Week 4) | `changeproof change` reads commits with `git cat-file`, `diff-tree`, `rev-list` and `archive` | GPL-2.0 | Run as a separate process on the user's machine; no git code is copied, linked or shipped. |
 
 ## Development and CI only (not shipped)

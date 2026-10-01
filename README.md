@@ -5,14 +5,14 @@ Market: universal (`general`) is the main path and EU DORA (`eu-dora`) the stron
 
 Focus: the link between what a change touches in the code and proof that nothing else changed
 behaviour, in one evidence record per change. The impact half is proven for COBOL
-(`tests/test_impact.py`); the equivalence half is **planned** (Weeks 8-9), so the joined record is
-**planned** too. Neither half alone is new: CAST, OpenText and IBM ADDI do impact analysis, IBM
+(`tests/test_impact.py`); the equivalence half is **planned** (Week 9, on the Week 8 characterization tests), so the joined
+record is **planned** too. Neither half alone is new: CAST, OpenText and IBM ADDI do impact analysis, IBM
 watsonx Code Assistant for Z tests equivalence for COBOL-to-Java translation, and Kosli keeps
 tamper-evident change records. Sources and the full comparison are in `ROADMAP.md` (Positioning).
 
 ## Status
 
-Weeks 1-7 (planned capabilities are labeled; proven ones cite their test):
+Weeks 1-8 (planned capabilities are labeled; proven ones cite their test):
 
 - `changeproof init` writes a starter `changeproof.yaml` (`tests/test_cli.py`).
 - `changeproof validate` checks a config against the schema (`tests/test_cli.py`).
@@ -54,6 +54,13 @@ Weeks 1-7 (planned capabilities are labeled; proven ones cite their test):
   (`tests/test_gate.py`, `docs/adr/005-policy-gate-and-oscal.md`). A CI job template is in
   `docs/ci/changeproof-gate.yml`. `equivalence-required-outside-impact-set` reports
   **not-evaluated** until Weeks 8-9.
+- Characterization tests: `changeproof characterize` runs a COBOL linkage subprogram under GnuCOBOL
+  (locally, or in `docker/gnucobol` with networking off) on boundary inputs read from the program,
+  traces which way each `IF`, `WHEN` and `PERFORM UNTIL` went, and writes a golden suite with every
+  condition's `file:line`. On the three synthetic batch programs every one of the 21 conditions has
+  tests both ways, suites are reproducible, and `--replay` catches a changed fee rate
+  (`tests/test_characterize.py`, `docs/adr/006-characterization.md`). Programs that read files, Db2
+  or CICS need stubs: **planned**.
 - Adapters for languages other than COBOL: **planned** (Java in Week 11; see `ROADMAP.md`).
 - Equivalence and crypto-inventory evidence: **planned** (Weeks 9, 16).
 
