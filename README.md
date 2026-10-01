@@ -3,6 +3,13 @@
 Semantic change evidence engine. See `ROADMAP.md` for the build plan and `CLAUDE.md` for working rules.
 Market: universal (`general`) is the main path and EU DORA (`eu-dora`) the strong second.
 
+Focus: the link between what a change touches in the code and proof that nothing else changed
+behaviour, in one evidence record per change. The impact half is proven for COBOL
+(`tests/test_impact.py`); the equivalence half is **planned** (Weeks 8-9), so the joined record is
+**planned** too. Neither half alone is new: CAST, OpenText and IBM ADDI do impact analysis, IBM
+watsonx Code Assistant for Z tests equivalence for COBOL-to-Java translation, and Kosli keeps
+tamper-evident change records. Sources and the full comparison are in `ROADMAP.md` (Positioning).
+
 ## Status
 
 Weeks 1-5 (planned capabilities are labeled; proven ones cite their test):

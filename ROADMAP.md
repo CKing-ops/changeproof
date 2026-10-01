@@ -9,7 +9,15 @@
 
 Each evidence record answers **who / what / when / where / how** at code depth and links to **why** (ticket, requirement, approval), which the engine links but never invents.
 
+**The focus:** the link between what a change touches in the code and proof that nothing else changed behaviour, joined in one evidence record for every ordinary change (owner, 2026-10-01). The impact half is proven for COBOL (`tests/test_impact.py`, Week 5); the equivalence half is **planned** (Weeks 8-9), so the join is **planned** too.
+
 **The gap it fills:** SBOM tools (Anchore, Lineaje, Manifest Cyber, NetRise, ReversingLabs) prove *what is inside* software. Process tools (Kosli, ServiceNow, GRC) prove a change was *approved and tested*. Neither proves *what a change actually does*. DoD's Software Fast Track (SWFT) is moving authorization toward continuous, machine-readable, per-change evidence.
+
+Each half exists somewhere on its own, so neither half is the moat; the join is. Read on each vendor's page on 2026-10-01 (a product page shows only what a vendor chooses to say, so "not mentioned" means not shown, not "cannot do"):
+- **Impact without equivalence:** CAST Imaging ("all transactions and objects potentially affected by a code change", [capabilities](https://www.castsoftware.com/imaging/capabilities)), OpenText Enterprise Analyzer ("determine the impact of making a change", [data sheet](https://cabs.microfocus.com/media/data-sheet/enterprise_analyzer_ds.pdf)) and IBM ADDI ([library](https://www.ibm.com/support/pages/ibm-application-discovery-and-delivery-intelligence-ibm-z-library)) do code-level impact analysis, sold for modernisation. None mentions equivalence.
+- **Equivalence, for translation only:** IBM watsonx Code Assistant for Z generates unit tests "to compare semantic equivalence of new Java service to original COBOL code" ([product page](https://www.ibm.com/products/watsonx-code-assistant-z)). That covers COBOL-to-Java translation with AI-generated tests, not ordinary maintenance changes. IBM holds both halves in separate products, which makes it the closest threat.
+- **Tamper-evident records without code impact:** Kosli records changes across commits, pipelines and runtime environments in a "tamper-evident database" ([change management](https://www.kosli.com/release-change-management-automation/)). Signed or tamper-evident change evidence alone is therefore not a differentiator; ours is signed *code-level* impact and equivalence evidence.
+- ServiceNow was not re-read on 2026-10-01 and stays **unverified** here.
 
 **Post-quantum angle (new):** Between now and 2030, every defense system must migrate its cryptography. Each migration is a risky code change. The engine will find quantum-vulnerable crypto, show the impact of replacing it, and prove behavior was preserved afterward, with evidence signed in CNSA 2.0 algorithms. This turns a regulatory deadline into a recurring use case.
 
@@ -39,7 +47,7 @@ One build serves every market through the `market:` setting (`general` default, 
 
 **Later:** SOX / FDA CSA.
 
-**Moat targets:** (1) assessor acceptance, (2) deep legacy-language adapters (COBOL, Ada), (3) air-gapped, offline-first operation, (4) accumulated per-system baselines, (5) CNSA 2.0-native evidence plus PQC-migration proof, which few change-evidence tools offer.
+**Moat targets:** (1) impact and equivalence joined per change, as one deterministic evidence record (**planned**, Weeks 8-9; see The focus), (2) assessor acceptance, (3) line-level provenance on every fact, machine-checked (proven for COBOL: `tests/test_graph.py::test_every_edge_has_provenance`); not deep legacy coverage, where CAST, OpenText and IBM already go deeper and wider, (4) deterministic facts with no AI-generated evidence (CLAUDE.md rule 3), unlike AI-generated equivalence tests, (5) air-gapped, offline-first operation, (6) accumulated per-system baselines, (7) CNSA 2.0-native evidence plus PQC-migration proof, which few change-evidence tools offer.
 
 **Compliance realities:**
 - No CUI or classified code until you're on a CMMC Level 2 path. Pilot on unclassified, public or synthetic code.
