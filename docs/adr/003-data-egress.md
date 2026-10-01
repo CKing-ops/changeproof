@@ -69,8 +69,13 @@ sanitizer.
    `::test_dora_customer_data_egress_needs_approval_register_entry_and_eu_processing`,
    `::test_restricted_system_can_never_allow_egress`, `::test_egress_is_denied_when_section_is_missing`).
 
-2. **One rule set, two gates.** The Week 10 solver interface calls the same `check_egress` before
-   running any backend flagged `remote`. **Planned** (Week 10).
+2. **One rule set, two gates.** The solver interface (Week 10, ADR 008) calls the same
+   `check_egress` before running any backend flagged `remote`, and raises `EgressDenied` when a rule
+   fails, when there is no config, or when the problem is not a QUBO. Proven:
+   `tests/test_solver.py::test_remote_backends_pass_the_egress_gate_or_raise` (the same 20 cases),
+   `::test_a_remote_backend_with_egress_off_or_no_config_is_denied`,
+   `::test_only_a_qubo_may_go_to_a_remote_backend`, `::test_local_backends_never_consult_egress`.
+   The configs in those tests skip validation, so the solver's own gate is what is tested.
 
 3. **The engine package contains no network code.** No module under `src/changeproof/` may import
    `socket`, `ssl`, `http`, `urllib`, `asyncio`, `requests` or similar. The only network client
@@ -89,7 +94,9 @@ sanitizer.
 
 6. **Problem sanitizer.** Before egress: strip names, paths, IDs and metadata; randomize variable
    order; optionally pad or split to hide size. The payload must pass a "no source-derived
-   strings" test. **Planned** (Week 20).
+   strings" test. Name stripping exists: a serialized QUBO carries variable indices and numbers
+   only (`tests/test_solver.py::test_serialized_qubo_carries_no_names_from_the_problem`). The rest of
+   the sanitizer is **planned** (Week 20).
 
 7. **Egress attestation.** Every outbound call produces a signed record: payload hash,
    destination, time, approver, data tier, register-of-information reference and processing

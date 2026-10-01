@@ -198,6 +198,7 @@
         "line": 20,
         "end_line": 24
       },
+      "decision_line": 20,
       "true_line": 21,
       "false_line": 23,
       "covered": [
@@ -225,7 +226,8 @@
         "RISKSCR-18",
         "RISKSCR-19",
         "RISKSCR-20",
-        "RISKSCR-21"
+        "RISKSCR-21",
+        "RISKSCR-22"
       ]
     },
     {
@@ -237,6 +239,7 @@
         "line": 25,
         "end_line": 31
       },
+      "decision_line": 25,
       "true_line": 26,
       "false_line": 28,
       "covered": [
@@ -264,7 +267,8 @@
         "RISKSCR-18",
         "RISKSCR-19",
         "RISKSCR-20",
-        "RISKSCR-21"
+        "RISKSCR-21",
+        "RISKSCR-22"
       ]
     },
     {
@@ -276,6 +280,7 @@
         "line": 28,
         "end_line": 30
       },
+      "decision_line": 28,
       "true_line": 29,
       "false_line": null,
       "covered": [
@@ -305,6 +310,7 @@
         "line": 32,
         "end_line": 34
       },
+      "decision_line": 32,
       "true_line": null,
       "false_line": 33,
       "covered": [
@@ -332,7 +338,8 @@
         "RISKSCR-18",
         "RISKSCR-19",
         "RISKSCR-20",
-        "RISKSCR-21"
+        "RISKSCR-21",
+        "RISKSCR-22"
       ]
     },
     {
@@ -344,6 +351,7 @@
         "line": 35,
         "end_line": 37
       },
+      "decision_line": 35,
       "true_line": 36,
       "false_line": null,
       "covered": [
@@ -371,7 +379,8 @@
         "RISKSCR-18",
         "RISKSCR-19",
         "RISKSCR-20",
-        "RISKSCR-21"
+        "RISKSCR-21",
+        "RISKSCR-22"
       ]
     },
     {
@@ -382,6 +391,7 @@
         "file": "corpus/synthetic/batch/RISKSCR.cbl",
         "line": 39
       },
+      "decision_line": 38,
       "true_line": 40,
       "false_line": null,
       "covered": [
@@ -409,7 +419,8 @@
         "RISKSCR-18",
         "RISKSCR-19",
         "RISKSCR-20",
-        "RISKSCR-21"
+        "RISKSCR-21",
+        "RISKSCR-22"
       ]
     },
     {
@@ -420,6 +431,7 @@
         "file": "corpus/synthetic/batch/RISKSCR.cbl",
         "line": 41
       },
+      "decision_line": 38,
       "true_line": 42,
       "false_line": null,
       "covered": [
@@ -447,7 +459,8 @@
         "RISKSCR-18",
         "RISKSCR-19",
         "RISKSCR-20",
-        "RISKSCR-21"
+        "RISKSCR-21",
+        "RISKSCR-22"
       ]
     },
     {
@@ -458,6 +471,7 @@
         "file": "corpus/synthetic/batch/RISKSCR.cbl",
         "line": 43
       },
+      "decision_line": 38,
       "true_line": 44,
       "false_line": null,
       "covered": [
@@ -485,7 +499,8 @@
         "RISKSCR-18",
         "RISKSCR-19",
         "RISKSCR-20",
-        "RISKSCR-21"
+        "RISKSCR-21",
+        "RISKSCR-22"
       ]
     }
   ],
@@ -541,7 +556,26 @@
           "condition": "branch:RISKSCR.MAIN-PARA#8",
           "outcome": false
         }
-      ]
+      ],
+      "lines": [
+        16,
+        18,
+        19,
+        20,
+        23,
+        25,
+        26,
+        32,
+        35,
+        36,
+        38,
+        39,
+        41,
+        42,
+        48,
+        49
+      ],
+      "boundaries": []
     },
     {
       "id": "RISKSCR-02",
@@ -598,7 +632,25 @@
           "condition": "branch:RISKSCR.MAIN-PARA#8",
           "outcome": false
         }
-      ]
+      ],
+      "lines": [
+        16,
+        18,
+        19,
+        20,
+        21,
+        25,
+        26,
+        32,
+        33,
+        35,
+        38,
+        39,
+        40,
+        48,
+        49
+      ],
+      "boundaries": []
     },
     {
       "id": "RISKSCR-03",
@@ -651,7 +703,26 @@
           "condition": "branch:RISKSCR.MAIN-PARA#8",
           "outcome": false
         }
-      ]
+      ],
+      "lines": [
+        16,
+        18,
+        19,
+        20,
+        21,
+        25,
+        26,
+        32,
+        35,
+        36,
+        38,
+        39,
+        41,
+        42,
+        48,
+        49
+      ],
+      "boundaries": []
     },
     {
       "id": "RISKSCR-04",
@@ -708,7 +779,27 @@
           "condition": "branch:RISKSCR.MAIN-PARA#8",
           "outcome": false
         }
-      ]
+      ],
+      "lines": [
+        16,
+        18,
+        19,
+        20,
+        21,
+        25,
+        28,
+        32,
+        35,
+        36,
+        38,
+        39,
+        41,
+        43,
+        46,
+        48,
+        49
+      ],
+      "boundaries": []
     },
     {
       "id": "RISKSCR-05",
@@ -765,7 +856,27 @@
           "condition": "branch:RISKSCR.MAIN-PARA#8",
           "outcome": false
         }
-      ]
+      ],
+      "lines": [
+        16,
+        18,
+        19,
+        20,
+        23,
+        25,
+        26,
+        32,
+        33,
+        35,
+        36,
+        38,
+        39,
+        41,
+        42,
+        48,
+        49
+      ],
+      "boundaries": []
     },
     {
       "id": "RISKSCR-06",
@@ -822,7 +933,26 @@
           "condition": "branch:RISKSCR.MAIN-PARA#8",
           "outcome": false
         }
-      ]
+      ],
+      "lines": [
+        16,
+        18,
+        19,
+        20,
+        23,
+        25,
+        26,
+        32,
+        33,
+        35,
+        36,
+        38,
+        39,
+        40,
+        48,
+        49
+      ],
+      "boundaries": []
     },
     {
       "id": "RISKSCR-07",
@@ -874,6 +1004,30 @@
         {
           "condition": "branch:RISKSCR.MAIN-PARA#8",
           "outcome": false
+        }
+      ],
+      "lines": [
+        16,
+        18,
+        19,
+        20,
+        23,
+        25,
+        26,
+        32,
+        35,
+        38,
+        39,
+        41,
+        42,
+        48,
+        49
+      ],
+      "boundaries": [
+        {
+          "field": "LK-YEARS",
+          "value": "2",
+          "condition": "branch:RISKSCR.MAIN-PARA#5"
         }
       ]
     },
@@ -936,7 +1090,25 @@
           "condition": "branch:RISKSCR.MAIN-PARA#8",
           "outcome": false
         }
-      ]
+      ],
+      "lines": [
+        16,
+        18,
+        19,
+        20,
+        21,
+        25,
+        28,
+        32,
+        33,
+        35,
+        38,
+        39,
+        40,
+        48,
+        49
+      ],
+      "boundaries": []
     },
     {
       "id": "RISKSCR-09",
@@ -997,7 +1169,26 @@
           "condition": "branch:RISKSCR.MAIN-PARA#8",
           "outcome": false
         }
-      ]
+      ],
+      "lines": [
+        16,
+        18,
+        19,
+        20,
+        21,
+        25,
+        28,
+        29,
+        32,
+        33,
+        35,
+        38,
+        39,
+        40,
+        48,
+        49
+      ],
+      "boundaries": []
     },
     {
       "id": "RISKSCR-10",
@@ -1054,7 +1245,25 @@
           "condition": "branch:RISKSCR.MAIN-PARA#8",
           "outcome": false
         }
-      ]
+      ],
+      "lines": [
+        16,
+        18,
+        19,
+        20,
+        23,
+        25,
+        26,
+        32,
+        33,
+        35,
+        38,
+        39,
+        40,
+        48,
+        49
+      ],
+      "boundaries": []
     },
     {
       "id": "RISKSCR-11",
@@ -1107,7 +1316,25 @@
           "condition": "branch:RISKSCR.MAIN-PARA#8",
           "outcome": false
         }
-      ]
+      ],
+      "lines": [
+        16,
+        18,
+        19,
+        20,
+        21,
+        25,
+        26,
+        32,
+        35,
+        38,
+        39,
+        41,
+        42,
+        48,
+        49
+      ],
+      "boundaries": []
     },
     {
       "id": "RISKSCR-12",
@@ -1164,7 +1391,26 @@
           "condition": "branch:RISKSCR.MAIN-PARA#8",
           "outcome": false
         }
-      ]
+      ],
+      "lines": [
+        16,
+        18,
+        19,
+        20,
+        21,
+        25,
+        26,
+        32,
+        33,
+        35,
+        38,
+        39,
+        41,
+        42,
+        48,
+        49
+      ],
+      "boundaries": []
     },
     {
       "id": "RISKSCR-13",
@@ -1221,7 +1467,26 @@
           "condition": "branch:RISKSCR.MAIN-PARA#8",
           "outcome": false
         }
-      ]
+      ],
+      "lines": [
+        16,
+        18,
+        19,
+        20,
+        21,
+        25,
+        26,
+        32,
+        33,
+        35,
+        36,
+        38,
+        39,
+        40,
+        48,
+        49
+      ],
+      "boundaries": []
     },
     {
       "id": "RISKSCR-14",
@@ -1282,7 +1547,28 @@
           "condition": "branch:RISKSCR.MAIN-PARA#8",
           "outcome": true
         }
-      ]
+      ],
+      "lines": [
+        16,
+        18,
+        19,
+        20,
+        21,
+        25,
+        28,
+        32,
+        33,
+        35,
+        36,
+        38,
+        39,
+        41,
+        43,
+        44,
+        48,
+        49
+      ],
+      "boundaries": []
     },
     {
       "id": "RISKSCR-15",
@@ -1343,7 +1629,27 @@
           "condition": "branch:RISKSCR.MAIN-PARA#8",
           "outcome": false
         }
-      ]
+      ],
+      "lines": [
+        16,
+        18,
+        19,
+        20,
+        21,
+        25,
+        28,
+        32,
+        33,
+        35,
+        36,
+        38,
+        39,
+        41,
+        42,
+        48,
+        49
+      ],
+      "boundaries": []
     },
     {
       "id": "RISKSCR-16",
@@ -1404,7 +1710,26 @@
           "condition": "branch:RISKSCR.MAIN-PARA#8",
           "outcome": false
         }
-      ]
+      ],
+      "lines": [
+        16,
+        18,
+        19,
+        20,
+        21,
+        25,
+        28,
+        32,
+        33,
+        35,
+        36,
+        38,
+        39,
+        40,
+        48,
+        49
+      ],
+      "boundaries": []
     },
     {
       "id": "RISKSCR-17",
@@ -1460,6 +1785,31 @@
         {
           "condition": "branch:RISKSCR.MAIN-PARA#8",
           "outcome": false
+        }
+      ],
+      "lines": [
+        16,
+        18,
+        19,
+        20,
+        21,
+        25,
+        28,
+        32,
+        35,
+        38,
+        39,
+        41,
+        43,
+        46,
+        48,
+        49
+      ],
+      "boundaries": [
+        {
+          "field": "LK-YEARS",
+          "value": "2",
+          "condition": "branch:RISKSCR.MAIN-PARA#5"
         }
       ]
     },
@@ -1518,7 +1868,27 @@
           "condition": "branch:RISKSCR.MAIN-PARA#8",
           "outcome": true
         }
-      ]
+      ],
+      "lines": [
+        16,
+        18,
+        19,
+        20,
+        21,
+        25,
+        28,
+        29,
+        32,
+        35,
+        38,
+        39,
+        41,
+        43,
+        44,
+        48,
+        49
+      ],
+      "boundaries": []
     },
     {
       "id": "RISKSCR-19",
@@ -1579,7 +1949,28 @@
           "condition": "branch:RISKSCR.MAIN-PARA#8",
           "outcome": true
         }
-      ]
+      ],
+      "lines": [
+        16,
+        18,
+        19,
+        20,
+        21,
+        25,
+        28,
+        29,
+        32,
+        33,
+        35,
+        38,
+        39,
+        41,
+        43,
+        44,
+        48,
+        49
+      ],
+      "boundaries": []
     },
     {
       "id": "RISKSCR-20",
@@ -1640,7 +2031,27 @@
           "condition": "branch:RISKSCR.MAIN-PARA#8",
           "outcome": false
         }
-      ]
+      ],
+      "lines": [
+        16,
+        18,
+        19,
+        20,
+        21,
+        25,
+        28,
+        29,
+        32,
+        33,
+        35,
+        38,
+        39,
+        41,
+        42,
+        48,
+        49
+      ],
+      "boundaries": []
     },
     {
       "id": "RISKSCR-21",
@@ -1700,6 +2111,104 @@
         {
           "condition": "branch:RISKSCR.MAIN-PARA#8",
           "outcome": false
+        }
+      ],
+      "lines": [
+        16,
+        18,
+        19,
+        20,
+        21,
+        25,
+        28,
+        29,
+        32,
+        33,
+        35,
+        36,
+        38,
+        39,
+        40,
+        48,
+        49
+      ],
+      "boundaries": []
+    },
+    {
+      "id": "RISKSCR-22",
+      "input": {
+        "LK-BALANCE": "-0.01",
+        "LK-LIMIT": "0.00",
+        "LK-MISSED": "0",
+        "LK-YEARS": "0",
+        "LK-SCORE": "0",
+        "LK-GRADE": ""
+      },
+      "output": {
+        "LK-BALANCE": "-000000000.01",
+        "LK-LIMIT": "+000000000.00",
+        "LK-MISSED": "00",
+        "LK-YEARS": "00",
+        "LK-SCORE": "050",
+        "LK-GRADE": "C"
+      },
+      "output_digest": {
+        "sha-384": "59d322f96bdcff6e215f2579642323e86f604bfc6214e858130253389247631958cbb0f00040a72efe3404069880a814"
+      },
+      "rc": 0,
+      "covers": [
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#1",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#2",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#4",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#5",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#6",
+          "outcome": false
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#7",
+          "outcome": true
+        },
+        {
+          "condition": "branch:RISKSCR.MAIN-PARA#8",
+          "outcome": false
+        }
+      ],
+      "lines": [
+        16,
+        18,
+        19,
+        20,
+        23,
+        25,
+        26,
+        32,
+        35,
+        36,
+        38,
+        39,
+        41,
+        42,
+        48,
+        49
+      ],
+      "boundaries": [
+        {
+          "field": "LK-LIMIT",
+          "value": "0.00",
+          "condition": "branch:RISKSCR.MAIN-PARA#1"
         }
       ]
     }

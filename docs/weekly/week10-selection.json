@@ -1,0 +1,646 @@
+{
+  "bugs": 30,
+  "same_as_full_suite": true,
+  "caught": {
+    "full": 27,
+    "cp-sat": 27,
+    "greedy": 27
+  },
+  "test_runs": {
+    "full": 517,
+    "cp-sat": 281,
+    "greedy": 285
+  },
+  "rows": [
+    {
+      "bug": "F1",
+      "program": "FEECALC",
+      "changed_lines": [
+        18
+      ],
+      "full": {
+        "tests": 14,
+        "caught": true
+      },
+      "cp-sat": {
+        "tests": 13,
+        "optimal": true,
+        "caught": true
+      },
+      "greedy": {
+        "tests": 13,
+        "optimal": false,
+        "caught": true
+      }
+    },
+    {
+      "bug": "F2",
+      "program": "FEECALC",
+      "changed_lines": [
+        24
+      ],
+      "full": {
+        "tests": 14,
+        "caught": true
+      },
+      "cp-sat": {
+        "tests": 5,
+        "optimal": true,
+        "caught": true
+      },
+      "greedy": {
+        "tests": 5,
+        "optimal": false,
+        "caught": true
+      }
+    },
+    {
+      "bug": "F3",
+      "program": "FEECALC",
+      "changed_lines": [
+        26
+      ],
+      "full": {
+        "tests": 14,
+        "caught": true
+      },
+      "cp-sat": {
+        "tests": 4,
+        "optimal": true,
+        "caught": true
+      },
+      "greedy": {
+        "tests": 4,
+        "optimal": false,
+        "caught": true
+      }
+    },
+    {
+      "bug": "F4",
+      "program": "FEECALC",
+      "changed_lines": [
+        31
+      ],
+      "full": {
+        "tests": 14,
+        "caught": true
+      },
+      "cp-sat": {
+        "tests": 10,
+        "optimal": true,
+        "caught": true
+      },
+      "greedy": {
+        "tests": 10,
+        "optimal": false,
+        "caught": true
+      }
+    },
+    {
+      "bug": "F5",
+      "program": "FEECALC",
+      "changed_lines": [
+        34
+      ],
+      "full": {
+        "tests": 14,
+        "caught": true
+      },
+      "cp-sat": {
+        "tests": 9,
+        "optimal": true,
+        "caught": true
+      },
+      "greedy": {
+        "tests": 9,
+        "optimal": false,
+        "caught": true
+      }
+    },
+    {
+      "bug": "F6",
+      "program": "FEECALC",
+      "changed_lines": [
+        35
+      ],
+      "full": {
+        "tests": 14,
+        "caught": true
+      },
+      "cp-sat": {
+        "tests": 4,
+        "optimal": true,
+        "caught": true
+      },
+      "greedy": {
+        "tests": 4,
+        "optimal": false,
+        "caught": true
+      }
+    },
+    {
+      "bug": "F7",
+      "program": "FEECALC",
+      "changed_lines": [
+        39
+      ],
+      "full": {
+        "tests": 14,
+        "caught": true
+      },
+      "cp-sat": {
+        "tests": 2,
+        "optimal": true,
+        "caught": true
+      },
+      "greedy": {
+        "tests": 2,
+        "optimal": false,
+        "caught": true
+      }
+    },
+    {
+      "bug": "R1",
+      "program": "RISKSCR",
+      "changed_lines": [
+        20
+      ],
+      "full": {
+        "tests": 22,
+        "caught": true
+      },
+      "cp-sat": {
+        "tests": 21,
+        "optimal": true,
+        "caught": true
+      },
+      "greedy": {
+        "tests": 22,
+        "optimal": false,
+        "caught": true
+      }
+    },
+    {
+      "bug": "R2",
+      "program": "RISKSCR",
+      "changed_lines": [
+        25
+      ],
+      "full": {
+        "tests": 22,
+        "caught": false
+      },
+      "cp-sat": {
+        "tests": 21,
+        "optimal": true,
+        "caught": false
+      },
+      "greedy": {
+        "tests": 21,
+        "optimal": false,
+        "caught": false
+      }
+    },
+    {
+      "bug": "R3",
+      "program": "RISKSCR",
+      "changed_lines": [
+        29
+      ],
+      "full": {
+        "tests": 22,
+        "caught": true
+      },
+      "cp-sat": {
+        "tests": 5,
+        "optimal": true,
+        "caught": true
+      },
+      "greedy": {
+        "tests": 5,
+        "optimal": false,
+        "caught": true
+      }
+    },
+    {
+      "bug": "R4",
+      "program": "RISKSCR",
+      "changed_lines": [
+        32
+      ],
+      "full": {
+        "tests": 22,
+        "caught": true
+      },
+      "cp-sat": {
+        "tests": 21,
+        "optimal": true,
+        "caught": true
+      },
+      "greedy": {
+        "tests": 21,
+        "optimal": false,
+        "caught": true
+      }
+    },
+    {
+      "bug": "R5",
+      "program": "RISKSCR",
+      "changed_lines": [
+        35
+      ],
+      "full": {
+        "tests": 22,
+        "caught": true
+      },
+      "cp-sat": {
+        "tests": 21,
+        "optimal": true,
+        "caught": true
+      },
+      "greedy": {
+        "tests": 21,
+        "optimal": false,
+        "caught": true
+      }
+    },
+    {
+      "bug": "R6",
+      "program": "RISKSCR",
+      "changed_lines": [
+        41
+      ],
+      "full": {
+        "tests": 22,
+        "caught": true
+      },
+      "cp-sat": {
+        "tests": 21,
+        "optimal": true,
+        "caught": true
+      },
+      "greedy": {
+        "tests": 21,
+        "optimal": false,
+        "caught": true
+      }
+    },
+    {
+      "bug": "R7",
+      "program": "RISKSCR",
+      "changed_lines": [
+        44
+      ],
+      "full": {
+        "tests": 22,
+        "caught": true
+      },
+      "cp-sat": {
+        "tests": 3,
+        "optimal": true,
+        "caught": true
+      },
+      "greedy": {
+        "tests": 3,
+        "optimal": false,
+        "caught": true
+      }
+    },
+    {
+      "bug": "I1",
+      "program": "INTCALC",
+      "changed_lines": [
+        23
+      ],
+      "full": {
+        "tests": 15,
+        "caught": true
+      },
+      "cp-sat": {
+        "tests": 5,
+        "optimal": true,
+        "caught": true
+      },
+      "greedy": {
+        "tests": 5,
+        "optimal": false,
+        "caught": true
+      }
+    },
+    {
+      "bug": "I2",
+      "program": "INTCALC",
+      "changed_lines": [
+        30
+      ],
+      "full": {
+        "tests": 15,
+        "caught": true
+      },
+      "cp-sat": {
+        "tests": 12,
+        "optimal": true,
+        "caught": true
+      },
+      "greedy": {
+        "tests": 13,
+        "optimal": false,
+        "caught": true
+      }
+    },
+    {
+      "bug": "I3",
+      "program": "INTCALC",
+      "changed_lines": [
+        34
+      ],
+      "full": {
+        "tests": 15,
+        "caught": true
+      },
+      "cp-sat": {
+        "tests": 9,
+        "optimal": true,
+        "caught": true
+      },
+      "greedy": {
+        "tests": 10,
+        "optimal": false,
+        "caught": true
+      }
+    },
+    {
+      "bug": "I4",
+      "program": "INTCALC",
+      "changed_lines": [
+        35
+      ],
+      "full": {
+        "tests": 15,
+        "caught": true
+      },
+      "cp-sat": {
+        "tests": 7,
+        "optimal": true,
+        "caught": true
+      },
+      "greedy": {
+        "tests": 7,
+        "optimal": false,
+        "caught": true
+      }
+    },
+    {
+      "bug": "I5",
+      "program": "INTCALC",
+      "changed_lines": [
+        41
+      ],
+      "full": {
+        "tests": 15,
+        "caught": true
+      },
+      "cp-sat": {
+        "tests": 9,
+        "optimal": true,
+        "caught": true
+      },
+      "greedy": {
+        "tests": 9,
+        "optimal": false,
+        "caught": true
+      }
+    },
+    {
+      "bug": "I6",
+      "program": "INTCALC",
+      "changed_lines": [
+        45
+      ],
+      "full": {
+        "tests": 15,
+        "caught": true
+      },
+      "cp-sat": {
+        "tests": 4,
+        "optimal": true,
+        "caught": true
+      },
+      "greedy": {
+        "tests": 4,
+        "optimal": false,
+        "caught": true
+      }
+    },
+    {
+      "bug": "H1",
+      "program": "FEECALC",
+      "changed_lines": [
+        36
+      ],
+      "full": {
+        "tests": 14,
+        "caught": true
+      },
+      "cp-sat": {
+        "tests": 4,
+        "optimal": true,
+        "caught": true
+      },
+      "greedy": {
+        "tests": 4,
+        "optimal": false,
+        "caught": true
+      }
+    },
+    {
+      "bug": "H2",
+      "program": "FEECALC",
+      "changed_lines": [
+        32
+      ],
+      "full": {
+        "tests": 14,
+        "caught": true
+      },
+      "cp-sat": {
+        "tests": 4,
+        "optimal": true,
+        "caught": true
+      },
+      "greedy": {
+        "tests": 4,
+        "optimal": false,
+        "caught": true
+      }
+    },
+    {
+      "bug": "H3",
+      "program": "FEECALC",
+      "changed_lines": [
+        38
+      ],
+      "full": {
+        "tests": 14,
+        "caught": false
+      },
+      "cp-sat": {
+        "tests": 9,
+        "optimal": true,
+        "caught": false
+      },
+      "greedy": {
+        "tests": 10,
+        "optimal": false,
+        "caught": false
+      }
+    },
+    {
+      "bug": "H4",
+      "program": "RISKSCR",
+      "changed_lines": [
+        26
+      ],
+      "full": {
+        "tests": 22,
+        "caught": true
+      },
+      "cp-sat": {
+        "tests": 10,
+        "optimal": true,
+        "caught": true
+      },
+      "greedy": {
+        "tests": 10,
+        "optimal": false,
+        "caught": true
+      }
+    },
+    {
+      "bug": "H5",
+      "program": "RISKSCR",
+      "changed_lines": [
+        36
+      ],
+      "full": {
+        "tests": 22,
+        "caught": true
+      },
+      "cp-sat": {
+        "tests": 10,
+        "optimal": true,
+        "caught": true
+      },
+      "greedy": {
+        "tests": 10,
+        "optimal": false,
+        "caught": true
+      }
+    },
+    {
+      "bug": "H6",
+      "program": "RISKSCR",
+      "changed_lines": [
+        39
+      ],
+      "full": {
+        "tests": 22,
+        "caught": false
+      },
+      "cp-sat": {
+        "tests": 21,
+        "optimal": true,
+        "caught": false
+      },
+      "greedy": {
+        "tests": 21,
+        "optimal": false,
+        "caught": false
+      }
+    },
+    {
+      "bug": "H7",
+      "program": "RISKSCR",
+      "changed_lines": [
+        23
+      ],
+      "full": {
+        "tests": 22,
+        "caught": true
+      },
+      "cp-sat": {
+        "tests": 5,
+        "optimal": true,
+        "caught": true
+      },
+      "greedy": {
+        "tests": 5,
+        "optimal": false,
+        "caught": true
+      }
+    },
+    {
+      "bug": "H8",
+      "program": "INTCALC",
+      "changed_lines": [
+        21
+      ],
+      "full": {
+        "tests": 15,
+        "caught": true
+      },
+      "cp-sat": {
+        "tests": 3,
+        "optimal": true,
+        "caught": true
+      },
+      "greedy": {
+        "tests": 3,
+        "optimal": false,
+        "caught": true
+      }
+    },
+    {
+      "bug": "H9",
+      "program": "INTCALC",
+      "changed_lines": [
+        46
+      ],
+      "full": {
+        "tests": 15,
+        "caught": true
+      },
+      "cp-sat": {
+        "tests": 4,
+        "optimal": true,
+        "caught": true
+      },
+      "greedy": {
+        "tests": 4,
+        "optimal": false,
+        "caught": true
+      }
+    },
+    {
+      "bug": "H10",
+      "program": "INTCALC",
+      "changed_lines": [
+        42
+      ],
+      "full": {
+        "tests": 15,
+        "caught": true
+      },
+      "cp-sat": {
+        "tests": 5,
+        "optimal": true,
+        "caught": true
+      },
+      "greedy": {
+        "tests": 5,
+        "optimal": false,
+        "caught": true
+      }
+    }
+  ]
+}
