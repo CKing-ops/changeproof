@@ -1,0 +1,267 @@
+{
+ "bugs": 20,
+ "caught": 19,
+ "share": 0.95,
+ "target": 0.85,
+ "kill_gate": 0.6,
+ "rows": [
+  {
+   "bug": "F1",
+   "program": "FEECALC",
+   "mistake": "zero amount no longer rejected",
+   "change": "IF LK-AMOUNT <= 0 -> IF LK-AMOUNT < 0",
+   "verdict": "not-equivalent",
+   "caught": true,
+   "programs_differing": [
+    "FEECALC"
+   ],
+   "tests_differing": 1,
+   "tests_run": 51
+  },
+  {
+   "bug": "F2",
+   "program": "FEECALC",
+   "mistake": "personal rate wrong",
+   "change": "LK-AMOUNT * 0.015 -> LK-AMOUNT * 0.016",
+   "verdict": "not-equivalent",
+   "caught": true,
+   "programs_differing": [
+    "FEECALC"
+   ],
+   "tests_differing": 5,
+   "tests_run": 51
+  },
+  {
+   "bug": "F3",
+   "program": "FEECALC",
+   "mistake": "business rate wrong by a factor of ten",
+   "change": "LK-AMOUNT * 0.010 -> LK-AMOUNT * 0.100",
+   "verdict": "not-equivalent",
+   "caught": true,
+   "programs_differing": [
+    "FEECALC"
+   ],
+   "tests_differing": 3,
+   "tests_run": 51
+  },
+  {
+   "bug": "F4",
+   "program": "FEECALC",
+   "mistake": "large-balance discount off by one",
+   "change": "IF LK-AMOUNT > 10000 -> IF LK-AMOUNT >= 10000",
+   "verdict": "not-equivalent",
+   "caught": true,
+   "programs_differing": [
+    "FEECALC"
+   ],
+   "tests_differing": 1,
+   "tests_run": 51
+  },
+  {
+   "bug": "F5",
+   "program": "FEECALC",
+   "mistake": "late threshold off by one",
+   "change": "IF LK-DAYS-LATE > 30 -> IF LK-DAYS-LATE > 31",
+   "verdict": "not-equivalent",
+   "caught": true,
+   "programs_differing": [
+    "FEECALC"
+   ],
+   "tests_differing": 1,
+   "tests_run": 51
+  },
+  {
+   "bug": "F6",
+   "program": "FEECALC",
+   "mistake": "late fee mistyped",
+   "change": "ADD 40 TO LK-FEE -> ADD 4 TO LK-FEE",
+   "verdict": "not-equivalent",
+   "caught": true,
+   "programs_differing": [
+    "FEECALC"
+   ],
+   "tests_differing": 4,
+   "tests_run": 51
+  },
+  {
+   "bug": "F7",
+   "program": "FEECALC",
+   "mistake": "minimum fee wrong",
+   "change": "MOVE 2.50 TO LK-FEE -> MOVE 2.00 TO LK-FEE",
+   "verdict": "not-equivalent",
+   "caught": true,
+   "programs_differing": [
+    "FEECALC"
+   ],
+   "tests_differing": 3,
+   "tests_run": 51
+  },
+  {
+   "bug": "R1",
+   "program": "RISKSCR",
+   "mistake": "zero limit divides instead of scoring as full use",
+   "change": "IF LK-LIMIT > 0 -> IF LK-LIMIT >= 0",
+   "verdict": "not-equivalent",
+   "caught": true,
+   "programs_differing": [
+    "RISKSCR"
+   ],
+   "tests_differing": 1,
+   "tests_run": 51
+  },
+  {
+   "bug": "R2",
+   "program": "RISKSCR",
+   "mistake": "high-use threshold off by one",
+   "change": "IF WS-UTIL >= 90 -> IF WS-UTIL > 90",
+   "verdict": "equivalent",
+   "caught": false,
+   "programs_differing": [],
+   "tests_differing": 0,
+   "tests_run": 51
+  },
+  {
+   "bug": "R3",
+   "program": "RISKSCR",
+   "mistake": "medium-use weight wrong",
+   "change": "ADD 20 TO WS-SCORE -> ADD 25 TO WS-SCORE",
+   "verdict": "not-equivalent",
+   "caught": true,
+   "programs_differing": [
+    "RISKSCR"
+   ],
+   "tests_differing": 5,
+   "tests_run": 51
+  },
+  {
+   "bug": "R4",
+   "program": "RISKSCR",
+   "mistake": "loop runs once too few",
+   "change": "UNTIL WS-I > LK-MISSED -> UNTIL WS-I >= LK-MISSED",
+   "verdict": "not-equivalent",
+   "caught": true,
+   "programs_differing": [
+    "RISKSCR"
+   ],
+   "tests_differing": 14,
+   "tests_run": 51
+  },
+  {
+   "bug": "R5",
+   "program": "RISKSCR",
+   "mistake": "new-customer threshold off by one",
+   "change": "IF LK-YEARS < 2 -> IF LK-YEARS < 3",
+   "verdict": "not-equivalent",
+   "caught": true,
+   "programs_differing": [
+    "RISKSCR"
+   ],
+   "tests_differing": 2,
+   "tests_run": 51
+  },
+  {
+   "bug": "R6",
+   "program": "RISKSCR",
+   "mistake": "grade C boundary off by one",
+   "change": "WHEN WS-SCORE >= 40 -> WHEN WS-SCORE > 40",
+   "verdict": "not-equivalent",
+   "caught": true,
+   "programs_differing": [
+    "RISKSCR"
+   ],
+   "tests_differing": 3,
+   "tests_run": 51
+  },
+  {
+   "bug": "R7",
+   "program": "RISKSCR",
+   "mistake": "wrong grade letter",
+   "change": "MOVE 'B' TO LK-GRADE -> MOVE 'A' TO LK-GRADE",
+   "verdict": "not-equivalent",
+   "caught": true,
+   "programs_differing": [
+    "RISKSCR"
+   ],
+   "tests_differing": 3,
+   "tests_run": 51
+  },
+  {
+   "bug": "I1",
+   "program": "INTCALC",
+   "mistake": "premium rate wrong",
+   "change": "MOVE 0.0425 TO WS-RATE -> MOVE 0.0450 TO WS-RATE",
+   "verdict": "not-equivalent",
+   "caught": true,
+   "programs_differing": [
+    "INTCALC"
+   ],
+   "tests_differing": 4,
+   "tests_run": 51
+  },
+  {
+   "bug": "I2",
+   "program": "INTCALC",
+   "mistake": "zero-day check tests the wrong value",
+   "change": "IF LK-DAYS = 0 -> IF LK-DAYS = 1",
+   "verdict": "not-equivalent",
+   "caught": true,
+   "programs_differing": [
+    "INTCALC"
+   ],
+   "tests_differing": 5,
+   "tests_run": 51
+  },
+  {
+   "bug": "I3",
+   "program": "INTCALC",
+   "mistake": "term cap off by one",
+   "change": "IF LK-DAYS > 365 -> IF LK-DAYS > 366",
+   "verdict": "not-equivalent",
+   "caught": true,
+   "programs_differing": [
+    "INTCALC"
+   ],
+   "tests_differing": 5,
+   "tests_run": 51
+  },
+  {
+   "bug": "I4",
+   "program": "INTCALC",
+   "mistake": "capped term wrong",
+   "change": "MOVE 365 TO WS-DAYS -> MOVE 360 TO WS-DAYS",
+   "verdict": "not-equivalent",
+   "caught": true,
+   "programs_differing": [
+    "INTCALC"
+   ],
+   "tests_differing": 5,
+   "tests_run": 51
+  },
+  {
+   "bug": "I5",
+   "program": "INTCALC",
+   "mistake": "bonus threshold off by one",
+   "change": "IF LK-PRINCIPAL >= 100000 -> IF LK-PRINCIPAL > 100000",
+   "verdict": "not-equivalent",
+   "caught": true,
+   "programs_differing": [
+    "INTCALC"
+   ],
+   "tests_differing": 1,
+   "tests_run": 51
+  },
+  {
+   "bug": "I6",
+   "program": "INTCALC",
+   "mistake": "interest cap mistyped",
+   "change": "MOVE 5000 TO LK-INTEREST -> MOVE 500 TO LK-INTEREST",
+   "verdict": "not-equivalent",
+   "caught": true,
+   "programs_differing": [
+    "INTCALC"
+   ],
+   "tests_differing": 4,
+   "tests_run": 51
+  }
+ ]
+}

@@ -2,8 +2,8 @@
 
 The engine builds the policy input from the impact run (crypto calls that changed, who approved,
 which components changed), every fact with its provenance. OPA evaluates the bundled Rego offline,
-as a separate process like git. A rule whose evidence does not exist yet is reported
-`not-evaluated`, never passed.
+as a separate process like git. The equivalence rule also needs characterization runs (Week 9); when
+they cannot run, the rule is reported `not-evaluated`, never passed.
 """
 
 import json
@@ -15,12 +15,11 @@ from importlib.resources import files
 from pathlib import Path
 
 from changeproof.adapters.base import ChangeKind
+from changeproof.equivalence import EquivalenceRun, equivalence_of
 from changeproof.impact import ImpactRun, run_impact
 
 POLICY_DIR = Path(str(files("changeproof").joinpath("policies")))
-PLANNED_RULES = {  # RENAME: RULES NAMED IN CONFIGS WHOSE EVIDENCE IS NOT BUILT YET, WITH WHY
-    "equivalence-required-outside-impact-set": "behavioral-equivalence evidence is planned (ROADMAP Weeks 8-9)",
-}
+EQUIVALENCE_RULE = "equivalence-required-outside-impact-set"  # RENAME: THE RULE THAT NEEDS CHARACTERIZATION RUNS
 CRYPTO_FIELDS = ("algorithm", "key_bits", "quantum_vulnerable")
 
 
@@ -31,10 +30,9 @@ class GateResult:
     decision: dict  # per-rule outcome, overall ok, OPA version
 
 
-# PURPOSE: RULE ID TO "REGO" FOR EACH BUNDLED POLICY AND "PLANNED" FOR RULES WITHOUT EVIDENCE YET
+# PURPOSE: RULE ID TO "REGO" FOR EACH BUNDLED POLICY
 def known_rules() -> dict[str, str]:
-    found = {p.stem.replace("_", "-"): "rego" for p in POLICY_DIR.glob("*.rego")}
-    return found | {rule: "planned" for rule in PLANNED_RULES}
+    return {p.stem.replace("_", "-"): "rego" for p in POLICY_DIR.glob("*.rego")}
 
 
 # PURPOSE: THE OPA EXECUTABLE: $CHANGEPROOF_OPA IF SET, ELSE OPA ON THE PATH
@@ -80,6 +78,15 @@ def policy_input(run: ImpactRun) -> dict:
     }
 
 
+# PURPOSE: WHAT THE EQUIVALENCE RULE READS: TESTS THAT DIFFERED OR FAILED, AND PROGRAMS WITH NO TESTS
+def equivalence_facts(found: EquivalenceRun) -> dict:
+    p = found.predicate
+    rows = {result: [{"program": t["target"]["name"], "test": t["id"], "provenance": t["target"]["provenance"]}
+                     for t in p["tests"] if t["result"] == result] for result in ("different", "error")}
+    return {"verdict": p["verdict"], "scope": p["scope"], "differing": rows["different"], "errors": rows["error"],
+            "untested": p["untested"]}
+
+
 # PURPOSE: EVALUATES EVERY BUNDLED RULE PACKAGE WITH OPA, OFFLINE; RETURNS (PACKAGE OUTCOMES, OPA VERSION)
 def evaluate(facts: dict) -> tuple[dict, str]:
     opa = opa_path()
@@ -96,19 +103,28 @@ def evaluate(facts: dict) -> tuple[dict, str]:
 # PURPOSE: RUNS THE IMPACT ANALYSIS AND THE CONFIGURED RULES FOR A COMMIT OR RANGE
 def gate(root: Path, revisions: str, copybook_dirs: list[str] = (), config_path: str = "changeproof.yaml") -> GateResult:
     run = run_impact(root, revisions, copybook_dirs, config_path)
+    named = [r.rule for r in run.config.policy] if run.config else []
+    known = known_rules()
+    if unknown := [r for r in named if r not in known]:
+        raise ValueError(f"policy rule '{unknown[0]}' is not known ({', '.join(sorted(known))})")
     facts = policy_input(run)
+    skipped = {}  # RENAME: RULE ID TO WHY IT COULD NOT BE EVALUATED
+    if EQUIVALENCE_RULE in named:
+        try:
+            facts["equivalence"] = equivalence_facts(equivalence_of(run, root, copybook_dirs))
+        except RuntimeError as exc:  # no GnuCOBOL: the rule has no evidence, so it is not passed
+            skipped[EQUIVALENCE_RULE] = str(exc)
     outcomes, version = evaluate(facts)
     rules = []
-    known = known_rules()
-    for rule in (r.rule for r in run.config.policy) if run.config else ():
-        if rule not in known:
-            raise ValueError(f"policy rule '{rule}' is not known ({', '.join(sorted(known))})")
-        if rule in PLANNED_RULES:
-            rules.append({"rule": rule, "status": "not-evaluated", "reason": PLANNED_RULES[rule], "deny": [], "warn": []})
+    for rule in named:
+        if rule in skipped:
+            rules.append({"rule": rule, "status": "not-evaluated", "reason": skipped[rule], "deny": [], "warn": []})
             continue
         found = outcomes[rule.replace("-", "_")]
         deny = sorted(found.get("deny", []), key=json.dumps)
-        rules.append({"rule": rule, "status": "fail" if deny else "pass", "deny": deny,
+        # no difference found but some code went untested: not a failure, and not a pass either
+        unproven = rule == EQUIVALENCE_RULE and facts["equivalence"]["verdict"] == "inconclusive"
+        rules.append({"rule": rule, "status": "fail" if deny else "inconclusive" if unproven else "pass", "deny": deny,
                       "warn": sorted(found.get("warn", []), key=json.dumps)})
     decision = {"ok": all(r["status"] != "fail" for r in rules), "opa": version, "rules": rules}
     return GateResult(run, facts, decision)

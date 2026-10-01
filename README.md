@@ -4,15 +4,17 @@ Semantic change evidence engine. See `ROADMAP.md` for the build plan and `CLAUDE
 Market: universal (`general`) is the main path and EU DORA (`eu-dora`) the strong second.
 
 Focus: the link between what a change touches in the code and proof that nothing else changed
-behaviour, in one evidence record per change. The impact half is proven for COBOL
-(`tests/test_impact.py`); the equivalence half is **planned** (Week 9, on the Week 8 characterization tests), so the joined
-record is **planned** too. Neither half alone is new: CAST, OpenText and IBM ADDI do impact analysis, IBM
+behaviour, in one evidence record per change. Both halves are proven for COBOL linkage
+subprograms: impact (`tests/test_impact.py`) and behavioral equivalence outside the impact set,
+joined by the impact statement's digest and checked by the policy gate (`tests/test_equivalence.py`,
+`tests/test_gate.py`). Programs that read files, Db2 or CICS still show as untested until stubs exist
+(**planned**). Neither half alone is new: CAST, OpenText and IBM ADDI do impact analysis, IBM
 watsonx Code Assistant for Z tests equivalence for COBOL-to-Java translation, and Kosli keeps
 tamper-evident change records. Sources and the full comparison are in `ROADMAP.md` (Positioning).
 
 ## Status
 
-Weeks 1-8 (planned capabilities are labeled; proven ones cite their test):
+Weeks 1-9 (planned capabilities are labeled; proven ones cite their test):
 
 - `changeproof init` writes a starter `changeproof.yaml` (`tests/test_cli.py`).
 - `changeproof validate` checks a config against the schema (`tests/test_cli.py`).
@@ -52,8 +54,9 @@ Weeks 1-8 (planned capabilities are labeled; proven ones cite their test):
   literals a crypto call is given. `high-criticality-needs-two-approvers` is also enforced.
   `--oscal` writes OSCAL 1.1.2 assessment results that validate against NIST's schema
   (`tests/test_gate.py`, `docs/adr/005-policy-gate-and-oscal.md`). A CI job template is in
-  `docs/ci/changeproof-gate.yml`. `equivalence-required-outside-impact-set` reports
-  **not-evaluated** until Weeks 8-9.
+  `docs/ci/changeproof-gate.yml`. `equivalence-required-outside-impact-set` blocks a behaviour change
+  outside the impact set and warns about programs it cannot test (`tests/test_gate.py`,
+  `tests/policies/`).
 - Characterization tests: `changeproof characterize` runs a COBOL linkage subprogram under GnuCOBOL
   (locally, or in `docker/gnucobol` with networking off) on boundary inputs read from the program,
   traces which way each `IF`, `WHEN` and `PERFORM UNTIL` went, and writes a golden suite with every
@@ -61,8 +64,15 @@ Weeks 1-8 (planned capabilities are labeled; proven ones cite their test):
   tests both ways, suites are reproducible, and `--replay` catches a changed fee rate
   (`tests/test_characterize.py`, `docs/adr/006-characterization.md`). Programs that read files, Db2
   or CICS need stubs: **planned**.
+- Behavioral equivalence: `changeproof equivalence <commit or range>` builds characterization tests
+  from each program before the change, replays them after it, and prints a behavioral-equivalence
+  predicate (signed with `--key`). By default it tests only programs outside the impact set and
+  names the impact statement it used by digest. Programs it cannot test are listed with the reason,
+  and the verdict is then inconclusive. Mutation check: the tests catch 19 of 20 seeded bugs (95%)
+  and 8 of 10 held-out bugs (`tests/test_equivalence.py`, `scripts/mutation_check.py`,
+  `docs/adr/007-equivalence.md`).
 - Adapters for languages other than COBOL: **planned** (Java in Week 11; see `ROADMAP.md`).
-- Equivalence and crypto-inventory evidence: **planned** (Weeks 9, 16).
+- Crypto-inventory evidence: **planned** (Week 16).
 
 ## Development
 

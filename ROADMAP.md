@@ -9,7 +9,7 @@
 
 Each evidence record answers **who / what / when / where / how** at code depth and links to **why** (ticket, requirement, approval), which the engine links but never invents.
 
-**The focus:** the link between what a change touches in the code and proof that nothing else changed behaviour, joined in one evidence record for every ordinary change (owner, 2026-10-01). The impact half is proven for COBOL (`tests/test_impact.py`, Week 5); the equivalence half is **planned** (Weeks 8-9), so the join is **planned** too.
+**The focus:** the link between what a change touches in the code and proof that nothing else changed behaviour, joined in one evidence record for every ordinary change (owner, 2026-10-01). The impact half is proven for COBOL (`tests/test_impact.py`, Week 5). The equivalence half is proven for COBOL linkage subprograms (`tests/test_equivalence.py`, Week 9); its predicate names the impact statement by digest, and the policy gate checks both. Programs that read files, Db2 or CICS need stubs (**planned**), and a single combined record per change is **planned**.
 
 **The gap it fills:** SBOM tools (Anchore, Lineaje, Manifest Cyber, NetRise, ReversingLabs) prove *what is inside* software. Process tools (Kosli, ServiceNow, GRC) prove a change was *approved and tested*. Neither proves *what a change actually does*. DoD's Software Fast Track (SWFT) is moving authorization toward continuous, machine-readable, per-change evidence.
 
@@ -47,7 +47,7 @@ One build serves every market through the `market:` setting (`general` default, 
 
 **Later:** SOX / FDA CSA.
 
-**Moat targets:** (1) impact and equivalence joined per change, as one deterministic evidence record (**planned**, Weeks 8-9; see The focus), (2) assessor acceptance, (3) line-level provenance on every fact, machine-checked (proven for COBOL: `tests/test_graph.py::test_every_edge_has_provenance`); not deep legacy coverage, where CAST, OpenText and IBM already go deeper and wider, (4) deterministic facts with no AI-generated evidence (CLAUDE.md rule 3), unlike AI-generated equivalence tests, (5) air-gapped, offline-first operation, (6) accumulated per-system baselines, (7) CNSA 2.0-native evidence plus PQC-migration proof, which few change-evidence tools offer.
+**Moat targets:** (1) impact and equivalence joined per change (linked by digest and gated since Week 9 for COBOL linkage subprograms; one combined record **planned**; see The focus), (2) assessor acceptance, (3) line-level provenance on every fact, machine-checked (proven for COBOL: `tests/test_graph.py::test_every_edge_has_provenance`); not deep legacy coverage, where CAST, OpenText and IBM already go deeper and wider, (4) deterministic facts with no AI-generated evidence (CLAUDE.md rule 3), unlike AI-generated equivalence tests, (5) air-gapped, offline-first operation, (6) accumulated per-system baselines, (7) CNSA 2.0-native evidence plus PQC-migration proof, which few change-evidence tools offer.
 
 **Compliance realities:**
 - No CUI or classified code until you're on a CMMC Level 2 path. Pilot on unclassified, public or synthetic code.

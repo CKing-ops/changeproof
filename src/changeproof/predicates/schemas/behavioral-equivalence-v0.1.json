@@ -28,6 +28,20 @@
         }
       }
     },
+    "untested": {
+      "description": "Programs in scope that have no tests, each with why. Any entry makes the verdict inconclusive.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["provenance", "reason"],
+        "additionalProperties": false,
+        "properties": {
+          "program": {"type": "string"},
+          "provenance": {"$ref": "urn:changeproof:schema:common:v0.1#/$defs/provenance"},
+          "reason": {"type": "string", "minLength": 1}
+        }
+      }
+    },
     "summary": {
       "type": "object",
       "required": ["total", "same", "different", "error"],
