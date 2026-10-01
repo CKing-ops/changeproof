@@ -31,6 +31,8 @@ def anchors(edge: Edge, names: dict[str, str]) -> list[str]:
             return [names[edge.dst].rsplit(".", 1)[-1]]
         case "cics-file":
             return [edge.attributes["command"]]
+        case "runs" if "via" in edge.attributes:
+            return [names[edge.dst]]
         case "runs" | "runs-proc":
             return ["EXEC"]
         case "flows-to":

@@ -12,7 +12,7 @@ from changeproof.adapters.base import Entity, IRModule
 from changeproof.adapters.cobol import CobolAdapter
 from changeproof.config import Config
 from changeproof.graph.csd import CsdDefinition, parse_csd
-from changeproof.graph.jcl import JclJob, parse_jcl
+from changeproof.graph.jcl import IMS_PROGRAMS, JclJob, parse_jcl
 from changeproof.graph.model import Edge, Graph, Node
 from changeproof.provenance import Provenance
 
@@ -343,7 +343,14 @@ class GraphBuilder:
                 else:
                     self.unresolved(f"runs>{step_id}", step_id, f"program:{step.program}", "runs", step.provenance,
                                     "program not in the analyzed code")
-            elif step.proc:
+            for name, where in step.runs:
+                via = "ims-region" if step.program in IMS_PROGRAMS else "tso-run"
+                if name in self.programs:
+                    self.edge(f"runs>{step_id}>{name}", step_id, f"program:{name}", "runs", where, via=via)
+                else:
+                    self.unresolved(f"runs>{step_id}>{name}", step_id, f"program:{name}", "runs", where,
+                                    "program not in the analyzed code", via=via)
+            if step.proc and not step.program:
                 if step.proc in procs:
                     self.edge(f"runs>{step_id}", step_id, f"proc:{step.proc}", "runs-proc", step.provenance)
                 else:
@@ -351,7 +358,8 @@ class GraphBuilder:
                                     "procedure not in the analyzed code")
             files = {  # RENAME: DD NAME TO THE FILE ENTITY THE STEP'S PROGRAM ASSIGNS TO IT
                 DD_PREFIX_RE.sub("", (f.attributes.get("assign") or "").upper()): f.id
-                for f in self.facts.get(step.program or "", []) if f.kind == "file"
+                for program in [step.program, *(name for name, _ in step.runs)]
+                for f in self.facts.get(program or "", []) if f.kind == "file"
             }
             for dd in step.dds:
                 if dd.dataset is None:

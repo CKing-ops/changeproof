@@ -28,3 +28,12 @@ def test_dd_statements_keep_dataset_disposition_and_line():
 def test_instream_data_is_not_parsed_as_statements():
     (job,) = parse_jcl(ROOT / "jcl" / "RUNBATCH.jcl", ROOT)
     assert all("CONTROL" not in d.name for s in job.steps for d in s.dds)
+
+
+def test_programs_run_through_tso_batch_and_ims_regions():
+    (job,) = parse_jcl(ROOT / "jcl" / "INDIRECT.jcl", ROOT)
+    assert [(s.name, s.program, [(name, str(where)) for name, where in s.runs]) for s in job.steps] == [
+        ("DB2STEP", "IKJEFT01", [("BATCH1", "jcl/INDIRECT.jcl:7")]),
+        ("IMSSTEP", "DFSRRC00", [("SUBPGM", "jcl/INDIRECT.jcl:10-11")]),
+        ("NEXT", "IEFBR14", []),
+    ]

@@ -153,3 +153,12 @@ def test_edge_check_catches_a_wrong_line(graph):
 ])
 def test_sql_table_references(sql, expected):
     assert sql_tables(sql) == expected
+
+
+def test_steps_run_programs_through_tso_and_ims(tmp_path):
+    graph = build_graph(ROOT, programs=["src/BATCH1.cbl", "src/SUBPGM.cbl"], copybook_dirs=["copy"],
+                        jcl=["jcl/INDIRECT.jcl"])
+    runs = {(e.src, e.dst, e.attributes.get("via"), str(e.provenance)) for e in graph.edges if e.kind == "runs"}
+    assert ("step:INDIRECT.DB2STEP", "program:BATCH1", "tso-run", "jcl/INDIRECT.jcl:7") in runs
+    assert ("step:INDIRECT.IMSSTEP", "program:SUBPGM", "ims-region", "jcl/INDIRECT.jcl:10-11") in runs
+    assert check_edges(graph, ROOT) == []
