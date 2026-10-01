@@ -12,11 +12,12 @@ from pathlib import Path, PurePosixPath
 import yaml
 
 from changeproof import __version__
+from changeproof.adapters.base import IRModule
 from changeproof.adapters.cobol import CobolAdapter
 from changeproof.adapters.cobol.parse import CobolSyntaxError
 from changeproof.adapters.java import JavaAdapter, JavaSyntaxError
 from changeproof.change.git import checkout_tree, commits_in, empty_tree, origin_url, read_commit, tree_diffs
-from changeproof.change.message import trailers
+from changeproof.change.message import agent_trailers, person, trailers
 from changeproof.change.record import JAVA_SUFFIXES, JCL_SUFFIXES, PROGRAM_SUFFIXES, What, what_in, who_of, why_of
 from changeproof.config import Config, load_config
 from changeproof.graph import graph_from
@@ -27,6 +28,10 @@ from changeproof.impact.walk import ImpactWalk, Reached
 from changeproof.predicates import PREDICATE_TYPES, validate_predicate
 
 CONFIG_NAME = "changeproof.yaml"
+ENGINE = {"name": "changeproof", "version": __version__,  # RENAME: ENGINE AND ADAPTERS NAMED IN EVERY PREDICATE
+          "adapters": [{"language": "cobol", "version": __version__, "parser": "antlr4-cobol85"},
+                       {"language": "jcl", "version": __version__},
+                       {"language": "java", "version": __version__, "parser": "tree-sitter-java"}]}
 CSD_SUFFIXES = frozenset({".csd"})  # RENAME: CICS RESOURCE DEFINITION FILE EXTENSIONS, LOWERCASE
 NOT_REPORTED = frozenset({"unresolved", "crypto-service"})  # RENAME: NODE KINDS WALKED THROUGH BUT NEVER LISTED
 
@@ -37,8 +42,8 @@ def files_with(tree: Path, suffixes: frozenset[str], skip: list[str]) -> list[st
     return sorted(p for p in found if not any(p.startswith(d.rstrip("/") + "/") for d in skip))
 
 
-# PURPOSE: BUILDS THE GRAPH OF EVERY PROGRAM, JCL MEMBER AND CSD EXTRACT IN A TREE; RETURNS IT WITH PARSE FAILURES
-def system_graph(tree: Path, copybook_dirs: list[str], config: Config | None) -> tuple[Graph, dict[str, str]]:
+# PURPOSE: PARSES EVERY COBOL PROGRAM AND JAVA SOURCE IN A TREE; RETURNS THE MODULES WITH PARSE FAILURES
+def system_modules(tree: Path, copybook_dirs: list[str]) -> tuple[list[IRModule], dict[str, str]]:
     adapter = CobolAdapter(copybook_dirs)
     modules, failed = [], {}
     for path in files_with(tree, PROGRAM_SUFFIXES, copybook_dirs):
@@ -51,6 +56,12 @@ def system_graph(tree: Path, copybook_dirs: list[str], config: Config | None) ->
             modules.append(JavaAdapter().parse(tree / path, tree))
         except JavaSyntaxError as exc:
             failed[path] = str(exc)
+    return modules, failed
+
+
+# PURPOSE: BUILDS THE GRAPH OF EVERY PROGRAM, JCL MEMBER AND CSD EXTRACT IN A TREE; RETURNS IT WITH PARSE FAILURES
+def system_graph(tree: Path, copybook_dirs: list[str], config: Config | None) -> tuple[Graph, dict[str, str]]:
+    modules, failed = system_modules(tree, copybook_dirs)
     jobs = [job for path in files_with(tree, JCL_SUFFIXES, []) for job in parse_jcl(tree / path, tree)]
     csd = [d for path in files_with(tree, CSD_SUFFIXES, []) for d in parse_csd(tree / path, tree)]
     return graph_from(modules, jobs, config, csd), failed
@@ -96,10 +107,10 @@ def gaps(walk: ImpactWalk, graph: Graph, best: dict[str, Reached], what: What, f
     return unique(found)
 
 
-# PURPOSE: WHO, WHEN AND WHY FOR THE COMMITS IN THE RANGE, COPIED FROM THE COMMIT OBJECTS
-def people_and_reasons(root: Path, shas: list[str]) -> tuple[list[dict], dict, list[dict]]:
+# PURPOSE: WHO, WHEN, WHY AND WHICH AI AGENTS FOR THE COMMITS IN THE RANGE, COPIED FROM THE COMMIT OBJECTS
+def people_and_reasons(root: Path, shas: list[str]) -> tuple[list[dict], dict, list[dict], list[dict]]:
     commits = [read_commit(root, sha) for sha in shas]
-    who, why = [], []
+    who, why, agents = [], [], []
     for commit in commits:
         found = trailers(commit.message)
         roles = who_of(commit, found)
@@ -109,10 +120,14 @@ def people_and_reasons(root: Path, shas: list[str]) -> tuple[list[dict], dict, l
                     "source": f"git committer, {roles.committer.provenance}"})
         who += [{"role": "approver", "id": a.email or a.name, "source": f"Approved-by trailer, {a.provenance}"}
                 for a in roles.approvers]
+        agents += [{"id": email or name, "source": f"{t.key} trailer, {t.provenance}",
+                    "provenance": t.provenance.model_dump(mode="json", exclude_none=True)}
+                   for t in agent_trailers(found) for name, email in [person(t.value)]]
         why += [{"kind": "ticket", "ref": t.id, "found_in": f"commit {t.found_in}, {t.provenance}"}
                 for t in why_of(commit, found).tickets]
     when = {"authored_at": commits[0].author.at, "committed_at": commits[-1].committer.at}
-    return unique(who, "role", "id"), when, unique(why, "ref")
+    who += [{"role": "agent", "id": a["id"], "source": a["source"]} for a in agents]
+    return unique(who, "role", "id"), when, unique(why, "ref"), agents
 
 
 @dataclass(frozen=True)
@@ -122,6 +137,7 @@ class ImpactRun:
     config: Config | None
     config_path: str
     component_at: dict[str, int]  # component ID to its line in the config
+    agents: list[dict]  # AI agents named in the commits, each with the trailer line it was read from
 
 
 # PURPOSE: THE IMPACT PREDICATE FOR A COMMIT OR RANGE, VALIDATED AGAINST ITS SCHEMA
@@ -155,7 +171,7 @@ def run_impact(root: Path, revisions: str, copybook_dirs: list[str] = (), config
                for system in component["relied_on_by"]]
     crypto = any(c.entity.kind == "crypto-call" for c in what.entities) or any(
         e.kind == "uses-crypto" for node in changed for e in walk.out.get(node, []))
-    who, when, why = people_and_reasons(root, shas)
+    who, when, why, agents = people_and_reasons(root, shas)
     predicate = {
         "change": {"vcs": "git", "repository": origin_url(root) or root.resolve().name,
                    "base": base or empty_tree(root), "head": head},
@@ -174,10 +190,7 @@ def run_impact(root: Path, revisions: str, copybook_dirs: list[str] = (), config
         "reliant_systems": unique(reliant),
         "touches_crypto": crypto,
         "unresolved": gaps(walk, graph, best, what, failed),
-        "engine": {"name": "changeproof", "version": __version__,
-                   "adapters": [{"language": "cobol", "version": __version__, "parser": "antlr4-cobol85"},
-                                {"language": "jcl", "version": __version__},
-                                {"language": "java", "version": __version__, "parser": "tree-sitter-java"}]},
+        "engine": ENGINE,
     }
     validate_predicate(PREDICATE_TYPES["impact"], predicate)
-    return ImpactRun(predicate, what, config, PurePosixPath(config_path).as_posix(), component_at)
+    return ImpactRun(predicate, what, config, PurePosixPath(config_path).as_posix(), component_at, agents)

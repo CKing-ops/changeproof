@@ -14,7 +14,7 @@ tamper-evident change records. Sources and the full comparison are in `ROADMAP.m
 
 ## Status
 
-Weeks 1-11 (planned capabilities are labeled; proven ones cite their test):
+Weeks 1-12 (planned capabilities are labeled; proven ones cite their test):
 
 - `changeproof init` writes a starter `changeproof.yaml` (`tests/test_cli.py`).
 - `changeproof validate` checks a config against the schema (`tests/test_cli.py`).
@@ -92,7 +92,20 @@ Weeks 1-11 (planned capabilities are labeled; proven ones cite their test):
   (`tests/test_java_adapter.py`, `tests/test_java_impact.py`, `tests/test_java_corpus.py`,
   `docs/adr/009-java-adapter.md`). Running Java for equivalence tests: **planned**. Other
   languages: **planned**.
-- Crypto-inventory evidence: **planned** (Week 16).
+- AI attribution: an agent named in an `Assisted-by`, `Generated-by` or `AI-agent` trailer, or as a
+  co-author at a known agent address, is recorded in the impact attestation with the trailer's
+  line, and the rule `agent-changes-need-independent-approval` asks for an approver who did not
+  implement the change (`tests/test_agents.py`).
+- Evidence pack: `changeproof pack <release>` signs impact, policy-decision and behavioral-equivalence
+  attestations for each commit and builds a PDF report and OSCAL from them, with the crypto profile
+  stated. `changeproof pack-verify` checks every signature and rebuilds the report and OSCAL offline
+  from the attestations alone, byte for byte (`tests/test_pack.py`, `docs/adr/010-evidence-pack-and-mcp.md`).
+  A sample is in `docs/weekly/week12-pack/`.
+- MCP server: `changeproof mcp` gives AI agents the `impact`, `lineage`, `equivalence_status` and
+  `crypto_inventory` tools over stdio, read-only and offline (`tests/test_mcp.py`). Tested with a
+  scripted client; a third-party MCP client has not been tried yet.
+- Crypto-inventory evidence: the MCP tool lists crypto calls with algorithm and line; migration
+  categories, deadlines and the CBOM are **planned** (Week 16).
 
 ## Development
 

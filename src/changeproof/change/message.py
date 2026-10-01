@@ -22,9 +22,12 @@ SERVICENOW_TYPES = {  # RENAME: SERVICENOW NUMBER PREFIX TO RECORD TYPE
     "CHG": "change", "CTASK": "change-task", "INC": "incident", "PRB": "problem", "RITM": "request-item",
     "REQ": "request",
 }
-PERSON_TRAILERS = frozenset({  # RENAME: TRAILERS WHOSE VALUE NAMES A PERSON, SO NO TICKET IS READ FROM THEM
+AGENT_TRAILERS = frozenset({"assisted-by", "generated-by", "ai-agent"})  # RENAME: TRAILERS WHOSE VALUE NAMES AN AI AGENT
+# a co-author is an agent only at one of these addresses; the owner adds the agents the team uses
+AGENT_ADDRESSES = frozenset({"noreply@anthropic.com"})  # RENAME: CO-AUTHOR EMAILS THAT MARK AN AI AGENT
+PERSON_TRAILERS = frozenset({  # RENAME: TRAILERS WHOSE VALUE NAMES A PERSON OR AGENT, SO NO TICKET IS READ FROM THEM
     "requested-by", "approved-by", "reviewed-by", "signed-off-by", "co-authored-by", "acked-by", "tested-by",
-})
+}) | AGENT_TRAILERS
 
 
 @dataclass(frozen=True)
@@ -90,3 +93,9 @@ def tickets(message: list[tuple[str, Provenance]], found: list[Trailer]) -> list
         for key in jira:
             keep(key, "jira", "issue", place, where)
     return list(refs.values())
+
+
+# PURPOSE: TRAILERS THAT NAME AN AI AGENT: AN AGENT TRAILER, OR A CO-AUTHOR AT A KNOWN AGENT ADDRESS
+def agent_trailers(found: list[Trailer]) -> list[Trailer]:
+    return [t for t in found if t.key.lower() in AGENT_TRAILERS
+            or (t.key.lower() == "co-authored-by" and (person(t.value)[1] or "").lower() in AGENT_ADDRESSES)]

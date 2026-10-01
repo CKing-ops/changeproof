@@ -64,6 +64,7 @@ installed metadata.
 |---|---|---|
 | pytest | 9.1.1 | MIT |
 | pytest-socket | 0.8.1 | MIT |
+| pypdf (Week 12: tests read the evidence pack's PDF back) | 6.19.0 | BSD-3-Clause |
 | pluggy | 1.6.0 | MIT |
 | iniconfig | 2.3.0 | MIT |
 | packaging | 26.3 | Apache-2.0 OR BSD-2-Clause |
@@ -72,6 +73,10 @@ installed metadata.
 | actions/checkout, astral-sh/setup-uv (CI) | v4, v6 | MIT |
 | actions/setup-go (CI, Week 7) | v5 | MIT |
 | actions/upload-artifact (`docs/ci/changeproof-gate.yml` template, Week 7) | v4 | MIT |
+
+Considered and not added (Week 12): the reference MCP Python SDK (`mcp` 1.30.0, MIT) as a test client.
+It pulls in `certifi` (MPL-2.0), which is not on the permissive list, so the MCP server is tested
+with a scripted client instead.
 
 ## Parser spike only (`spike/`, not shipped, built into git-ignored `spike/_build/`)
 

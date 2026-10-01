@@ -6,7 +6,7 @@ about a framework control: controls are listed as reviewed, and each finding tar
 
 import json
 import re
-from datetime import UTC, datetime
+from datetime import datetime
 from functools import cache
 from importlib.resources import files
 
@@ -15,8 +15,7 @@ from jsonschema import validators
 
 from changeproof import __version__
 from changeproof.frameworks import controls_for
-from changeproof.gate import GateResult
-from changeproof.markets import MARKETS
+from changeproof.gate import GateResult, policy_decision
 from changeproof.signer import name_uuid
 
 OSCAL_VERSION = "1.1.2"
@@ -76,8 +75,7 @@ def provenance_props(items: list[dict]) -> list[dict]:
 
 
 # PURPOSE: OBSERVATIONS, GROUPED BY WHAT THEY RECORD, FOR THE FACTS THE RULES SAW
-def observations(result: GateResult, key: str, at: str) -> dict[str, list[dict]]:
-    facts, predicate = result.input, result.run.predicate
+def observations(predicate: dict, facts: dict, key: str, at: str) -> dict[str, list[dict]]:
     tiers = [i["confidence"] for i in predicate["impacted"]]
     groups = {"impact": [{
         "uuid": name_uuid(f"{key}:observation:impact"), "title": "Impact of the change",
@@ -120,9 +118,9 @@ def status_of(rule: dict) -> dict:
 
 
 # PURPOSE: ONE FINDING PER EVALUATED POLICY RULE, CITING THE OBSERVATIONS IT RESTS ON
-def findings(result: GateResult, key: str, groups: dict[str, list[dict]]) -> list[dict]:
+def findings(rules: list[dict], key: str, groups: dict[str, list[dict]]) -> list[dict]:
     found = []
-    for rule in result.decision["rules"]:
+    for rule in rules:
         if rule["status"] == "not-evaluated":
             continue
         messages = [d["message"] for d in rule["deny"]] + [f"warning: {w['message']}" for w in rule["warn"]]
@@ -140,24 +138,29 @@ def findings(result: GateResult, key: str, groups: dict[str, list[dict]]) -> lis
 
 # PURPOSE: OSCAL ASSESSMENT-RESULTS DOCUMENT FOR A GATE RUN; SAME INPUTS AND TIME GIVE THE SAME DOCUMENT
 def assessment_results(result: GateResult, at: datetime) -> dict:
-    change, config = result.run.predicate["change"], result.run.config
+    return assessment_results_of(result.run.predicate, policy_decision(result, at))
+
+
+# PURPOSE: THE SAME DOCUMENT FROM THE IMPACT AND POLICY-DECISION PREDICATES ALONE, AS AN EVIDENCE PACK REBUILDS IT
+def assessment_results_of(impact: dict, decision: dict) -> dict:
+    change, rules = impact["change"], decision["rules"]
     key = f"{change['repository']}:{change['base']}..{change['head']}"
-    stamp = at.astimezone(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
-    frameworks = (config.frameworks or MARKETS[config.market].frameworks) if config else ()
-    controls = list(dict.fromkeys(control_token(c.framework, c.id) for f in frameworks for c in controls_for(f)))
-    groups = observations(result, key, stamp)
+    stamp = decision["evaluated_at"]
+    controls = list(dict.fromkeys(control_token(c.framework, c.id)
+                                  for f in decision["frameworks"] for c in controls_for(f)))
+    groups = observations(impact, decision["facts"], key, stamp)
     plan = name_uuid(f"{key}:plan")
-    skipped = [f"{r['rule']}: {r['reason']}" for r in result.decision["rules"] if r["status"] == "not-evaluated"]
+    skipped = [f"{r['rule']}: {r['reason']}" for r in rules if r["status"] == "not-evaluated"]
     run = compact({
         "uuid": name_uuid(f"{key}:result"), "title": "changeproof policy gate",
         "description": f"Impact and policy evidence for {change['repository']} {change['base']}..{change['head']}, "
-                       f"rules evaluated by OPA {result.decision['opa']}. Findings target policy rules; no "
+                       f"rules evaluated by OPA {decision['opa']}. Findings target policy rules; no "
                        "determination is made about any framework control.",
         "start": stamp, "end": stamp,
         "reviewed-controls": {"control-selections": [
             {"include-controls": [{"control-id": c} for c in controls]} if controls else {"include-all": {}}]},
         "observations": [o for g in groups.values() for o in g],
-        "findings": findings(result, key, groups),
+        "findings": findings(rules, key, groups),
         **({"remarks": "Not evaluated: " + "; ".join(skipped)} if skipped else {}),
     })
     return {"assessment-results": {
@@ -169,5 +172,5 @@ def assessment_results(result: GateResult, at: datetime) -> dict:
         "back-matter": {"resources": [{
             "uuid": plan, "title": "changeproof policy gate",
             "description": "Rules named in the policy section of changeproof.yaml: "
-                           + ", ".join(r["rule"] for r in result.decision["rules"]) + "."}]},
+                           + ", ".join(r["rule"] for r in rules) + "."}]},
     }}
