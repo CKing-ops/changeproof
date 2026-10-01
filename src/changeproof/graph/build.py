@@ -24,6 +24,14 @@ SCREEN_COMMANDS = frozenset({"SEND", "RECEIVE"})  # RENAME: CICS COMMANDS THAT S
 TRANSACTION_COMMANDS = frozenset({"RETURN", "START"})  # RENAME: CICS COMMANDS THAT NAME THE NEXT TRANSACTION
 SHARED_KINDS = frozenset({"dataset", "table", "cics-file"})  # RENAME: NODES SEVERAL COMPONENTS CAN SHARE
 DD_PREFIX_RE = re.compile(r"^(?:[A-Z]{2}-)*(?:S-)?")  # ASSIGN TO UT-S-NAME style prefixes before the DD name
+CICS_DATA_OPTIONS = {  # RENAME: CICS OPTIONS THAT NAME A DATA ITEM, AND WHETHER THE COMMAND READS OR WRITES IT
+    "INTO": "write", "SET": "write", "FROM": "read", "RIDFLD": "read", "COMMAREA": "read",
+}
+CICS_DATA_RE = re.compile(rf"\b({'|'.join(CICS_DATA_OPTIONS)})\s*\(\s*([A-Z0-9][\w-]*(?:\s+(?:OF|IN)\s+[\w-]+)*)\s*\)",
+                          re.IGNORECASE)
+HOST_VARIABLE_RE = re.compile(r":([A-Z0-9][\w-]*(?:\.[\w-]+)?)", re.IGNORECASE)
+SQL_TARGET_COMMANDS = frozenset({"SELECT", "FETCH"})  # RENAME: SQL COMMANDS WHOSE INTO LIST IS WRITTEN
+SQL_LIST_ENDS = frozenset({"FROM", "WHERE", "SET", "VALUES", "USING", "FOR"})  # RENAME: WORDS THAT END AN INTO LIST
 
 
 SQL_CLAUSES = frozenset({  # RENAME: KEYWORDS THAT END A FROM LIST
@@ -55,6 +63,34 @@ def sql_tables(text: str) -> list[tuple[str, str]]:
             if j >= len(words) or words[j] != ",":
                 break
             j += 1
+    return found
+
+
+# PURPOSE: FINDS THE ONE DATA ITEM IN A PROGRAM THAT A NAME LIKE "FIELD OF GROUP" REFERS TO, OR THE REASON IT CANNOT
+def find_data(items: list[tuple[str, str]], program: str, ref: str) -> tuple[str | None, str]:
+    name, *qualifiers = re.split(r"\s+(?:OF|IN)\s+", ref.strip().upper())
+    matches = [i for i, n in items if n == name and i.startswith(f"data:{program}.")
+               and set(qualifiers) <= set(i.split(":", 1)[1].split(".")[1:-1])]
+    if len(matches) == 1:
+        return matches[0], ""
+    return None, f"ambiguous: {len(matches)} data items have this name" if matches else "no such data item"
+
+
+# PURPOSE: DATA NAMES AN EXEC CICS OR EXEC SQL BLOCK READS OR WRITES, AS (NAME AS WRITTEN, REF, MODE)
+def exec_data(kind: str, text: str) -> list[tuple[str, str, str]]:
+    if kind == "exec-cics":
+        return [(m.group(2), m.group(2), CICS_DATA_OPTIONS[m.group(1).upper()]) for m in CICS_DATA_RE.finditer(text)]
+    command = text.split(" ", 1)[0].upper()
+    found, mode = [], "read"
+    for word in re.findall(r":?[\w.-]+", text):
+        upper = word.upper()
+        if upper == "INTO" and command in SQL_TARGET_COMMANDS:
+            mode = "write"
+        elif upper in SQL_LIST_ENDS:
+            mode = "read"
+        elif m := HOST_VARIABLE_RE.fullmatch(word):
+            group, _, field = m.group(1).partition(".")
+            found.append((m.group(1), f"{field} OF {group}" if field else group, mode))
     return found
 
 
@@ -117,12 +153,18 @@ class GraphBuilder:
 
     # PURPOSE: FINDS THE DATA ITEM A NAME LIKE "FIELD OF GROUP" REFERS TO, OR THE REASON IT CANNOT
     def data_item(self, program: str, ref: str) -> tuple[str | None, str]:
-        name, *qualifiers = ref.split(" OF ")
-        matches = [e.id for e in self.facts[program] if e.kind == "data" and e.name == name
-                   and set(qualifiers) <= set(e.id.split(":", 1)[1].split(".")[1:-1])]
-        if len(matches) == 1:
-            return matches[0], ""
-        return None, f"ambiguous: {len(matches)} data items have this name" if matches else "no such data item"
+        return find_data([(e.id, e.name) for e in self.facts[program] if e.kind == "data"], program, ref)
+
+    # PURPOSE: ADDS A USES-DATA EDGE FROM THE PARAGRAPH TO EACH DATA ITEM AN EXEC BLOCK READS OR WRITES
+    def add_uses(self, program: str, e: Entity, src: str) -> None:
+        for written, ref, mode in exec_data(e.kind, e.attributes["text"]):
+            key = f"{e.id}>uses>{written.upper()}>{mode}"
+            item, problem = self.data_item(program, ref)
+            if item:
+                self.edge(key, src, item, "uses-data", e.provenance, mode=mode, ref=written)
+            else:
+                self.unresolved(key, src, f"data:{written.upper()}", "uses-data", e.provenance, problem,
+                                mode=mode, ref=written)
 
     # PURPOSE: TURNS ONE PROGRAM'S IR FACTS INTO NODES AND EDGES
     def add_program(self, program: str) -> None:
@@ -151,8 +193,10 @@ class GraphBuilder:
                     for table, mode in sql_tables(e.attributes["text"]):
                         table_id = self.node(f"table:{table}", "table", table, e.provenance)
                         self.edge(f"{e.id}>{mode}>{table}", src, table_id, f"{mode}-table", e.provenance)
+                    self.add_uses(program, e, src)
                 case "exec-cics":
                     self.add_cics(program, e, src)
+                    self.add_uses(program, e, src)
                 case "data" if e.name != "FILLER":
                     self.node(e.id, "data", e.name, e.provenance,
                               {k: v for k, v in e.attributes.items() if k in ("level", "section", "parent", "picture")})
@@ -167,7 +211,8 @@ class GraphBuilder:
             known = any(f.id == file_id for f in self.facts[program])
             sources.append((file_id if known else None, "no such file", e.attributes["file"]))
         targets = [self.data_item(program, ref) + (ref,) for ref in e.attributes["targets"]]
-        extra = {"verb": e.attributes["verb"]} | ({"corresponding": True} if e.attributes.get("corresponding") else {})
+        extra = {"verb": e.attributes["verb"]} | ({"corresponding": True} if e.attributes.get("corresponding") else {}) \
+            | ({"paragraph": e.attributes["paragraph"]} if "paragraph" in e.attributes else {})
         for src, src_problem, src_ref in sources:
             for dst, dst_problem, dst_ref in targets:
                 key = f"{e.id}>{src_ref}>{dst_ref}"

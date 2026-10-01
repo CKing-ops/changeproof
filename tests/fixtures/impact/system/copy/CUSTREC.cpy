@@ -1,0 +1,4 @@
+000001 01  CUST-REC.
+000002     05  CUST-ID             PIC X(8).
+000003     05  CUST-NAME           PIC X(30).
+000004     05  CUST-STATUS         PIC X(8).

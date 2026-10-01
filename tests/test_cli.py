@@ -91,3 +91,15 @@ def test_change_prints_a_record_per_commit(tmp_path, capsys):
     assert [r["where"]["commit"] for r in records] == shas[7:9]
     assert records[1]["why"]["emergency"] is True
     assert records[1]["gaps"] == [] and "an approver is also the implementer" in records[1]["open_items"]
+
+
+def test_impact_prints_the_predicate_for_a_commit(tmp_path, capsys):
+    spec = importlib.util.spec_from_file_location("impact_seed", Path(__file__).parent / "fixtures" / "impact" / "seed.py")
+    seed = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(seed)
+    shas = dict(seed.seed(tmp_path / "repo"))
+    assert main(["impact", shas["hmac-instead-of-signature"], "--repo", str(tmp_path / "repo"),
+                 "--copybooks", "copy"]) == 0
+    predicate = json.loads(capsys.readouterr().out)
+    assert predicate["touches_crypto"] is True
+    assert {"program:INVSIGN", "job:INVJOB"} <= {i["id"] for i in predicate["impacted"]}

@@ -1,0 +1,177 @@
+{
+  "_note": "Hand-labelled impact for each seeded change in seed.py, written from the code before the engine ran. Tiers: definite (static dependency), probable (dynamic target or data value flow, or a changed input), possible (shared table, file or dataset). Data fields and FD files are not labelled; the recall gate counts the kinds listed in gate_kinds.",
+  "gate_kinds": ["program", "paragraph", "section", "step", "job", "proc", "transaction", "table", "dataset", "cics-file"],
+  "changes": {
+    "tax-rounding": {
+      "touches_crypto": false,
+      "impacted": {
+        "program:TAXCALC": "definite",
+        "paragraph:INVMAIN.PRICE-PARA": "definite",
+        "program:INVMAIN": "definite",
+        "paragraph:INVMAIN.MAIN-PARA": "definite",
+        "step:INVJOB.STEP01": "definite",
+        "job:INVJOB": "definite",
+        "paragraph:INVONL.MAIN-PARA": "probable",
+        "program:INVONL": "probable",
+        "transaction:INV1": "probable",
+        "paragraph:INVMAIN.POST-PARA": "possible",
+        "table:INVOICES": "possible",
+        "dataset:BILL.INV.OUT": "possible",
+        "paragraph:INVRPT.SUM-PARA": "possible",
+        "paragraph:INVRPT.MAIN-PARA": "possible",
+        "program:INVRPT": "possible",
+        "step:INVJOB.STEP02": "possible"
+      }
+    },
+    "customer-tier-field": {
+      "touches_crypto": false,
+      "impacted": {
+        "program:INVMAIN": "definite",
+        "program:INVONL": "definite",
+        "program:CUSTUPD": "definite",
+        "paragraph:INVMAIN.MAIN-PARA": "definite",
+        "paragraph:INVONL.MAIN-PARA": "definite",
+        "paragraph:CUSTUPD.MAIN-PARA": "definite",
+        "step:INVJOB.STEP01": "definite",
+        "job:INVJOB": "definite",
+        "transaction:INV1": "definite",
+        "transaction:CUS1": "definite",
+        "paragraph:INVMAIN.POST-PARA": "possible",
+        "table:INVOICES": "possible",
+        "dataset:BILL.INV.OUT": "possible",
+        "paragraph:INVRPT.SUM-PARA": "possible",
+        "paragraph:INVRPT.MAIN-PARA": "possible",
+        "program:INVRPT": "possible",
+        "step:INVJOB.STEP02": "possible",
+        "cics-file:CUSTFIL": "possible",
+        "dataset:BILL.CUST.MASTER": "possible"
+      }
+    },
+    "hmac-instead-of-signature": {
+      "touches_crypto": true,
+      "impacted": {
+        "program:INVSIGN": "definite",
+        "paragraph:INVMAIN.SIGN-PARA": "definite",
+        "program:INVMAIN": "definite",
+        "paragraph:INVMAIN.MAIN-PARA": "definite",
+        "step:INVJOB.STEP01": "definite",
+        "job:INVJOB": "definite",
+        "paragraph:INVMAIN.POST-PARA": "possible",
+        "table:INVOICES": "possible",
+        "dataset:BILL.INV.OUT": "possible",
+        "paragraph:INVRPT.SUM-PARA": "possible",
+        "paragraph:INVRPT.MAIN-PARA": "possible",
+        "program:INVRPT": "possible",
+        "step:INVJOB.STEP02": "possible"
+      }
+    },
+    "report-reads-v2-file": {
+      "touches_crypto": false,
+      "impacted": {
+        "step:INVJOB.STEP02": "definite",
+        "job:INVJOB": "definite",
+        "program:INVRPT": "probable"
+      }
+    },
+    "report-open-invoices-only": {
+      "touches_crypto": false,
+      "impacted": {
+        "paragraph:INVRPT.SUM-PARA": "definite",
+        "program:INVRPT": "definite",
+        "paragraph:INVRPT.MAIN-PARA": "definite",
+        "step:INVJOB.STEP02": "definite",
+        "job:INVJOB": "definite"
+      }
+    },
+    "audit-stamp-text": {
+      "touches_crypto": false,
+      "impacted": {
+        "program:AUDLOG": "definite",
+        "step:AUDJOB.STEP01": "definite",
+        "job:AUDJOB": "definite",
+        "dataset:BILL.AUDIT.LOG": "possible"
+      }
+    },
+    "discount-paragraph": {
+      "touches_crypto": false,
+      "impacted": {
+        "program:INVMAIN": "definite",
+        "step:INVJOB.STEP01": "definite",
+        "job:INVJOB": "definite",
+        "paragraph:INVMAIN.POST-PARA": "probable",
+        "table:INVOICES": "possible",
+        "dataset:BILL.INV.OUT": "possible",
+        "paragraph:INVRPT.SUM-PARA": "possible",
+        "paragraph:INVRPT.MAIN-PARA": "possible",
+        "program:INVRPT": "possible",
+        "step:INVJOB.STEP02": "possible"
+      }
+    },
+    "retire-signing-program": {
+      "touches_crypto": true,
+      "impacted": {
+        "paragraph:INVMAIN.SIGN-PARA": "definite",
+        "program:INVMAIN": "definite",
+        "paragraph:INVMAIN.MAIN-PARA": "definite",
+        "step:INVJOB.STEP01": "definite",
+        "job:INVJOB": "definite",
+        "paragraph:INVMAIN.POST-PARA": "possible",
+        "table:INVOICES": "possible",
+        "dataset:BILL.INV.OUT": "possible",
+        "paragraph:INVRPT.SUM-PARA": "possible",
+        "paragraph:INVRPT.MAIN-PARA": "possible",
+        "program:INVRPT": "possible",
+        "step:INVJOB.STEP02": "possible"
+      }
+    },
+    "customer-status-value": {
+      "touches_crypto": false,
+      "impacted": {
+        "program:CUSTUPD": "definite",
+        "transaction:CUS1": "definite",
+        "cics-file:CUSTFIL": "possible",
+        "paragraph:INVONL.MAIN-PARA": "possible",
+        "program:INVONL": "possible",
+        "transaction:INV1": "possible",
+        "dataset:BILL.CUST.MASTER": "possible",
+        "step:INVJOB.STEP01": "possible",
+        "program:INVMAIN": "possible",
+        "paragraph:INVMAIN.MAIN-PARA": "possible",
+        "job:INVJOB": "possible",
+        "paragraph:INVMAIN.POST-PARA": "possible",
+        "table:INVOICES": "possible",
+        "dataset:BILL.INV.OUT": "possible",
+        "paragraph:INVRPT.SUM-PARA": "possible",
+        "paragraph:INVRPT.MAIN-PARA": "possible",
+        "program:INVRPT": "possible",
+        "step:INVJOB.STEP02": "possible"
+      }
+    },
+    "tax-rate-value": {
+      "touches_crypto": false,
+      "impacted": {
+        "paragraph:TAXCALC.CALC-PARA": "definite",
+        "program:TAXCALC": "definite",
+        "paragraph:INVMAIN.PRICE-PARA": "definite",
+        "program:INVMAIN": "definite",
+        "paragraph:INVMAIN.MAIN-PARA": "definite",
+        "step:INVJOB.STEP01": "definite",
+        "job:INVJOB": "definite",
+        "paragraph:INVONL.MAIN-PARA": "probable",
+        "program:INVONL": "probable",
+        "transaction:INV1": "probable",
+        "paragraph:INVMAIN.POST-PARA": "possible",
+        "table:INVOICES": "possible",
+        "dataset:BILL.INV.OUT": "possible",
+        "paragraph:INVRPT.SUM-PARA": "possible",
+        "paragraph:INVRPT.MAIN-PARA": "possible",
+        "program:INVRPT": "possible",
+        "step:INVJOB.STEP02": "possible"
+      }
+    },
+    "move-report-program": {
+      "touches_crypto": false,
+      "impacted": {}
+    }
+  }
+}

@@ -9,6 +9,7 @@ from pydantic import ValidationError
 
 from changeproof.change import change_records
 from changeproof.config import Config, load_config
+from changeproof.impact import impact
 from changeproof.markets import DEFAULT_MARKET, MARKETS
 
 CONFIG_NAME = "changeproof.yaml"
@@ -72,7 +73,14 @@ def cmd_change(args: argparse.Namespace) -> int:
     return 1 if any(r.gaps() for r in records) else 0
 
 
-# PURPOSE: DEFINES THE INIT, VALIDATE, SCHEMA AND CHANGE SUBCOMMANDS
+# PURPOSE: PRINTS THE IMPACT PREDICATE FOR A COMMIT OR RANGE AS JSON
+def cmd_impact(args: argparse.Namespace) -> int:
+    print(json.dumps(impact(Path(args.repo), args.revisions, copybook_dirs=args.copybooks, config_path=args.config),
+                     indent=2))
+    return 0
+
+
+# PURPOSE: DEFINES THE INIT, VALIDATE, SCHEMA, CHANGE AND IMPACT SUBCOMMANDS
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="changeproof")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -98,6 +106,13 @@ def build_parser() -> argparse.ArgumentParser:
     change.add_argument("--config", help=f"defaults to {CONFIG_NAME} in the repository")
     change.add_argument("--copybooks", action="append", default=[], help="copybook folder, repo-relative; repeatable")
     change.set_defaults(func=cmd_change)
+
+    impacts = sub.add_parser("impact", help="print what a commit or range impacts, with confidence and paths")
+    impacts.add_argument("revisions", help="a commit, or a range such as main..HEAD")
+    impacts.add_argument("--repo", default=".")
+    impacts.add_argument("--config", default=CONFIG_NAME, help="repo-relative path of the config at the head commit")
+    impacts.add_argument("--copybooks", action="append", default=[], help="copybook folder, repo-relative; repeatable")
+    impacts.set_defaults(func=cmd_impact)
     return parser
 
 

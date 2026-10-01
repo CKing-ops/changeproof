@@ -35,6 +35,8 @@ def anchors(edge: Edge, names: dict[str, str]) -> list[str]:
             return ["EXEC"]
         case "flows-to":
             return [edge.attributes["verb"]]
+        case "uses-data":
+            return [edge.attributes["ref"].split()[0].rsplit(".", 1)[-1]]
         case "starts" | "cics-dataset":
             return [names[edge.dst]]
         case "uses-screen":
