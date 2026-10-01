@@ -47,9 +47,9 @@ def test_rego_policy_unit_tests_pass():
     assert proc.returncode == 0, proc.stdout + proc.stderr
 
 
-def test_rules_are_the_rego_packages_plus_the_planned_one():
+def test_every_rule_is_a_rego_package():
     assert known_rules() == {"no-new-quantum-vulnerable-crypto": "rego", "high-criticality-needs-two-approvers": "rego",
-                             "equivalence-required-outside-impact-set": "planned"}
+                             "equivalence-required-outside-impact-set": "rego"}
 
 
 def test_exit_check_policy_blocks_a_pr_that_adds_rsa_2048(results, repo):
@@ -87,10 +87,21 @@ def test_a_high_criticality_change_needs_two_independent_approvers(results):
     assert outcome(results["add-sha-384-digest"], "high-criticality-needs-two-approvers")["status"] == "pass"
 
 
-def test_rules_without_evidence_yet_are_reported_not_evaluated(results):
+def test_the_equivalence_rule_warns_about_each_program_it_cannot_test(results):
     rule = outcome(results["add-sha-384-digest"], "equivalence-required-outside-impact-set")
+    assert (rule["status"], rule["deny"]) == ("inconclusive", [])
+    assert results["add-sha-384-digest"].decision["ok"] is True
+    assert rule["warn"] and all("has no equivalence tests" in w["message"] for w in rule["warn"])
+    assert all(w["provenance"]["file"].startswith("src/") for w in rule["warn"])
+    assert results["add-sha-384-digest"].input["equivalence"]["verdict"] == "inconclusive"
+
+
+def test_without_gnucobol_the_equivalence_rule_is_not_evaluated(repo, monkeypatch):
+    root, shas = repo
+    monkeypatch.setenv("CHANGEPROOF_COBC", "/nonexistent/cobc")
+    rule = outcome(gate(root, shas["add-sha-384-digest"]), "equivalence-required-outside-impact-set")
     assert rule["status"] == "not-evaluated"
-    assert "planned" in rule["reason"]
+    assert "cobc was not found" in rule["reason"]
 
 
 def test_every_policy_input_fact_carries_provenance(results):
@@ -123,7 +134,8 @@ def test_oscal_records_policy_findings_and_cited_evidence(results):
     result = doc["results"][0]
     states = {f["target"]["target-id"]: f["target"]["status"]["state"] for f in result["findings"]}
     assert states == {"no-new-quantum-vulnerable-crypto": "not-satisfied",
-                      "high-criticality-needs-two-approvers": "satisfied"}
+                      "high-criticality-needs-two-approvers": "satisfied",
+                      "equivalence-required-outside-impact-set": "not-satisfied"}
     observed = {o["uuid"]: o for o in result["observations"]}
     crypto = next(f for f in result["findings"] if f["target"]["target-id"] == "no-new-quantum-vulnerable-crypto")
     cited = [observed[r["observation-uuid"]] for r in crypto["related-observations"]]

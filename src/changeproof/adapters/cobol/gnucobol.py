@@ -92,7 +92,7 @@ class Runner(ABC):
             proc = subprocess.run(self.command(work), capture_output=True, text=True)
             if proc.returncode:
                 log = work / "build.log"
-                raise RuntimeError(f"{source.name} did not build:\n{log.read_text() if log.exists() else proc.stderr}")
+                raise RuntimeError(f"{source.name} did not build: {(log.read_text() if log.exists() else proc.stderr).strip()}")
             return collect(work, program, len(inputs))
 
 
@@ -100,8 +100,9 @@ class LocalRunner(Runner):
     # PURPOSE: USES CHANGEPROOF_COBC OR COBC ON THE PATH
     def __init__(self) -> None:
         self.cobc = os.environ.get("CHANGEPROOF_COBC") or shutil.which("cobc")
-        if not self.cobc:
-            raise RuntimeError("GnuCOBOL's cobc was not found; install it or set CHANGEPROOF_COBC")
+        if not self.cobc or not Path(self.cobc).is_file():
+            raise RuntimeError(f"GnuCOBOL's cobc was not found ({self.cobc or 'not on PATH'}); "
+                               "install it or set CHANGEPROOF_COBC")
 
     # PURPOSE: RUNS THE SCRIPT WITH THE LOCAL COBC
     def command(self, work: Path) -> list[str]:

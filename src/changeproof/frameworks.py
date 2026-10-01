@@ -83,7 +83,9 @@ RECORD = Evidence("change record: who, what, when, where and how for every commi
                   "tests/test_change.py::test_exit_check_ten_seeded_commits_give_complete_records")
 CRYPTO = Evidence("impact predicate: touches_crypto when a change touches a crypto call",
                   "tests/test_impact.py::test_crypto_flag")
-EQUIVALENCE = Evidence("behavioral-equivalence attestation for code outside the impact set (Weeks 8-9)", PLANNED)
+EQUIVALENCE = Evidence("behavioral-equivalence attestation: characterization tests from the base replayed at the head, "
+                       "for COBOL linkage subprograms outside the impact set",
+                       "tests/test_equivalence.py::test_a_refactor_leaves_everything_outside_the_impact_set_equivalent")
 SIGNED = Evidence("signed attestation, verifiable offline; hybrid signatures survive a distrusted algorithm",
                   "tests/test_signer.py::test_exit_check_hybrid_verifies_when_either_component_is_distrusted")
 GATE_CRYPTO = Evidence("policy gate: no-new-quantum-vulnerable-crypto blocks a change that adds RSA, ECC, DSA or DH",

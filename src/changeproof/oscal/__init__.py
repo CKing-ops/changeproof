@@ -112,6 +112,13 @@ def observations(result: GateResult, key: str, at: str) -> dict[str, list[dict]]
     return {name: [compact(o) for o in group] for name, group in groups.items()}
 
 
+# PURPOSE: OSCAL STATUS OF A RULE; AN INCONCLUSIVE RULE IS NOT SATISFIED, WITH THE REASON IN REMARKS
+def status_of(rule: dict) -> dict:
+    if rule["status"] == "inconclusive":
+        return {"state": "not-satisfied", "remarks": "No difference was found, but some code in scope has no tests."}
+    return {"state": "satisfied" if rule["status"] == "pass" else "not-satisfied"}
+
+
 # PURPOSE: ONE FINDING PER EVALUATED POLICY RULE, CITING THE OBSERVATIONS IT RESTS ON
 def findings(result: GateResult, key: str, groups: dict[str, list[dict]]) -> list[dict]:
     found = []
@@ -125,7 +132,7 @@ def findings(result: GateResult, key: str, groups: dict[str, list[dict]]) -> lis
             "description": "; ".join(messages) or "The rule holds for this change.",
             "props": provenance_props([d["provenance"] for d in rule["deny"] + rule["warn"]]),
             "target": {"type": "objective-id", "target-id": rule["rule"],
-                       "status": {"state": "satisfied" if rule["status"] == "pass" else "not-satisfied"}},
+                       "status": status_of(rule)},
             "related-observations": [{"observation-uuid": o["uuid"]} for o in cited],
         }))
     return found

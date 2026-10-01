@@ -12,6 +12,7 @@ from changeproof import __version__
 from changeproof.change import change_records
 from changeproof.characterize import DockerRunner, LocalRunner, characterize, replay
 from changeproof.config import Config, load_config
+from changeproof.equivalence import SCOPES, change_subject, equivalence
 from changeproof.impact import impact
 from changeproof.gate import gate, known_rules
 from changeproof.markets import DEFAULT_MARKET, MARKETS
@@ -93,11 +94,23 @@ def cmd_change(args: argparse.Namespace) -> int:
 def cmd_impact(args: argparse.Namespace) -> int:
     predicate = impact(Path(args.repo), args.revisions, copybook_dirs=args.copybooks, config_path=args.config)
     if args.key:
-        subject = {"name": predicate["change"]["repository"], "digest": {"gitCommit": predicate["change"]["head"]}}
-        predicate = sign_envelope(statement([subject], PREDICATE_TYPES["impact"], predicate),
+        predicate = sign_envelope(statement([change_subject(predicate)], PREDICATE_TYPES["impact"], predicate),
                                   [load_private(k) for k in args.key], datetime.now(UTC))
     print(json.dumps(predicate, indent=2))
     return 0
+
+
+# PURPOSE: PRINTS THE EQUIVALENCE PREDICATE, SIGNED WITH --KEY; EXIT 1 UNLESS THE VERDICT IS EQUIVALENT
+def cmd_equivalence(args: argparse.Namespace) -> int:
+    found = equivalence(Path(args.repo), args.revisions, copybook_dirs=args.copybooks, config_path=args.config,
+                        scope=args.scope, runner=DockerRunner(args.docker) if args.docker else LocalRunner(),
+                        baselines=Path(args.baselines) if args.baselines else None).predicate
+    output = found
+    if args.key:
+        output = sign_envelope(statement([change_subject(found)], PREDICATE_TYPES["behavioral-equivalence"], found),
+                               [load_private(k) for k in args.key], datetime.now(UTC))
+    print(json.dumps(output, indent=2))
+    return 0 if found["verdict"] == "equivalent" else 1
 
 
 # PURPOSE: RUNS THE CONFIGURED POLICY RULES ON A COMMIT OR RANGE; PRINTS THE DECISION; EXIT 1 IF A RULE FAILS
@@ -243,6 +256,17 @@ def build_parser() -> argparse.ArgumentParser:
     gates.add_argument("--copybooks", action="append", default=[], help="copybook folder, repo-relative; repeatable")
     gates.add_argument("--oscal", help="write OSCAL assessment results here, validated against the NIST schema")
     gates.set_defaults(func=cmd_gate)
+
+    equiv = sub.add_parser("equivalence", help="replay characterization tests from the base at the head of a change")
+    equiv.add_argument("revisions", help="a commit, or a range such as main..HEAD")
+    equiv.add_argument("--repo", default=".")
+    equiv.add_argument("--config", default=CONFIG_NAME, help="repo-relative path of the config at the head commit")
+    equiv.add_argument("--copybooks", action="append", default=[], help="copybook folder, repo-relative; repeatable")
+    equiv.add_argument("--scope", choices=SCOPES, default=SCOPES[0])
+    equiv.add_argument("--baselines", help="folder that keeps baseline suites by source digest between runs")
+    equiv.add_argument("--docker", metavar="IMAGE", help="run in this GnuCOBOL image with networking off")
+    equiv.add_argument("--key", action="append", default=[], help="private key file to sign with; repeatable")
+    equiv.set_defaults(func=cmd_equivalence)
 
     chars = sub.add_parser("characterize", help="golden tests for COBOL linkage subprograms, run under GnuCOBOL")
     chars.add_argument("programs", nargs="*", help="program source files")

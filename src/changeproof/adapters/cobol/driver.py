@@ -68,11 +68,10 @@ def linkage_fields(module: IRModule) -> list[Field]:
     return list(found.values())
 
 
-# PURPOSE: CONDITION AND STATEMENT TEXTS THAT MENTION A FIELD OR ONE OF ITS 88 NAMES
-def texts_about(f: Field, module: IRModule) -> list[str]:
+# PURPOSE: BRANCHES WHOSE CONDITION READS A FIELD OR ONE OF ITS 88 NAMES
+def branches_about(f: Field, module: IRModule) -> list[Entity]:
     names = {f.name, *f.values}
-    return [e.attributes["condition"] for e in module.entities
-            if e.kind == "branch" and names & set(e.attributes["refs"])]
+    return [e for e in module.entities if e.kind == "branch" and names & set(e.attributes["refs"])]
 
 
 # PURPOSE: BOUNDARY VALUES FOR ONE FIELD: EACH LITERAL IT MEETS, ONE UNIT EITHER SIDE, ZERO AND THE MAXIMUM
@@ -81,7 +80,7 @@ def candidates(f: Field, module: IRModule) -> list[str]:
     if not shape["numeric"]:
         if not f.read:
             return [f.default]
-        pool = ["", *f.values.values(), *(q for t in texts_about(f, module) for q in literals(t)[0])]
+        pool = ["", *f.values.values(), *(q for b in branches_about(f, module) for q in literals(b.attributes["condition"])[0])]
         return list(dict.fromkeys(v for v in pool if len(v) <= shape["length"]))
     if not f.read:
         return [f.default]
@@ -99,6 +98,20 @@ def candidates(f: Field, module: IRModule) -> list[str]:
     low = -top if shape["signed"] else Decimal(0)
     return [format(v, "f") for v in sorted(v.quantize(unit) for v in seen
                                            if low <= v <= top and v == v.quantize(unit))]
+
+
+# PURPOSE: ON-POINT VALUES OF A FIELD: EACH LITERAL A CONDITION COMPARES IT WITH, IN THE FIELD'S FORMAT, WITH THE BRANCHES
+def boundary_values(f: Field, module: IRModule) -> dict[str, set[str]]:
+    shape = f.shape
+    unit = Decimal(1).scaleb(-shape["scale"])
+    found: dict[str, set[str]] = {}  # RENAME: ON-POINT VALUE TO THE BRANCH IDS THAT COMPARE THE FIELD WITH IT
+    for branch in branches_about(f, module):
+        quoted, numbers = literals(branch.attributes["condition"])
+        values = quoted if not shape["numeric"] else [
+            format(Decimal(n).quantize(unit), "f") for n in numbers if Decimal(n) == Decimal(n).quantize(unit)]
+        for value in values:
+            found.setdefault(value, set()).add(branch.id)
+    return found
 
 
 # PURPOSE: FREE-FORMAT DRIVER THAT READS EVERY LINKAGE ITEM FROM STDIN, CALLS THE PROGRAM AND DISPLAYS THEM ALL
