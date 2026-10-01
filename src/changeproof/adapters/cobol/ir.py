@@ -25,7 +25,8 @@ CICS_OPTIONS = {  # RENAME: CICS OPTION NAMES TO THE ATTRIBUTE THEY FILL (LITERA
     "program": "PROGRAM", "file": "FILE|DATASET", "transid": "TRANSID", "map": "MAP", "mapset": "MAPSET",
 }
 CICS_OPERAND_RE = {
-    attribute: re.compile(rf"\b(?:{words})\s*\(\s*(?:'([^']*)'|\"([^\"]*)\"|([\w-]+))\s*\)", re.IGNORECASE)
+    attribute: re.compile(rf"\b(?:{words})\s*\(\s*(?:'([^']*)'|\"([^\"]*)\"|([\w-]+)(?:\s*\([^)]*\))?)\s*\)",
+                          re.IGNORECASE)
     for attribute, words in CICS_OPTIONS.items()
 }
 

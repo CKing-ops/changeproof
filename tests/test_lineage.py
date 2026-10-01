@@ -59,3 +59,16 @@ def test_downstream_lineage_follows_a_group_move_into_its_fields(graph):
 
 def test_new_edges_pass_the_provenance_check(graph):
     assert check_edges(graph, ROOT) == []
+
+
+def test_dynamic_targets_resolve_through_tables_and_moved_constants():
+    graph = build_graph(ROOT, programs=["src/BATCH1.cbl", "src/SUBPGM.cbl", "src/FLOWS.cbl", "src/MENU.cbl"],
+                        copybook_dirs=["copy"])
+    calls = {(e.dst, e.attributes.get("target_from"), str(e.provenance)) for e in graph.edges
+             if e.kind == "calls" and e.src == "paragraph:MENU.MAIN-PARA"}
+    assert calls == {
+        ("program:BATCH1", "data:MENU.MENU-OPTIONS.MENU-DATA.FILLER", "src/MENU.cbl:21"),
+        ("program:SUBPGM", "data:MENU.MENU-OPTIONS.MENU-DATA.FILLER#3", "src/MENU.cbl:21"),
+        ("program:FLOWS", "data:MENU.LIT-BACK", "src/MENU.cbl:23"),
+    }
+    assert check_edges(graph, ROOT) == []

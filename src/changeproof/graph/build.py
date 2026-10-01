@@ -30,6 +30,8 @@ CICS_DATA_OPTIONS = {  # RENAME: CICS OPTIONS THAT NAME A DATA ITEM, AND WHETHER
 CICS_DATA_RE = re.compile(rf"\b({'|'.join(CICS_DATA_OPTIONS)})\s*\(\s*([A-Z0-9][\w-]*(?:\s+(?:OF|IN)\s+[\w-]+)*)\s*\)",
                           re.IGNORECASE)
 HOST_VARIABLE_RE = re.compile(r":([A-Z0-9][\w-]*(?:\.[\w-]+)?)", re.IGNORECASE)
+SUBSCRIPT_RE = re.compile(r"\s*\([^)]*\)")
+REDEFINES_RE = re.compile(r"\bREDEFINES\s+([\w-]+)", re.IGNORECASE)
 SQL_TARGET_COMMANDS = frozenset({"SELECT", "FETCH"})  # RENAME: SQL COMMANDS WHOSE INTO LIST IS WRITTEN
 SQL_LIST_ENDS = frozenset({"FROM", "WHERE", "SET", "VALUES", "USING", "FOR"})  # RENAME: WORDS THAT END AN INTO LIST
 
@@ -140,16 +142,42 @@ class GraphBuilder:
             return (same or paragraphs)[0].id
         return next((e.id for e in facts if e.kind == "section" and e.name == name), None)
 
-    # PURPOSE: LITERALS A DATA ITEM CAN HOLD, FROM ITS VALUE CLAUSE AND FROM MOVES, AS (VALUE, SOURCE FACT ID)
+    # Sources: its VALUE clause, literal MOVEs, MOVEs from other items, and same-picture VALUEs in redefined storage.
+    # PURPOSE: LITERALS A DATA ITEM CAN HOLD, AS (VALUE, SOURCE FACT ID)
     def values_of(self, program: str, data_name: str) -> list[tuple[str, str]]:
         found = {}  # RENAME: LITERAL TO THE FIRST FACT THAT PUTS IT IN THE DATA ITEM
-        for e in self.facts[program]:
-            if e.kind == "data" and e.name == data_name and "value" in e.attributes:
-                found.setdefault(e.attributes["value"].strip().upper(), e.id)
-            elif e.kind == "flow" and "literal" in e.attributes and \
-                    any(t.split()[0] == data_name for t in e.attributes["targets"]):
-                found.setdefault(e.attributes["literal"].strip().upper(), e.id)
+        facts = self.facts[program]
+        by_id = {e.id: e for e in facts if e.kind == "data"}
+        todo, seen = [SUBSCRIPT_RE.sub("", data_name).strip()], set()
+        while todo:
+            name = todo.pop(0)
+            if name in seen:
+                continue
+            seen.add(name)
+            for e in facts:
+                if e.kind == "data" and e.name == name:
+                    if "value" in e.attributes:
+                        found.setdefault(e.attributes["value"].strip().upper(), e.id)
+                    for literal, fact in self.redefined_values(e, by_id):
+                        found.setdefault(literal, fact)
+                elif e.kind == "flow" and any(t.split()[0] == name for t in e.attributes["targets"]):
+                    if "literal" in e.attributes:
+                        found.setdefault(e.attributes["literal"].strip().upper(), e.id)
+                    elif e.attributes["verb"] == "MOVE":
+                        todo += [SUBSCRIPT_RE.sub("", src).split()[0] for src in e.attributes["sources"]]
         return list(found.items())
+
+    # PURPOSE: VALUES OF SAME-PICTURE ITEMS INSIDE THE STORAGE THAT AN ENCLOSING GROUP OF THE ITEM REDEFINES
+    def redefined_values(self, item: Entity, by_id: dict[str, Entity]) -> list[tuple[str, str]]:
+        group = item
+        while group is not None and not (m := REDEFINES_RE.search(group.attributes.get("text", ""))):
+            group = by_id.get(group.attributes.get("parent"))
+        if group is None:
+            return []
+        prefix = f"{group.id.split('#', 1)[0].rsplit('.', 1)[0]}.{m.group(1).upper()}"
+        return [(e.attributes["value"].strip().upper(), e.id) for e in by_id.values()
+                if e.id.startswith(prefix + ".") and "value" in e.attributes
+                and e.attributes.get("picture") == item.attributes.get("picture")]
 
     # PURPOSE: FINDS THE DATA ITEM A NAME LIKE "FIELD OF GROUP" REFERS TO, OR THE REASON IT CANNOT
     def data_item(self, program: str, ref: str) -> tuple[str | None, str]:

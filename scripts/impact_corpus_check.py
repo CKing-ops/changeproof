@@ -149,9 +149,13 @@ def seeds(modules, jcl_modules, graph) -> list[tuple[str, list[EntityChange], se
 # PURPOSE: RUNS EVERY SEED THROUGH THE ENGINE AND THE ORACLE, WRITES THE REPORT, EXITS 1 BELOW 95% RECALL
 def main() -> int:
     paths = sorted(p for p in CORPUS.glob("app/**/*") if p.suffix.lower() == ".cbl")
-    jcl_paths = sorted(p for p in CORPUS.glob("app/**/*") if p.suffix.lower() in (".jcl", ".prc"))
     with ProcessPoolExecutor() as pool:
-        modules = list(pool.map(parse_one, paths))
+        return check(list(pool.map(parse_one, paths)))
+
+
+# PURPOSE: SCORES THE ENGINE AGAINST THE ORACLE ON ALREADY-PARSED PROGRAMS
+def check(modules) -> int:
+    jcl_paths = sorted(p for p in CORPUS.glob("app/**/*") if p.suffix.lower() in (".jcl", ".prc"))
     jobs = [job for path in jcl_paths for job in parse_jcl(path, CORPUS)]
     csd = [d for path in CORPUS.glob("app/**/*.csd") for d in parse_csd(path, CORPUS)]
     graph = graph_from(modules, jobs, load_config(CONFIG), csd)
