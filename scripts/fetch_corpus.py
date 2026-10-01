@@ -3,12 +3,13 @@
 Setup-time only. The engine itself never opens a network connection.
 """
 
-import hashlib
 import io
 import sys
 import tarfile
 import urllib.request
 from pathlib import Path
+
+from changeproof.signer import digest
 
 NIST_URL = "https://sourceforge.net/projects/gnucobol/files/nist/newcob.val.tar.gz/download"
 NIST_SHA256 = "e4513f26a9b38911f7bf882fe3d3339a80b45cabc2caf85eb3055b0f5ce87ee0"
@@ -22,9 +23,9 @@ OUT_DIR = ROOT / "corpus" / "nist"
 def download(url: str, sha256: str) -> bytes:
     with urllib.request.urlopen(url, timeout=120) as resp:
         blob = resp.read()
-    digest = hashlib.sha256(blob).hexdigest()
-    if digest != sha256:
-        raise SystemExit(f"hash mismatch for {url}: got {digest}, pinned {sha256}")
+    found = digest(blob, "sha-256")["sha-256"]
+    if found != sha256:
+        raise SystemExit(f"hash mismatch for {url}: got {found}, pinned {sha256}")
     return blob
 
 

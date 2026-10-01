@@ -37,7 +37,9 @@ schema migration across every stored record. That is the failure this ADR preven
 
 1. **One signer interface owns all cryptography.** Signing, verification and hashing go through a
    `Signer` / `Verifier` / `Hasher` interface (built in Week 6). No other module imports a crypto
-   library or names an algorithm in code. CLAUDE.md rule 6 makes this a review rule.
+   library or names an algorithm in code. CLAUDE.md rule 6 makes this a review rule. Built in
+   Week 6 as `src/changeproof/signer/`; a test fails if any other module imports a crypto library
+   (`tests/test_style.py::test_crypto_libraries_are_imported_only_by_the_signer`).
 
 2. **Algorithms are opaque identifiers everywhere else.** Config, predicates and the IR carry
    algorithm IDs as strings matching `^[a-z0-9][a-z0-9-]*$` (e.g. `ml-dsa-87`, `ecdsa-p384`,
@@ -50,13 +52,17 @@ schema migration across every stored record. That is the failure this ADR preven
 3. **Every signature records its algorithm ID.** Attestations use a DSSE envelope. Each entry in
    `signatures[]` carries, next to `sig` and `keyid`, the algorithm ID, the library and version
    that produced it, and a timestamp. Verification reads the algorithm from the record, never from
-   current config, so old records verify under the algorithm they were signed with. **Planned**
-   (Week 6).
+   current config, so old records verify under the algorithm they were signed with. The label is
+   not trusted on its own: the algorithm must match the trusted key with that `keyid`. Proven:
+   `tests/test_signer.py::test_every_signature_records_its_algorithm_library_and_time`,
+   `::test_the_algorithm_comes_from_the_trusted_key_not_the_label`.
 
 4. **Hybrid signing is several signatures, not a combined one.** A hybrid profile produces one
    DSSE signature per algorithm over the same payload. Verification policy says how many must
    hold and which algorithms are distrusted, so "valid if either component is still trusted" is a
-   policy setting, not a format change. **Planned** (Week 6 exit check).
+   policy setting, not a format change. Proven:
+   `tests/test_signer.py::test_exit_check_hybrid_verifies_when_either_component_is_distrusted`,
+   `::test_a_distrusted_component_never_hides_tampering`, `::test_a_policy_can_require_an_algorithm`.
 
 5. **Algorithm swap needs no schema change.** Adding or retiring an algorithm means registering
    or removing a signer implementation and editing `crypto:` in `changeproof.yaml`. Predicate
@@ -69,13 +75,18 @@ schema migration across every stored record. That is the failure this ADR preven
    new DSSE signature with the new algorithm to the existing envelope, over the unchanged payload,
    and keeps every earlier signature. The original bytes and their original signatures remain
    verifiable. A re-signing log records which records were countersigned, when and with what.
-   **Planned** (Week 6, and the Week 17 archive job).
+   It refuses evidence that does not verify. Proven:
+   `tests/test_signer.py::test_resign_countersigns_without_altering_the_original`,
+   `::test_resign_refuses_evidence_that_does_not_verify`. The archive job stays **planned** (Week 17).
 
 7. **Profiles are named policies.** `crypto.profile` (`hybrid`, `nist-pqc`, `classical-legacy`)
    selects which algorithm IDs the signer registry will accept for signing and for verification.
    `hybrid` is the default because national agencies in the EU (for example Germany's BSI and
    France's ANSSI) advise hybrid classical + PQ schemes during the transition; recheck their
-   current guidance before Week 6. The config stores the name; the registry owns the rule set.
+   current guidance before Week 6 (not rechecked in Week 6: the pages need the owner's approval to
+   fetch, so this advice is **unverified**). The config stores the name; the registry owns the rule
+   set, `src/changeproof/signer/profiles.py`, which also knows `cnsa2` for `us-defense`
+   (`tests/test_signer.py::test_the_registry_checks_config_algorithms_against_the_profile`).
    One rule already applies at config time: under `hybrid` and `nist-pqc`,
    `egress.require_pq_transport` must stay true
    (`tests/test_config.py::test_hybrid_profile_requires_pq_transport`,
@@ -88,12 +99,14 @@ schema migration across every stored record. That is the failure this ADR preven
 
 ## Consequences
 
-- Algorithm IDs in config are not checked against a list until the Week 6 signer registry exists.
-  Until then a typo such as `ml-dsa-78` passes `changeproof validate`. Week 6 adds the check.
+- The config schema still accepts any well-formed ID (rule 8), and `changeproof validate` then checks
+  each one against the signer registry and the profile, so a typo such as `ml-dsa-78` is caught
+  (`tests/test_cli.py::test_validate_checks_algorithms_against_the_signer_registry`).
 - The `changeproof init` template names algorithm IDs as config data. That is allowed by rule 6,
   which forbids them in code, not in configuration.
-- Hybrid envelopes are larger (ML-DSA-87 signatures are about 4.6 KB). Week 6 benchmarks size and
-  speed.
+- Hybrid envelopes are larger: an ML-DSA-87 signature is 4,627 bytes, and a hybrid envelope over a
+  4 KB statement is about 12 KB against about 6 KB for ECDSA alone
+  (`scripts/signer_benchmark.py`, `docs/weekly/week06-signer-benchmark.json`).
 - Certified modules can replace the open-source PQ library behind the same interface when
   available. For EU buyers that means Common Criteria or national certification (for example BSI)
   rather than, or as well as, FIPS 140-3 (Week 17).

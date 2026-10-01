@@ -94,3 +94,20 @@ def test_predicate_schemas_resolve_without_fetching():
 
     ids = {json.loads(p.read_text())["$id"] for p in (PACKAGE / "predicates" / "schemas").glob("*.json")}
     assert ids <= set(schema_registry())
+
+
+def test_signing_and_verification_make_no_network_calls(tmp_path):
+    statement = tmp_path / "statement.json"
+    statement.write_text(json.dumps({"_type": "https://in-toto.io/Statement/v1", "subject": [], "predicate": {}}))
+    argv = [["keygen", alg, "--out", str(tmp_path / alg)] for alg in ("ml-dsa-87", "ecdsa-p384", "lms-sha256-192")]
+    argv += [
+        ["sign", str(statement), "-o", str(tmp_path / "signed.json"),
+         *[x for alg in ("ml-dsa-87", "ecdsa-p384", "lms-sha256-192") for x in ("--key", str(tmp_path / f"{alg}.key"))]],
+        ["verify", str(tmp_path / "signed.json"),
+         *[x for alg in ("ml-dsa-87", "ecdsa-p384", "lms-sha256-192") for x in ("--trust", str(tmp_path / f"{alg}.pub.json"))]],
+    ]
+    script = f"ARGV = {argv!r}\n" + textwrap.dedent(AUDITED)
+    proc = subprocess.run([sys.executable, "-c", script], capture_output=True, text=True, cwd=tmp_path)
+    assert proc.returncode == 0, proc.stderr
+    result = ast.literal_eval(proc.stdout.strip().splitlines()[-1])
+    assert result == {"codes": [0, 0, 0, 0, 0], "network_events": []}

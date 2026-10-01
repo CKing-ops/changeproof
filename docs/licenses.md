@@ -22,6 +22,10 @@ installed metadata.
 | attrs | 26.1.0 | MIT |
 | antlr4-python3-runtime (Week 2) | 4.13.2 | BSD-3-Clause |
 | networkx (Week 3) | 3.7 | BSD-3-Clause |
+| cryptography (Week 6: ECDSA P-384, ML-DSA-87) | 50.0.2 | Apache-2.0 OR BSD-3-Clause; its wheel bundles OpenSSL 4.0.3 (Apache-2.0) |
+| cffi (Week 6, needed by cryptography) | 2.1.1 | MIT-0 (MIT No Attribution, read from its LICENSE file) |
+| pycparser (Week 6, needed by cffi) | 3.0 | BSD-3-Clause |
+| pyhsslms (Week 6: LMS, pure Python) | 2.0.0 | Package metadata says MIT; the source file headers carry a BSD-3-Clause-style notice (Vigil Security). Both permissive; the notice is kept in the installed files |
 
 ## Vendored generated code (shipped)
 
