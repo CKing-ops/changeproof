@@ -14,7 +14,7 @@ tamper-evident change records. Sources and the full comparison are in `ROADMAP.m
 
 ## Status
 
-Weeks 1-12 (planned capabilities are labeled; proven ones cite their test):
+Weeks 1-13 (planned capabilities are labeled; proven ones cite their test):
 
 - `changeproof init` writes a starter `changeproof.yaml` (`tests/test_cli.py`).
 - `changeproof validate` checks a config against the schema (`tests/test_cli.py`).
@@ -101,6 +101,12 @@ Weeks 1-12 (planned capabilities are labeled; proven ones cite their test):
   stated. `changeproof pack-verify` checks every signature and rebuilds the report and OSCAL offline
   from the attestations alone, byte for byte (`tests/test_pack.py`, `docs/adr/010-evidence-pack-and-mcp.md`).
   A sample is in `docs/weekly/week12-pack/`.
+- Week 13 pack fixes from a mock assessor review (unverified; no independent reviewer yet): the
+  report opens with the release decision and open findings, shows what each change altered inside
+  its impact set, and maps the evidence to controls with each control number's source status. The
+  configured crypto profile is enforced when a pack is built and verified, and `--release-key`
+  countersigns it (`tests/test_pack.py`, `docs/weekly/week13-review.md`). Three packs, one signed
+  under CNSA 2.0 with ML-DSA-87 and LMS only, are in `docs/weekly/week13-packs/`.
 - MCP server: `changeproof mcp` gives AI agents the `impact`, `lineage`, `equivalence_status` and
   `crypto_inventory` tools over stdio, read-only and offline (`tests/test_mcp.py`). Tested with a
   scripted client; a third-party MCP client has not been tried yet.
