@@ -51,7 +51,7 @@ Read on 2026-10-07 (`tests/test_frameworks.py::test_the_sources_read_on_2026_10_
 
 `docs/framework-mapping.md` and the Week 5 source table carry these results.
 
-The whole suite passes with sockets blocked: TESTS tests.
+The whole suite passes with sockets blocked: 483 tests.
 
 ## Open issues
 

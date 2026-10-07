@@ -1,0 +1,175 @@
+{
+  "assessment-results": {
+    "uuid": "5c3af08d-abf7-5a7f-8fc3-29b23113f7e9",
+    "metadata": {
+      "title": "changeproof evidence for card-billing 81ab6076e1e2",
+      "last-modified": "2026-10-07T12:00:00Z",
+      "version": "0.1.0",
+      "oscal-version": "1.1.2"
+    },
+    "import-ap": {
+      "href": "#3561ad3e-af9d-5ee4-b56f-7fb289dcfdc9"
+    },
+    "results": [
+      {
+        "uuid": "aae9a2cd-68de-54e0-8461-19372ad0e759",
+        "title": "changeproof policy gate",
+        "description": "Impact and policy evidence for card-billing ed5641a66abe2d693afbff43f5bb5732d5c2bd96..81ab6076e1e2b55456ff7818eee2fd75bfa5fdf0, rules evaluated by OPA 1.21.1. Findings target policy rules; no determination is made about any framework control.",
+        "start": "2026-10-07T12:00:00Z",
+        "end": "2026-10-07T12:00:00Z",
+        "reviewed-controls": {
+          "control-selections": [
+            {
+              "include-controls": [
+                {
+                  "control-id": "dora_Art.-9-4-e"
+                },
+                {
+                  "control-id": "dora_Art.-28-3"
+                },
+                {
+                  "control-id": "dora-rts-ict-risk_Art.-17-1-a"
+                },
+                {
+                  "control-id": "dora-rts-ict-risk_Art.-17-1-b"
+                },
+                {
+                  "control-id": "dora-rts-ict-risk_Art.-17-1-d"
+                },
+                {
+                  "control-id": "dora-rts-ict-risk_Art.-17-1-f---g"
+                },
+                {
+                  "control-id": "dora-rts-ict-risk_Art.-17-1-h"
+                },
+                {
+                  "control-id": "dora-rts-ict-risk_Art.-16-2---3"
+                },
+                {
+                  "control-id": "ecb-itrq_Q23c-e"
+                },
+                {
+                  "control-id": "ecb-itrq_Q23a"
+                }
+              ]
+            }
+          ]
+        },
+        "observations": [
+          {
+            "uuid": "7c42e0c3-4f40-5683-9bfb-af92cc7fd2d1",
+            "title": "Impact of the change",
+            "description": "2 entities changed and 2 impacted (2 definite, 0 probable, 0 possible); 0 gaps reported.",
+            "methods": [
+              "TEST"
+            ],
+            "collected": "2026-10-07T12:00:00Z",
+            "props": [
+              {
+                "name": "provenance",
+                "ns": "urn:changeproof:oscal",
+                "value": "src/batch/FEECALC.cbl:15-41"
+              },
+              {
+                "name": "provenance",
+                "ns": "urn:changeproof:oscal",
+                "value": "src/batch/FEECALC.cbl:24"
+              }
+            ]
+          },
+          {
+            "uuid": "faf684f2-4e86-5fb3-9426-a0834c968433",
+            "title": "Approvals",
+            "description": "0 approvers and 1 implementers recorded in the commits; requester, implementer and approver are kept apart.",
+            "methods": [
+              "EXAMINE"
+            ],
+            "collected": "2026-10-07T12:00:00Z",
+            "props": [
+              {
+                "name": "source",
+                "ns": "urn:changeproof:oscal",
+                "value": "priya.raman@billing.example: git author, git-commit/81ab6076e1e2b55456ff7818eee2fd75bfa5fdf0:3"
+              }
+            ]
+          },
+          {
+            "uuid": "a40b1f83-60c7-5530-9748-e3bdd005b260",
+            "title": "Components changed",
+            "description": "batch-fees (high, changed)",
+            "methods": [
+              "EXAMINE"
+            ],
+            "collected": "2026-10-07T12:00:00Z",
+            "props": [
+              {
+                "name": "provenance",
+                "ns": "urn:changeproof:oscal",
+                "value": "changeproof.yaml:8"
+              }
+            ]
+          }
+        ],
+        "findings": [
+          {
+            "uuid": "44e1743e-4617-53f1-9fc9-530f0944d90d",
+            "title": "Policy rule no-new-quantum-vulnerable-crypto",
+            "description": "The rule holds for this change.",
+            "target": {
+              "type": "objective-id",
+              "target-id": "no-new-quantum-vulnerable-crypto",
+              "status": {
+                "state": "satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "7c42e0c3-4f40-5683-9bfb-af92cc7fd2d1"
+              }
+            ]
+          },
+          {
+            "uuid": "fdf45157-43e5-5738-a453-830b80a82952",
+            "title": "Policy rule agent-changes-need-independent-approval",
+            "description": "noreply@anthropic.com took part in this change and no independent approver is recorded",
+            "props": [
+              {
+                "name": "provenance",
+                "ns": "urn:changeproof:oscal",
+                "value": "git-commit/81ab6076e1e2b55456ff7818eee2fd75bfa5fdf0:8"
+              }
+            ],
+            "target": {
+              "type": "objective-id",
+              "target-id": "agent-changes-need-independent-approval",
+              "status": {
+                "state": "not-satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "b52bf60e-e837-5ab0-a1e2-e3f2df3f27a6",
+            "title": "Policy rule equivalence-required-outside-impact-set",
+            "description": "The rule holds for this change.",
+            "target": {
+              "type": "objective-id",
+              "target-id": "equivalence-required-outside-impact-set",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "back-matter": {
+      "resources": [
+        {
+          "uuid": "3561ad3e-af9d-5ee4-b56f-7fb289dcfdc9",
+          "title": "changeproof policy gate",
+          "description": "Rules named in the policy section of changeproof.yaml: no-new-quantum-vulnerable-crypto, agent-changes-need-independent-approval, equivalence-required-outside-impact-set."
+        }
+      ]
+    }
+  }
+}

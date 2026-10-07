@@ -114,7 +114,7 @@ def build_pack(root: Path, revisions: str, out: Path, keys: list[PrivateKey], re
     return signed
 
 
-# PURPOSE: THE ATTESTATION KIND IN A PACK PATH SUCH AS attestations/01-<sha12>-policy-decision.dsse.json
+# PURPOSE: THE ATTESTATION KIND NAMED AT THE END OF A PACK PATH, SUCH AS POLICY-DECISION
 def kind_of(path: str) -> str:
     return Path(path).name.removesuffix(".dsse.json").split("-", 2)[2]
 
