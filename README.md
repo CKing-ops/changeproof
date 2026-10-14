@@ -92,10 +92,15 @@ Weeks 1-13 (planned capabilities are labeled; proven ones cite their test):
   (`tests/test_java_adapter.py`, `tests/test_java_impact.py`, `tests/test_java_corpus.py`,
   `docs/adr/009-java-adapter.md`). Java behaviour is checked as described below. Other
   languages: **planned**.
-- AI attribution: an agent named in an `Assisted-by`, `Generated-by` or `AI-agent` trailer, or as a
-  co-author at a known agent address, is recorded in the impact attestation with the trailer's
-  line, and the rule `agent-changes-need-independent-approval` asks for an approver who did not
-  implement the change (`tests/test_agents.py`).
+- AI attribution: an agent named in an `Assisted-by`, `Generated-by` or `AI-agent` trailer, any
+  person trailer naming a known agent or bot address or a bot name (an AI reviewer in `Reviewed-by`,
+  say), and a bot that authored a commit, are recorded as agents with the line they were read from;
+  they never count as approvers or reviewers. The rule `agent-changes-need-independent-approval`
+  asks for an approver who did not implement the change (`tests/test_agents.py`,
+  `tests/test_merge_authors.py`).
+- Merge commits: the implementers are the authors of the commits a merge brings in, and the person
+  who merged is recorded apart, from `Merged-by` or the merge commit's author. A change counts as
+  independently approved when one approver implemented none of it (`tests/test_merge_authors.py`).
 - Evidence pack: `changeproof pack <release>` signs impact, policy-decision and behavioral-equivalence
   evidence for each commit and builds a PDF report and OSCAL from them, with the crypto profile
   stated. `changeproof pack-verify` checks every signature and rebuilds the report and OSCAL offline

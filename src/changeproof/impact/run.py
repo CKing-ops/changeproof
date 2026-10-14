@@ -16,8 +16,8 @@ from changeproof.adapters.base import IRModule
 from changeproof.adapters.cobol import CobolAdapter
 from changeproof.adapters.cobol.parse import CobolSyntaxError
 from changeproof.adapters.java import JavaAdapter, JavaSyntaxError
-from changeproof.change.git import checkout_tree, commits_in, empty_tree, origin_url, read_commit, tree_diffs
-from changeproof.change.message import agent_trailers, person, trailers
+from changeproof.change.git import checkout_tree, commits_in, empty_tree, merged_commits, origin_url, read_commit, tree_diffs
+from changeproof.change.message import agent_trailers, is_agent, person, trailers
 from changeproof.change.record import JAVA_SUFFIXES, JCL_SUFFIXES, PROGRAM_SUFFIXES, What, what_in, who_of, why_of
 from changeproof.config import Config, load_config
 from changeproof.graph import graph_from
@@ -113,9 +113,12 @@ def people_and_reasons(root: Path, shas: list[str]) -> tuple[list[dict], dict, l
     who, why, agents = [], [], []
     for commit in commits:
         found = trailers(commit.message)
-        roles = who_of(commit, found)
-        who.append({"role": "author", "id": roles.implementer.email or roles.implementer.name,
-                    "source": f"git author, {roles.implementer.provenance}"})
+        roles = who_of(commit, found, merged_commits(root, commit))
+        who += [{"role": "author", "id": i.email or i.name, "source": f"git author, {i.provenance}"}
+                for i in roles.implementers]
+        if roles.merged_by:
+            who.append({"role": "committer", "id": roles.merged_by.email or roles.merged_by.name,
+                        "source": f"merged by, {roles.merged_by.provenance}"})
         who.append({"role": "committer", "id": roles.committer.email or roles.committer.name,
                     "source": f"git committer, {roles.committer.provenance}"})
         who += [{"role": "approver", "id": a.email or a.name, "source": f"Approved-by trailer, {a.provenance}"}
@@ -123,6 +126,9 @@ def people_and_reasons(root: Path, shas: list[str]) -> tuple[list[dict], dict, l
         agents += [{"id": email or name, "source": f"{t.key} trailer, {t.provenance}",
                     "provenance": t.provenance.model_dump(mode="json", exclude_none=True)}
                    for t in agent_trailers(found) for name, email in [person(t.value)]]
+        agents += [{"id": i.email or i.name, "source": f"git author, {i.provenance}",
+                    "provenance": i.provenance.model_dump(mode="json", exclude_none=True)}
+                   for i in roles.implementers if is_agent(i.name, i.email)]
         why += [{"kind": "ticket", "ref": t.id, "found_in": f"commit {t.found_in}, {t.provenance}"}
                 for t in why_of(commit, found).tickets]
     when = {"authored_at": commits[0].author.at, "committed_at": commits[-1].committer.at}
