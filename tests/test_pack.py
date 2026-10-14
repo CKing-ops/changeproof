@@ -173,7 +173,7 @@ def test_the_cli_builds_and_verifies_a_pack(built, keys, release_key, tmp_path, 
     assert main(["pack", f"{shas['base']}..{shas['assisted']}", "--repo", str(root), "--out", str(tmp_path / "cli"),
                  *[a for k in keys for a in ("--key", str(k.private_path))],
                  "--release-key", str(release_key.private_path)]) == 0
-    assert json.loads(capsys.readouterr().out)["attestations"] == 4
+    assert json.loads(capsys.readouterr().out)["attestations"] == 1  # the default layout: one change record
     assert main(["pack-verify", str(out), *[a for k in [*keys, release_key] for a in ("--trust", str(k.public_path))],
                  "--rebuild", str(tmp_path / "rebuilt")]) == 0
     assert json.loads(capsys.readouterr().out)["ok"] is True
