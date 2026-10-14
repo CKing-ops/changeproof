@@ -69,4 +69,4 @@ The whole suite passes with sockets blocked: 483 tests.
 ## Decisions needed from the owner
 
 - Who reviews the packs for real: a design partner or assessor who can give the written statement.
-- Whether to merge this week's fixes now, with Week 13 left open until that statement arrives.
+- Merged on 2026-10-14 (PR #19) at the owner's choice; Week 13 stays open until a real reviewer's statement arrives.
