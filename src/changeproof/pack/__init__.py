@@ -13,7 +13,6 @@ import json
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
-from urllib.parse import urlsplit
 
 from changeproof.change.git import commits_in
 from changeproof.characterize import Runner
@@ -294,7 +293,7 @@ def control_blocks(evidence: dict[str, dict[str, dict]]) -> list[tuple[str, str]
         for c in controls:
             status = f"checked {c.source.checked}" if c.source.checked else "unverified"
             if not c.source.checked and (found := stand_in_for(framework, c.id)):
-                status += f"; stand-in read {found.read} at {urlsplit(found.url).hostname.removeprefix('www.')}"
+                status += f"; stand-in read {found.read} at {found.url.split('/')[2].removeprefix('www.')}"
             name = c.id if c.id.startswith(label) else f"{label} {c.id}"
             blocks.append(("code", f"{name} (source {status}): {c.topic}"))
             blocks += [("code", f"  {e.output}" + (" (planned)" if e.proof == PLANNED else "")) for e in c.evidence]
