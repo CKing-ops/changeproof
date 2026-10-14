@@ -13,6 +13,7 @@ import json
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
+from urllib.parse import urlsplit
 
 from changeproof.change.git import commits_in
 from changeproof.characterize import Runner
@@ -24,6 +25,7 @@ from changeproof.oscal import assessment_results_of, validate_oscal
 from changeproof.pack.pdf import render
 from changeproof.predicates import PREDICATE_TYPES, statement, validate_predicate
 from changeproof.signer import Policy, PrivateKey, PublicKey, Verification, digest, sign_envelope, verify_envelope
+from changeproof.standins import stand_in_for
 
 PACK_FILE = "pack.dsse.json"
 REPORT = "report.pdf"
@@ -291,6 +293,8 @@ def control_blocks(evidence: dict[str, dict[str, dict]]) -> list[tuple[str, str]
             continue
         for c in controls:
             status = f"checked {c.source.checked}" if c.source.checked else "unverified"
+            if not c.source.checked and (found := stand_in_for(framework, c.id)):
+                status += f"; stand-in read {found.read} at {urlsplit(found.url).hostname.removeprefix('www.')}"
             name = c.id if c.id.startswith(label) else f"{label} {c.id}"
             blocks.append(("code", f"{name} (source {status}): {c.topic}"))
             blocks += [("code", f"  {e.output}" + (" (planned)" if e.proof == PLANNED else "")) for e in c.evidence]
