@@ -27,6 +27,8 @@ from changeproof.signer import digest
 MAX_CASES = 48  # RENAME: PROBE CASES PER METHOD AT MOST
 MAX_POOL = 16  # RENAME: VALUES TRIED PER PARAMETER AT MOST
 TIMEOUT = 900  # RENAME: SECONDS ONE PROBE RUN OF A WHOLE TREE MAY TAKE
+# every identity hash is 1, so an object printed as Name@hash renders the same at the base and the head
+SAME_HASHES = ("-XX:+UnlockExperimentalVMOptions", "-XX:hashCode=2")  # RENAME: JVM FLAGS FOR STABLE IDENTITY HASHES
 SKIPPED = frozenset({"<init>", "<clinit>", "<instance-init>", "main"})  # RENAME: METHODS NEVER PROBED
 WIRE = {"String...": "String[]", "int...": "int[]", "long...": "long[]", "byte...": "byte[]"}  # RENAME: VARARGS TO ARRAYS
 INTEGRAL = {"int": 32, "long": 64, "short": 16, "byte": 8, "Integer": 32, "Long": 64}  # RENAME: TYPE TO BIT WIDTH
@@ -240,7 +242,7 @@ def compile_tree(tree: Path, out: Path) -> str | None:
 
 # PURPOSE: RUNS EVERY CASE OF THE TARGETS ONCE IN ONE JVM; ONE REPLY PER CASE KEY, MISSING IF THE JVM DIED
 def run_once(out: Path, keyed: list[tuple[str, str]]) -> dict[str, str]:
-    found = subprocess.run([JDK[0], "-Xss4m", "-cp", out.name, "Probe"], input="\n".join(line for _, line in keyed) + "\n",
+    found = subprocess.run([JDK[0], "-Xss4m", *SAME_HASHES, "-cp", out.name, "Probe"], input="\n".join(line for _, line in keyed) + "\n",
                            capture_output=True, text=True, timeout=TIMEOUT, env=clean_env(), cwd=out.parent)
     return dict(zip((k for k, _ in keyed), found.stdout.splitlines()))
 

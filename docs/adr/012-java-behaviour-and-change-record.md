@@ -1,6 +1,7 @@
 # ADR 012: Java behaviour check and one change record per commit
 
-- Status: proposed. Asked for by the owner on 2026-10-14, outside the roadmap's week plan.
+- Status: proposed. Asked for by the owner on 2026-10-14, outside the roadmap's week plan. The same day
+  the owner made COBOL at banks the MVP lead, so the Java check is kept as a demo and not grown further.
 - Date: 2026-10-14
 - Related: ADR 006 (characterization), ADR 007 (equivalence), ADR 009 (Java adapter), ADR 010 (evidence pack)
 
@@ -31,8 +32,9 @@ option.
    neighbours (49999, 50000, 50001 for `amount > 50000`). Three seed cases, then each parameter
    varied one at a time, capped at 48 cases per method.
 4. **Output.** What the call returned (rendered by value, arrays element by element) or the class of
-   what it threw. On an instance the same call is made a second time, which shows state the first
-   call left behind, then each observer's value is read. A case that runs past two seconds is a timeout.
+   what it threw. The same call is then made a second time, which shows state the first call left
+   behind (on the object or in static fields), then each observer's value is read. The JVM runs with
+   every identity hash set to 1, so an object printed as `Name@hash` reads the same on both sides. A case that runs past two seconds is a timeout.
    The code under test cannot write to the probe's output.
 5. **Same or different.** Every case runs twice at the base and twice at the head, each in a fresh
    JVM from the same folder and class path. A method with any case whose two runs disagree, on

@@ -1,0 +1,348 @@
+{
+  "corpus": "apache/commons-lang",
+  "head": "29ccc7665f3bc5d84155a3092ab2209a053324e6",
+  "jdk": "openjdk version 21.0.11 2026-04-21",
+  "commits": [
+    {
+      "commit": "d2eff05cd0e8e50be033240b377a46f1293e3ccc",
+      "subject": "Remove unused exception from deprecated StringUtils.toString(byte[], String)",
+      "files": [
+        "src/main/java/org/apache/commons/lang3/StringUtils.java"
+      ],
+      "cases": 4989,
+      "different": 0,
+      "methods_different": [],
+      "untested": [
+        {
+          "program": "StringUtils",
+          "reason": "58 of 234 public methods not probed: 19 parameter types the probe cannot build (CharSequence...); 5 parameter types the probe cannot build (char...); 4 parameter types the probe cannot build (T); 4 parameter types the probe cannot build (Object[]); 3 parameter types the probe cannot build (T...); 3 parameter types the probe cannot build (Locale); 3 parameter types the probe cannot build (char[]); 2 parameter types the probe cannot build (Charset); 2 parameter types the probe cannot build (boolean[]); 2 parameter types the probe cannot build (double[]); 2 parameter types the probe cannot build (float[]); 2 parameter types the probe cannot build (Iterable); 2 parameter types the probe cannot build (Iterator); 2 parameter types the probe cannot build (List); 2 parameter types the probe cannot build (short[]); 1 parameter types the probe cannot build (Object...)"
+        },
+        {
+          "program": "StringUtils",
+          "reason": "27 probe cases gave different results on two runs of the base or of the head (time, randomness or identity), so they are left out"
+        }
+      ]
+    },
+    {
+      "commit": "f3b9aca3acaee99524daca774fa1ac42d0f7fd4e",
+      "subject": "Sort members",
+      "files": [
+        "src/main/java/org/apache/commons/lang3/RandomUtils.java"
+      ],
+      "cases": 3,
+      "different": 0,
+      "methods_different": [],
+      "untested": [
+        {
+          "program": "RandomUtils",
+          "reason": "214 probe cases gave different results on two runs of the base or of the head (time, randomness or identity), so they are left out"
+        }
+      ]
+    },
+    {
+      "commit": "5d3c269193614161daae75946b3f632c65a6d8a8",
+      "subject": "Javadoc",
+      "files": [
+        "src/main/java/org/apache/commons/lang3/RandomStringUtils.java",
+        "src/main/java/org/apache/commons/lang3/RandomUtils.java"
+      ],
+      "cases": 7,
+      "different": 0,
+      "methods_different": [],
+      "untested": [
+        {
+          "program": "RandomStringUtils",
+          "reason": "5 of 42 public methods not probed: 4 parameter types the probe cannot build (char...); 1 parameter types the probe cannot build (char[])"
+        },
+        {
+          "program": "RandomStringUtils",
+          "reason": "517 probe cases gave different results on two runs of the base or of the head (time, randomness or identity), so they are left out"
+        },
+        {
+          "program": "RandomUtils",
+          "reason": "214 probe cases gave different results on two runs of the base or of the head (time, randomness or identity), so they are left out"
+        }
+      ]
+    },
+    {
+      "commit": "bfa3c06361fa7bfcf35f8b3136f48a46c2b2c241",
+      "subject": "Add CalendarUtils.toOffsetDateTime(Calendar)",
+      "files": [
+        "src/main/java/org/apache/commons/lang3/time/CalendarUtils.java"
+      ],
+      "cases": 1,
+      "different": 0,
+      "methods_different": [],
+      "untested": [
+        {
+          "program": "CalendarUtils",
+          "reason": "9 of 10 public methods not probed: 6 no public constructor without arguments; 3 parameter types the probe cannot build (Calendar)"
+        }
+      ]
+    },
+    {
+      "commit": "666ad13656c690b310fc2c6487dd60b6ed72a5ed",
+      "subject": "Add CalendarUtils.toZonedDateTime(Calendar)",
+      "files": [
+        "src/main/java/org/apache/commons/lang3/time/CalendarUtils.java"
+      ],
+      "cases": 0,
+      "different": 0,
+      "methods_different": [],
+      "untested": [
+        {
+          "program": "CalendarUtils",
+          "reason": "7 of 8 public methods not probed: 5 no public constructor without arguments; 2 parameter types the probe cannot build (Calendar)"
+        },
+        {
+          "program": "CalendarUtils",
+          "reason": "1 probe cases gave different results on two runs of the base or of the head (time, randomness or identity), so they are left out"
+        }
+      ]
+    },
+    {
+      "commit": "328f2aedfb8643c3e1e74b5aec9e3628c3cbf2e7",
+      "subject": "Add CalendarUtils.toLocalDateTime(Calendar)",
+      "files": [
+        "src/main/java/org/apache/commons/lang3/time/CalendarUtils.java"
+      ],
+      "cases": 1,
+      "different": 0,
+      "methods_different": [],
+      "untested": [
+        {
+          "program": "CalendarUtils",
+          "reason": "5 of 6 public methods not probed: 4 no public constructor without arguments; 1 parameter types the probe cannot build (Calendar)"
+        }
+      ]
+    },
+    {
+      "commit": "df4be6cd6e2a8bba13095a4415cfbc80abfbbe5b",
+      "subject": "Fix typos in comments",
+      "files": [
+        "src/main/java/org/apache/commons/lang3/RandomStringUtils.java"
+      ],
+      "cases": 4,
+      "different": 0,
+      "methods_different": [],
+      "untested": [
+        {
+          "program": "RandomStringUtils",
+          "reason": "5 of 42 public methods not probed: 4 parameter types the probe cannot build (char...); 1 parameter types the probe cannot build (char[])"
+        },
+        {
+          "program": "RandomStringUtils",
+          "reason": "517 probe cases gave different results on two runs of the base or of the head (time, randomness or identity), so they are left out"
+        }
+      ]
+    },
+    {
+      "commit": "dcba60a56927cc7f392528d0d093f0b0b3d9d486",
+      "subject": "Javadoc",
+      "files": [
+        "src/main/java/org/apache/commons/lang3/math/NumberUtils.java"
+      ],
+      "cases": 969,
+      "different": 0,
+      "methods_different": [],
+      "untested": [
+        {
+          "program": "NumberUtils",
+          "reason": "14 of 62 public methods not probed: 4 parameter types the probe cannot build (BigDecimal); 2 parameter types the probe cannot build (double...); 2 parameter types the probe cannot build (float...); 2 parameter types the probe cannot build (short...); 2 parameter types the probe cannot build (RoundingMode); 2 parameter types the probe cannot build (Float)"
+        }
+      ]
+    },
+    {
+      "commit": "ee2041464e60082a601d72be329bac57bc67328f",
+      "subject": "Let existing catch clause handle the NPE edge case",
+      "files": [
+        "src/main/java/org/apache/commons/lang3/math/NumberUtils.java"
+      ],
+      "cases": 969,
+      "different": 0,
+      "methods_different": [],
+      "untested": [
+        {
+          "program": "NumberUtils",
+          "reason": "14 of 62 public methods not probed: 4 parameter types the probe cannot build (BigDecimal); 2 parameter types the probe cannot build (double...); 2 parameter types the probe cannot build (float...); 2 parameter types the probe cannot build (short...); 2 parameter types the probe cannot build (RoundingMode); 2 parameter types the probe cannot build (Float)"
+        }
+      ]
+    },
+    {
+      "commit": "17c32087ad475b043e373e56f2a489d79046334d",
+      "subject": "Random[String]Utils.secure() now uses SecureRandom() instead of SecureRandom.getInstanceStrong()",
+      "files": [
+        "src/main/java/org/apache/commons/lang3/RandomStringUtils.java",
+        "src/main/java/org/apache/commons/lang3/RandomUtils.java"
+      ],
+      "cases": 47,
+      "different": 45,
+      "methods_different": [
+        "RandomStringUtils.nextNumeric(int,int)",
+        "RandomStringUtils.nextPrint(int,int)",
+        "RandomStringUtils.secure()",
+        "RandomStringUtils.toString()",
+        "RandomUtils.secure()"
+      ],
+      "untested": [
+        {
+          "program": "RandomStringUtils",
+          "reason": "5 of 41 public methods not probed: 4 parameter types the probe cannot build (char...); 1 parameter types the probe cannot build (char[])"
+        },
+        {
+          "program": "RandomStringUtils",
+          "reason": "475 probe cases gave different results on two runs of the base or of the head (time, randomness or identity), so they are left out"
+        },
+        {
+          "program": "RandomUtils",
+          "reason": "214 probe cases gave different results on two runs of the base or of the head (time, randomness or identity), so they are left out"
+        }
+      ]
+    },
+    {
+      "commit": "50587e0e00b24807ac866768200b6a15a4d75ef6",
+      "subject": "Better internal names",
+      "files": [
+        "src/main/java/org/apache/commons/lang3/RandomUtils.java"
+      ],
+      "cases": 3,
+      "different": 1,
+      "methods_different": [
+        "RandomUtils.nextBoolean()"
+      ],
+      "untested": [
+        {
+          "program": "RandomUtils",
+          "reason": "213 probe cases gave different results on two runs of the base or of the head (time, randomness or identity), so they are left out"
+        }
+      ]
+    },
+    {
+      "commit": "f92016c288410dd085ac4fdfab68375e7b18651b",
+      "subject": "[LANG-1750] Using RandomStringUtils.insecure() still leads to using the secure() random",
+      "files": [
+        "src/main/java/org/apache/commons/lang3/RandomStringUtils.java",
+        "src/main/java/org/apache/commons/lang3/RandomUtils.java"
+      ],
+      "cases": 5,
+      "different": 0,
+      "methods_different": [],
+      "untested": [
+        {
+          "program": "RandomStringUtils",
+          "reason": "5 of 41 public methods not probed: 4 parameter types the probe cannot build (char...); 1 parameter types the probe cannot build (char[])"
+        },
+        {
+          "program": "RandomStringUtils",
+          "reason": "517 probe cases gave different results on two runs of the base or of the head (time, randomness or identity), so they are left out"
+        },
+        {
+          "program": "RandomUtils",
+          "reason": "214 probe cases gave different results on two runs of the base or of the head (time, randomness or identity), so they are left out"
+        }
+      ]
+    }
+  ],
+  "planted": [
+    {
+      "file": "src/main/java/org/apache/commons/lang3/StringUtils.java",
+      "from": "return cs == null || cs.length() == 0;",
+      "to": "return cs == null || cs.length() <= 1;",
+      "files": [
+        "src/main/java/org/apache/commons/lang3/StringUtils.java"
+      ],
+      "cases": 5016,
+      "different": 67,
+      "methods_different": [
+        "StringUtils.abbreviate(String,String,int)",
+        "StringUtils.abbreviate(String,String,int,int)",
+        "StringUtils.abbreviate(String,int)",
+        "StringUtils.abbreviate(String,int,int)",
+        "StringUtils.abbreviateMiddle(String,String,int)",
+        "StringUtils.containsAny(CharSequence,CharSequence)",
+        "StringUtils.containsOnly(CharSequence,String)",
+        "StringUtils.countMatches(CharSequence,CharSequence)",
+        "StringUtils.countMatches(CharSequence,char)",
+        "StringUtils.getDigits(String)",
+        "StringUtils.indexOfAny(CharSequence,String)",
+        "StringUtils.indexOfAnyBut(CharSequence,CharSequence)",
+        "StringUtils.isAllLowerCase(CharSequence)",
+        "StringUtils.isAlpha(CharSequence)",
+        "StringUtils.isAlphanumeric(CharSequence)",
+        "StringUtils.isEmpty(CharSequence)",
+        "StringUtils.isNotEmpty(CharSequence)",
+        "StringUtils.remove(String,String)",
+        "StringUtils.remove(String,char)",
+        "StringUtils.removeIgnoreCase(String,String)",
+        "StringUtils.removeStart(String,String)",
+        "StringUtils.removeStart(String,char)",
+        "StringUtils.replace(String,String,String)",
+        "StringUtils.replace(String,String,String,int)",
+        "StringUtils.replaceEachRepeatedly(String,String[],String[])",
+        "StringUtils.replaceIgnoreCase(String,String,String)",
+        "StringUtils.replaceIgnoreCase(String,String,String,int)",
+        "StringUtils.replaceOnce(String,String,String)",
+        "StringUtils.replaceOnceIgnoreCase(String,String,String)",
+        "StringUtils.substringAfter(String,String)",
+        "StringUtils.substringAfter(String,int)",
+        "StringUtils.substringAfterLast(String,String)",
+        "StringUtils.substringAfterLast(String,int)",
+        "StringUtils.substringBeforeLast(String,String)",
+        "StringUtils.swapCase(String)",
+        "StringUtils.trimToNull(String)",
+        "StringUtils.wrap(String,String)",
+        "StringUtils.wrap(String,char)",
+        "StringUtils.wrapIfMissing(String,String)",
+        "StringUtils.wrapIfMissing(String,char)"
+      ],
+      "untested": [
+        {
+          "program": "StringUtils",
+          "reason": "58 of 234 public methods not probed: 19 parameter types the probe cannot build (CharSequence...); 5 parameter types the probe cannot build (char...); 4 parameter types the probe cannot build (T); 4 parameter types the probe cannot build (Object[]); 3 parameter types the probe cannot build (T...); 3 parameter types the probe cannot build (Locale); 3 parameter types the probe cannot build (char[]); 2 parameter types the probe cannot build (Charset); 2 parameter types the probe cannot build (boolean[]); 2 parameter types the probe cannot build (double[]); 2 parameter types the probe cannot build (float[]); 2 parameter types the probe cannot build (Iterable); 2 parameter types the probe cannot build (Iterator); 2 parameter types the probe cannot build (List); 2 parameter types the probe cannot build (short[]); 1 parameter types the probe cannot build (Object...)"
+        }
+      ]
+    },
+    {
+      "file": "src/main/java/org/apache/commons/lang3/StringUtils.java",
+      "from": "if (firstCodepoint == newCodePoint) {",
+      "to": "if (firstCodepoint != newCodePoint) {",
+      "files": [
+        "src/main/java/org/apache/commons/lang3/StringUtils.java"
+      ],
+      "cases": 4968,
+      "different": 2,
+      "methods_different": [
+        "StringUtils.capitalize(String)"
+      ],
+      "untested": [
+        {
+          "program": "StringUtils",
+          "reason": "58 of 234 public methods not probed: 19 parameter types the probe cannot build (CharSequence...); 5 parameter types the probe cannot build (char...); 4 parameter types the probe cannot build (T); 4 parameter types the probe cannot build (Object[]); 3 parameter types the probe cannot build (T...); 3 parameter types the probe cannot build (Locale); 3 parameter types the probe cannot build (char[]); 2 parameter types the probe cannot build (Charset); 2 parameter types the probe cannot build (boolean[]); 2 parameter types the probe cannot build (double[]); 2 parameter types the probe cannot build (float[]); 2 parameter types the probe cannot build (Iterable); 2 parameter types the probe cannot build (Iterator); 2 parameter types the probe cannot build (List); 2 parameter types the probe cannot build (short[]); 1 parameter types the probe cannot build (Object...)"
+        },
+        {
+          "program": "StringUtils",
+          "reason": "48 probe cases gave different results on two runs of the base or of the head (time, randomness or identity), so they are left out"
+        }
+      ]
+    },
+    {
+      "file": "src/main/java/org/apache/commons/lang3/BooleanUtils.java",
+      "from": "return toBooleanObject(str) == Boolean.TRUE;",
+      "to": "return toBooleanObject(str) != Boolean.FALSE;",
+      "files": [
+        "src/main/java/org/apache/commons/lang3/BooleanUtils.java"
+      ],
+      "cases": 606,
+      "different": 7,
+      "methods_different": [
+        "BooleanUtils.toBoolean(String)"
+      ],
+      "untested": [
+        {
+          "program": "BooleanUtils",
+          "reason": "9 of 47 public methods not probed: 4 parameter types the probe cannot build (boolean...); 4 parameter types the probe cannot build (Boolean...); 1 parameter types the probe cannot build (Consumer)"
+        }
+      ]
+    }
+  ]
+}

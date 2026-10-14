@@ -63,7 +63,7 @@ public final class Probe {
         });
     }
 
-    // PURPOSE: RUNS ONE CASE: BUILDS THE ARGUMENTS, CALLS THE METHOD (TWICE ON AN INSTANCE), THEN EACH OBSERVER
+    // PURPOSE: RUNS ONE CASE: BUILDS THE ARGUMENTS, CALLS THE METHOD TWICE, THEN EACH OBSERVER
     private static String call(String[] f) {
         StringBuilder text = new StringBuilder();
         Object self = null;
@@ -82,10 +82,8 @@ public final class Probe {
                 self = type.getConstructor().newInstance();
             }
             text.append("return=").append(render(method.invoke(self, values)));
-            if (self != null) {
-                // A second call on the same object shows state the first call left behind.
-                text.append(";again=").append(outcome(self, method, values));
-            }
+            // A second call shows state the first left behind, on the object or in static fields.
+            text.append(";again=").append(outcome(self, method, values));
         } catch (InvocationTargetException e) {
             text.append("throw=").append(e.getCause().getClass().getName());
         } catch (Throwable e) {

@@ -111,8 +111,7 @@ Weeks 1-13 (planned capabilities are labeled; proven ones cite their test):
   and instance methods of classes with a no-argument constructor, are called with their types'
   boundary values and the literals in their own code, at the base and at the head, twice each;
   methods that do not repeat are left out, and every method or class it cannot probe is listed with
-  the reason. An instance method is called twice on the same object, to show state the first call
-  left behind. It catches all 10 planted bugs in a seeded system, a refactor comes out all `same`,
+  the reason. Each method is called twice, to show state the first call left behind. It catches all 10 planted bugs in a seeded system, a refactor comes out all `same`,
   and with no JDK the verdict is inconclusive (`tests/test_java_behaviour.py`,
   `docs/adr/012-java-behaviour-and-change-record.md`). JAVA_LANG_RESULT It is evidence from tests,
   not a proof. A class path for third-party jars: **planned**.
