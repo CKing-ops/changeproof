@@ -134,7 +134,8 @@ def cmd_gate(args: argparse.Namespace) -> int:
 def cmd_pack(args: argparse.Namespace) -> int:
     signed = build_pack(Path(args.repo), args.revisions, Path(args.out), [load_private(k) for k in args.key],
                         release=args.release, copybook_dirs=args.copybooks, config_path=args.config,
-                        runner=DockerRunner(args.docker) if args.docker else LocalRunner())
+                        runner=DockerRunner(args.docker) if args.docker else LocalRunner(),
+                        release_key=load_private(args.release_key) if args.release_key else None)
     pack = json.loads(base64.b64decode(signed["payload"]))
     print(json.dumps({"pack": args.out, "files": len(pack["subject"]) + 1,
                       "attestations": len(pack["predicate"]["attestations"])}, indent=2))
@@ -330,6 +331,7 @@ def build_parser() -> argparse.ArgumentParser:
     packs.add_argument("--out", required=True, help="new folder for the pack")
     packs.add_argument("--key", action="append", required=True, help="private key file to sign with; repeatable")
     packs.add_argument("--release", help="release name for the report; defaults to the range")
+    packs.add_argument("--release-key", help="private key for crypto.release_signing; countersigns the pack statement")
     packs.add_argument("--repo", default=".")
     packs.add_argument("--config", default=CONFIG_NAME, help="repo-relative path of the config at each commit")
     packs.add_argument("--copybooks", action="append", default=[], help="copybook folder, repo-relative; repeatable")

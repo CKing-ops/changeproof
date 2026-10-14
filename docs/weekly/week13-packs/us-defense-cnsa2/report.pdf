@@ -1,0 +1,211 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Count 3 /Kids [6 0 R 8 0 R 10 0 R] >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier-Bold /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Title (changeproof evidence pack: card-billing v1.4 \(us-defense-cnsa2, synthetic\)) /Producer (changeproof) >>
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 7 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> >>
+endobj
+7 0 obj
+<< /Length 4720 >>
+stream
+BT
+/F2 16 Tf 1 0 0 1 56 765.2 Tm (changeproof evidence pack: card-billing v1.4) Tj
+/F2 16 Tf 1 0 0 1 56 744.4 Tm (\(us-defense-cnsa2, synthetic\)) Tj
+/F1 10 Tf 1 0 0 1 56 731.4 Tm (Repository: card-billing) Tj
+/F1 10 Tf 1 0 0 1 56 718.4 Tm (Commits ddca01a253f2..ce1ab964abbc: 2 changes. Generated 2026-10-07T12:00:00Z by) Tj
+/F1 10 Tf 1 0 0 1 56 705.4 Tm (changeproof 0.1.0.) Tj
+/F2 12 Tf 1 0 0 1 56 689.8 Tm () Tj
+/F2 12 Tf 1 0 0 1 56 674.2 Tm (Release decision) Tj
+/F1 10 Tf 1 0 0 1 56 661.2 Tm (Release decision: 1 of 2 changes fail a policy rule.) Tj
+/F1 8 Tf 1 0 0 1 56 650.8 Tm (open: ce1ab964abbc agent-changes-need-independent-approval: noreply@anthropic.com took part in this) Tj
+/F1 8 Tf 1 0 0 1 56 640.4 Tm (    change and no independent approver is recorded) Tj
+/F1 8 Tf 1 0 0 1 56 630.0 Tm (    \(git-commit/ce1ab964abbcfa49e433d8b050b18415ab0c075d:8\)) Tj
+/F2 12 Tf 1 0 0 1 56 614.4 Tm () Tj
+/F2 12 Tf 1 0 0 1 56 598.8 Tm (How to check this pack) Tj
+/F1 10 Tf 1 0 0 1 56 585.8 Tm (Everything in this report is read from the signed attestations in the) Tj
+/F1 10 Tf 1 0 0 1 56 572.8 Tm (attestations folder, and nothing else. Run: changeproof pack-verify <pack) Tj
+/F1 10 Tf 1 0 0 1 56 559.8 Tm (folder> --trust <public key> ... It verifies every signature offline and) Tj
+/F1 10 Tf 1 0 0 1 56 546.8 Tm (rebuilds this report and the OSCAL files from the attestations; each must match) Tj
+/F1 10 Tf 1 0 0 1 56 533.8 Tm (the digest in pack.dsse.json byte for byte.) Tj
+/F1 10 Tf 1 0 0 1 56 520.8 Tm (Behavioral equivalence means the characterization tests found no difference. It) Tj
+/F1 10 Tf 1 0 0 1 56 507.8 Tm (is evidence from tests, not a proof for all inputs. Programs it could not test) Tj
+/F1 10 Tf 1 0 0 1 56 494.8 Tm (are listed.) Tj
+/F2 12 Tf 1 0 0 1 56 479.2 Tm () Tj
+/F2 12 Tf 1 0 0 1 56 463.6 Tm (Crypto profile) Tj
+/F1 10 Tf 1 0 0 1 56 450.6 Tm (Crypto profile: cnsa2) Tj
+/F1 8 Tf 1 0 0 1 56 440.2 Tm (evidence signing: ml-dsa-87; release signing: lms-sha256-192; hash: sha-384) Tj
+/F1 8 Tf 1 0 0 1 56 429.8 Tm (this pack is signed with ml-dsa-87 \(key 0468c7188f199c5d\)) Tj
+/F1 8 Tf 1 0 0 1 56 419.4 Tm (release signature: lms-sha256-192 \(key d869d4844634fccb\)) Tj
+/F2 12 Tf 1 0 0 1 56 403.8 Tm () Tj
+/F2 12 Tf 1 0 0 1 56 388.2 Tm (Change 1 of 2: commit 4b060f669f41) Tj
+/F1 10 Tf 1 0 0 1 56 375.2 Tm (Who and why) Tj
+/F1 8 Tf 1 0 0 1 56 364.8 Tm (author: priya.raman@billing.example \(git author,) Tj
+/F1 8 Tf 1 0 0 1 56 354.4 Tm (    git-commit/4b060f669f4138026d439b4f674efd44af69f409:3\)) Tj
+/F1 8 Tf 1 0 0 1 56 344.0 Tm (committer: priya.raman@billing.example \(git committer,) Tj
+/F1 8 Tf 1 0 0 1 56 333.6 Tm (    git-commit/4b060f669f4138026d439b4f674efd44af69f409:4\)) Tj
+/F1 8 Tf 1 0 0 1 56 323.2 Tm (approver: dana.okafor@billing.example \(Approved-by trailer,) Tj
+/F1 8 Tf 1 0 0 1 56 312.8 Tm (    git-commit/4b060f669f4138026d439b4f674efd44af69f409:9\)) Tj
+/F1 8 Tf 1 0 0 1 56 302.4 Tm (agent: feebot@tools.example \(Assisted-by trailer,) Tj
+/F1 8 Tf 1 0 0 1 56 292.0 Tm (    git-commit/4b060f669f4138026d439b4f674efd44af69f409:8\)) Tj
+/F1 8 Tf 1 0 0 1 56 281.6 Tm (ticket: LOAN-2 \(commit subject, git-commit/4b060f669f4138026d439b4f674efd44af69f409:6\)) Tj
+/F1 10 Tf 1 0 0 1 56 268.6 Tm (What it touches: 2 entities changed, 2 impacted \(2 definite, 0 probable, 0) Tj
+/F1 10 Tf 1 0 0 1 56 255.6 Tm (possible\), 0 gaps reported. Touches crypto: no.) Tj
+/F1 8 Tf 1 0 0 1 56 245.2 Tm (src/batch/FEECALC.cbl:15-41  paragraph MAIN-PARA \(modified\)) Tj
+/F1 8 Tf 1 0 0 1 56 234.8 Tm (src/batch/FEECALC.cbl:35  flow COMPUTE \(modified\)) Tj
+/F1 8 Tf 1 0 0 1 56 224.4 Tm (src/batch/FEECALC.cbl:11  data LK-FEE \(definite\)) Tj
+/F1 8 Tf 1 0 0 1 56 214.0 Tm (src/batch/FEECALC.cbl:1-41  program FEECALC \(definite\)) Tj
+/F1 8 Tf 1 0 0 1 56 203.6 Tm (relied on by statement-print through batch-fees) Tj
+/F1 10 Tf 1 0 0 1 56 190.6 Tm (Inside the impact set: FEECALC 14 tests, 0 different: no behaviour change found.) Tj
+/F1 10 Tf 1 0 0 1 56 177.6 Tm (Outside the impact set: equivalent. 37 tests \(outside-impact-set\): 37 same, 0) Tj
+/F1 10 Tf 1 0 0 1 56 164.6 Tm (different, 0 errors.) Tj
+/F1 10 Tf 1 0 0 1 56 151.6 Tm (Linked to this change's impact attestation by its digest.) Tj
+/F1 10 Tf 1 0 0 1 56 138.6 Tm (Policy rules \(OPA 1.21.1\): all hold.) Tj
+/F1 8 Tf 1 0 0 1 56 128.2 Tm (no-new-quantum-vulnerable-crypto: pass) Tj
+/F1 8 Tf 1 0 0 1 56 117.8 Tm (agent-changes-need-independent-approval: pass) Tj
+/F1 8 Tf 1 0 0 1 56 107.4 Tm (equivalence-required-outside-impact-set: pass) Tj
+/F2 12 Tf 1 0 0 1 56 91.8 Tm () Tj
+/F2 12 Tf 1 0 0 1 56 76.2 Tm (Change 2 of 2: commit ce1ab964abbc) Tj
+/F1 10 Tf 1 0 0 1 56 63.2 Tm (Who and why) Tj
+/F1 8 Tf 1 0 0 1 56 28 Tm (page 1 of 3) Tj
+ET
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 9 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> >>
+endobj
+9 0 obj
+<< /Length 6679 >>
+stream
+BT
+/F1 8 Tf 1 0 0 1 56 775.6 Tm (author: priya.raman@billing.example \(git author,) Tj
+/F1 8 Tf 1 0 0 1 56 765.2 Tm (    git-commit/ce1ab964abbcfa49e433d8b050b18415ab0c075d:3\)) Tj
+/F1 8 Tf 1 0 0 1 56 754.8 Tm (committer: priya.raman@billing.example \(git committer,) Tj
+/F1 8 Tf 1 0 0 1 56 744.4 Tm (    git-commit/ce1ab964abbcfa49e433d8b050b18415ab0c075d:4\)) Tj
+/F1 8 Tf 1 0 0 1 56 734.0 Tm (agent: noreply@anthropic.com \(Co-authored-by trailer,) Tj
+/F1 8 Tf 1 0 0 1 56 723.6 Tm (    git-commit/ce1ab964abbcfa49e433d8b050b18415ab0c075d:8\)) Tj
+/F1 8 Tf 1 0 0 1 56 713.2 Tm (ticket: LOAN-3 \(commit subject, git-commit/ce1ab964abbcfa49e433d8b050b18415ab0c075d:6\)) Tj
+/F1 10 Tf 1 0 0 1 56 700.2 Tm (What it touches: 2 entities changed, 2 impacted \(2 definite, 0 probable, 0) Tj
+/F1 10 Tf 1 0 0 1 56 687.2 Tm (possible\), 0 gaps reported. Touches crypto: no.) Tj
+/F1 8 Tf 1 0 0 1 56 676.8 Tm (src/batch/FEECALC.cbl:15-41  paragraph MAIN-PARA \(modified\)) Tj
+/F1 8 Tf 1 0 0 1 56 666.4 Tm (src/batch/FEECALC.cbl:24  flow COMPUTE \(modified\)) Tj
+/F1 8 Tf 1 0 0 1 56 656.0 Tm (src/batch/FEECALC.cbl:11  data LK-FEE \(definite\)) Tj
+/F1 8 Tf 1 0 0 1 56 645.6 Tm (src/batch/FEECALC.cbl:1-41  program FEECALC \(definite\)) Tj
+/F1 8 Tf 1 0 0 1 56 635.2 Tm (relied on by statement-print through batch-fees) Tj
+/F1 10 Tf 1 0 0 1 56 622.2 Tm (Inside the impact set: FEECALC 14 tests, 5 different: behaviour this change) Tj
+/F1 10 Tf 1 0 0 1 56 609.2 Tm (altered, to check against its ticket.) Tj
+/F1 8 Tf 1 0 0 1 56 598.8 Tm (different: FEECALC test FEECALC-05 \(src/batch/FEECALC.cbl:1-41\)) Tj
+/F1 8 Tf 1 0 0 1 56 588.4 Tm (different: FEECALC test FEECALC-06 \(src/batch/FEECALC.cbl:1-41\)) Tj
+/F1 8 Tf 1 0 0 1 56 578.0 Tm (different: FEECALC test FEECALC-08 \(src/batch/FEECALC.cbl:1-41\)) Tj
+/F1 8 Tf 1 0 0 1 56 567.6 Tm (different: FEECALC test FEECALC-10 \(src/batch/FEECALC.cbl:1-41\)) Tj
+/F1 8 Tf 1 0 0 1 56 557.2 Tm (different: FEECALC test FEECALC-13 \(src/batch/FEECALC.cbl:1-41\)) Tj
+/F1 10 Tf 1 0 0 1 56 544.2 Tm (Outside the impact set: equivalent. 37 tests \(outside-impact-set\): 37 same, 0) Tj
+/F1 10 Tf 1 0 0 1 56 531.2 Tm (different, 0 errors.) Tj
+/F1 10 Tf 1 0 0 1 56 518.2 Tm (Linked to this change's impact attestation by its digest.) Tj
+/F1 10 Tf 1 0 0 1 56 505.2 Tm (Policy rules \(OPA 1.21.1\): a rule fails.) Tj
+/F1 8 Tf 1 0 0 1 56 494.8 Tm (no-new-quantum-vulnerable-crypto: pass) Tj
+/F1 8 Tf 1 0 0 1 56 484.4 Tm (agent-changes-need-independent-approval: fail) Tj
+/F1 8 Tf 1 0 0 1 56 474.0 Tm (  deny: noreply@anthropic.com took part in this change and no independent approver is recorded) Tj
+/F1 8 Tf 1 0 0 1 56 463.6 Tm (    \(git-commit/ce1ab964abbcfa49e433d8b050b18415ab0c075d:8\)) Tj
+/F1 8 Tf 1 0 0 1 56 453.2 Tm (equivalence-required-outside-impact-set: pass) Tj
+/F2 12 Tf 1 0 0 1 56 437.6 Tm () Tj
+/F2 12 Tf 1 0 0 1 56 422.0 Tm (Controls this evidence answers) Tj
+/F1 10 Tf 1 0 0 1 56 409.0 Tm (Mapped by the engine's framework table. A control number marked unverified has) Tj
+/F1 10 Tf 1 0 0 1 56 396.0 Tm (not been read in its source yet. Planned evidence is not in this pack.) Tj
+/F1 8 Tf 1 0 0 1 56 385.6 Tm (NIST SSDF PS.2.1 \(source checked 2026-10-07\): software integrity verification information for) Tj
+/F1 8 Tf 1 0 0 1 56 375.2 Tm (    acquirers) Tj
+/F1 8 Tf 1 0 0 1 56 364.8 Tm (  signed attestation, verifiable offline; hybrid signatures survive a distrusted algorithm) Tj
+/F1 8 Tf 1 0 0 1 56 354.4 Tm (  evidence pack: every attestation, report and OSCAL file verifiable and rebuildable offline) Tj
+/F1 8 Tf 1 0 0 1 56 344.0 Tm (NIST SSDF PS.3.1 \(source checked 2026-10-07\): archive the files and supporting data of each release) Tj
+/F1 8 Tf 1 0 0 1 56 333.6 Tm (  evidence pack: every attestation, report and OSCAL file verifiable and rebuildable offline) Tj
+/F1 8 Tf 1 0 0 1 56 323.2 Tm (NIST SSDF PW.8.2 \(source checked 2026-10-07\): scope, design and perform testing and document the) Tj
+/F1 8 Tf 1 0 0 1 56 312.8 Tm (    results) Tj
+/F1 8 Tf 1 0 0 1 56 302.4 Tm (  evidence pack: tests run inside the impact set at base and head, with what the change altered) Tj
+/F1 8 Tf 1 0 0 1 56 292.0 Tm (  behavioral-equivalence attestation: characterization tests from the base replayed at the head, for) Tj
+/F1 8 Tf 1 0 0 1 56 281.6 Tm (    COBOL linkage subprograms outside the impact set) Tj
+/F1 8 Tf 1 0 0 1 56 271.2 Tm (  test subset selected to cover the impact set) Tj
+/F1 8 Tf 1 0 0 1 56 260.8 Tm (NIST SP 800-53 CM-3 \(source checked 2026-10-07\): configuration change control) Tj
+/F1 8 Tf 1 0 0 1 56 250.4 Tm (  change record: who, what, when, where and how for every commit) Tj
+/F1 8 Tf 1 0 0 1 56 240.0 Tm (  change record: requester, implementer and approvers kept apart; self-approval flagged) Tj
+/F1 8 Tf 1 0 0 1 56 229.6 Tm (  change record: ticket and change request copied from the commit, never guessed) Tj
+/F1 8 Tf 1 0 0 1 56 219.2 Tm (  policy gate: high-criticality-needs-two-approvers) Tj
+/F1 8 Tf 1 0 0 1 56 208.8 Tm (  signed attestation, verifiable offline; hybrid signatures survive a distrusted algorithm) Tj
+/F1 8 Tf 1 0 0 1 56 198.4 Tm (  OSCAL 1.1.2 assessment results, validated against the NIST schema) Tj
+/F1 8 Tf 1 0 0 1 56 188.0 Tm (NIST SP 800-53 CM-3\(2\) \(source checked 2026-10-07\): testing, validation and documentation of changes) Tj
+/F1 8 Tf 1 0 0 1 56 177.6 Tm (  evidence pack: tests run inside the impact set at base and head, with what the change altered) Tj
+/F1 8 Tf 1 0 0 1 56 167.2 Tm (  behavioral-equivalence attestation: characterization tests from the base replayed at the head, for) Tj
+/F1 8 Tf 1 0 0 1 56 156.8 Tm (    COBOL linkage subprograms outside the impact set) Tj
+/F1 8 Tf 1 0 0 1 56 146.4 Tm (  change record: who, what, when, where and how for every commit) Tj
+/F1 8 Tf 1 0 0 1 56 136.0 Tm (NIST SP 800-53 CM-4 \(source checked 2026-10-07\): impact analyses) Tj
+/F1 8 Tf 1 0 0 1 56 125.6 Tm (  impact predicate: changed and impacted entities, each with provenance) Tj
+/F1 8 Tf 1 0 0 1 56 115.2 Tm (  impact predicate: confidence tier and dependency path per impacted entity) Tj
+/F1 8 Tf 1 0 0 1 56 104.8 Tm (  impact predicate: reliant_systems, from the component config) Tj
+/F1 8 Tf 1 0 0 1 56 94.4 Tm (NIST SP 800-53 SC-12 \(source checked 2026-10-07\): cryptographic key establishment and management) Tj
+/F1 8 Tf 1 0 0 1 56 84.0 Tm (  impact predicate: touches_crypto when a change touches a crypto call) Tj
+/F1 8 Tf 1 0 0 1 56 73.6 Tm (NIST SP 800-53 SC-13 \(source checked 2026-10-07\): cryptographic protection) Tj
+/F1 8 Tf 1 0 0 1 56 63.2 Tm (  impact predicate: touches_crypto when a change touches a crypto call) Tj
+/F1 8 Tf 1 0 0 1 56 28 Tm (page 2 of 3) Tj
+ET
+endstream
+endobj
+10 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 11 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> >>
+endobj
+11 0 obj
+<< /Length 2119 >>
+stream
+BT
+/F1 8 Tf 1 0 0 1 56 775.6 Tm (  policy gate: no-new-quantum-vulnerable-crypto blocks a change that adds RSA, ECC, DSA or DH) Tj
+/F1 8 Tf 1 0 0 1 56 765.2 Tm (SWFT: no controls mapped \(the DoD CIO page) Tj
+/F1 8 Tf 1 0 0 1 56 754.8 Tm (    \(https://dodcio.defense.gov/In-the-News/Article/4367436/software-fast-track-initiative, read) Tj
+/F1 8 Tf 1 0 0 1 56 744.4 Tm (    2026-10-14\) names the 24 April 2025 memo and its four focus areas but no vendor artifacts; the) Tj
+/F1 8 Tf 1 0 0 1 56 734.0 Tm (    SBOM and third-party assessment asks are in press reports only, so unverified\)) Tj
+/F1 8 Tf 1 0 0 1 56 723.6 Tm (CNSA 2.0 \(source checked 2026-10-14\): quantum-resistant algorithms for national security systems) Tj
+/F1 8 Tf 1 0 0 1 56 713.2 Tm (  impact predicate: touches_crypto when a change touches a crypto call) Tj
+/F1 8 Tf 1 0 0 1 56 702.8 Tm (  policy gate: no-new-quantum-vulnerable-crypto blocks a change that adds RSA, ECC, DSA or DH) Tj
+/F1 8 Tf 1 0 0 1 56 692.4 Tm (  signed attestation, verifiable offline; hybrid signatures survive a distrusted algorithm) Tj
+/F2 12 Tf 1 0 0 1 56 676.8 Tm () Tj
+/F2 12 Tf 1 0 0 1 56 661.2 Tm (Attestations) Tj
+/F1 8 Tf 1 0 0 1 56 650.8 Tm (attestations/01-4b060f669f41-impact.dsse.json  e638e5753c030524b2d77ee0) Tj
+/F1 8 Tf 1 0 0 1 56 640.4 Tm (attestations/01-4b060f669f41-policy-decision.dsse.json  18f5d110777ebe0d68c126cb) Tj
+/F1 8 Tf 1 0 0 1 56 630.0 Tm (attestations/01-4b060f669f41-behavioral-equivalence.dsse.json  38c1eb5453d77f42760a4bb1) Tj
+/F1 8 Tf 1 0 0 1 56 619.6 Tm (attestations/01-4b060f669f41-full-suite.dsse.json  c9848898259f04bb4a5bf426) Tj
+/F1 8 Tf 1 0 0 1 56 609.2 Tm (attestations/02-ce1ab964abbc-impact.dsse.json  8b6a1c129f85ec02fc15f6df) Tj
+/F1 8 Tf 1 0 0 1 56 598.8 Tm (attestations/02-ce1ab964abbc-policy-decision.dsse.json  6bb68aebf17c8597ed901ea8) Tj
+/F1 8 Tf 1 0 0 1 56 588.4 Tm (attestations/02-ce1ab964abbc-behavioral-equivalence.dsse.json  31593a788f1662cba091ad5e) Tj
+/F1 8 Tf 1 0 0 1 56 578.0 Tm (attestations/02-ce1ab964abbc-full-suite.dsse.json  3f0a046e924f1d4ba618ef32) Tj
+/F1 8 Tf 1 0 0 1 56 28 Tm (page 3 of 3) Tj
+ET
+endstream
+endobj
+xref
+0 12
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000134 00000 n 
+0000000229 00000 n 
+0000000329 00000 n 
+0000000460 00000 n 
+0000000596 00000 n 
+0000005368 00000 n 
+0000005504 00000 n 
+0000012235 00000 n 
+0000012373 00000 n 
+trailer
+<< /Size 12 /Root 1 0 R /Info 5 0 R >>
+startxref
+14545
+%%EOF

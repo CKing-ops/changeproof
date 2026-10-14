@@ -1,0 +1,172 @@
+{
+  "assessment-results": {
+    "uuid": "8783457d-c7a4-5e2b-a139-c605b440af2b",
+    "metadata": {
+      "title": "changeproof evidence for card-billing ce1ab964abbc",
+      "last-modified": "2026-10-07T12:00:00Z",
+      "version": "0.1.0",
+      "oscal-version": "1.1.2"
+    },
+    "import-ap": {
+      "href": "#41e8864b-810f-575a-935a-acbd18d0db63"
+    },
+    "results": [
+      {
+        "uuid": "a88522ac-7ea4-5b94-b62b-09f57989a2f2",
+        "title": "changeproof policy gate",
+        "description": "Impact and policy evidence for card-billing 4b060f669f4138026d439b4f674efd44af69f409..ce1ab964abbcfa49e433d8b050b18415ab0c075d, rules evaluated by OPA 1.21.1. Findings target policy rules; no determination is made about any framework control.",
+        "start": "2026-10-07T12:00:00Z",
+        "end": "2026-10-07T12:00:00Z",
+        "reviewed-controls": {
+          "control-selections": [
+            {
+              "include-controls": [
+                {
+                  "control-id": "nist-ssdf_PS.2.1"
+                },
+                {
+                  "control-id": "nist-ssdf_PS.3.1"
+                },
+                {
+                  "control-id": "nist-ssdf_PW.8.2"
+                },
+                {
+                  "control-id": "nist-800-53-cm_CM-3"
+                },
+                {
+                  "control-id": "nist-800-53-cm_CM-3-2"
+                },
+                {
+                  "control-id": "nist-800-53-cm_CM-4"
+                },
+                {
+                  "control-id": "nist-800-53-sc_SC-12"
+                },
+                {
+                  "control-id": "nist-800-53-sc_SC-13"
+                },
+                {
+                  "control-id": "cnsa2_CNSA-2.0"
+                }
+              ]
+            }
+          ]
+        },
+        "observations": [
+          {
+            "uuid": "91fb562c-9ac8-5e58-a0a7-e42b1755fbd5",
+            "title": "Impact of the change",
+            "description": "2 entities changed and 2 impacted (2 definite, 0 probable, 0 possible); 0 gaps reported.",
+            "methods": [
+              "TEST"
+            ],
+            "collected": "2026-10-07T12:00:00Z",
+            "props": [
+              {
+                "name": "provenance",
+                "ns": "urn:changeproof:oscal",
+                "value": "src/batch/FEECALC.cbl:15-41"
+              },
+              {
+                "name": "provenance",
+                "ns": "urn:changeproof:oscal",
+                "value": "src/batch/FEECALC.cbl:24"
+              }
+            ]
+          },
+          {
+            "uuid": "d5f1a073-fd0e-5850-882e-8dc456e8a8d2",
+            "title": "Approvals",
+            "description": "0 approvers and 1 implementers recorded in the commits; requester, implementer and approver are kept apart.",
+            "methods": [
+              "EXAMINE"
+            ],
+            "collected": "2026-10-07T12:00:00Z",
+            "props": [
+              {
+                "name": "source",
+                "ns": "urn:changeproof:oscal",
+                "value": "priya.raman@billing.example: git author, git-commit/ce1ab964abbcfa49e433d8b050b18415ab0c075d:3"
+              }
+            ]
+          },
+          {
+            "uuid": "46568234-5156-5e67-85a2-1a28dc5d9ef0",
+            "title": "Components changed",
+            "description": "batch-fees (high, changed)",
+            "methods": [
+              "EXAMINE"
+            ],
+            "collected": "2026-10-07T12:00:00Z",
+            "props": [
+              {
+                "name": "provenance",
+                "ns": "urn:changeproof:oscal",
+                "value": "changeproof.yaml:8"
+              }
+            ]
+          }
+        ],
+        "findings": [
+          {
+            "uuid": "b963087d-f8fa-5162-9ec8-fff8496c8042",
+            "title": "Policy rule no-new-quantum-vulnerable-crypto",
+            "description": "The rule holds for this change.",
+            "target": {
+              "type": "objective-id",
+              "target-id": "no-new-quantum-vulnerable-crypto",
+              "status": {
+                "state": "satisfied"
+              }
+            },
+            "related-observations": [
+              {
+                "observation-uuid": "91fb562c-9ac8-5e58-a0a7-e42b1755fbd5"
+              }
+            ]
+          },
+          {
+            "uuid": "5132347b-802e-57e7-bfee-7474bace0de6",
+            "title": "Policy rule agent-changes-need-independent-approval",
+            "description": "noreply@anthropic.com took part in this change and no independent approver is recorded",
+            "props": [
+              {
+                "name": "provenance",
+                "ns": "urn:changeproof:oscal",
+                "value": "git-commit/ce1ab964abbcfa49e433d8b050b18415ab0c075d:8"
+              }
+            ],
+            "target": {
+              "type": "objective-id",
+              "target-id": "agent-changes-need-independent-approval",
+              "status": {
+                "state": "not-satisfied"
+              }
+            }
+          },
+          {
+            "uuid": "2027808d-4420-57ee-a795-ce47b5dc5542",
+            "title": "Policy rule equivalence-required-outside-impact-set",
+            "description": "The rule holds for this change.",
+            "target": {
+              "type": "objective-id",
+              "target-id": "equivalence-required-outside-impact-set",
+              "status": {
+                "state": "satisfied"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "back-matter": {
+      "resources": [
+        {
+          "uuid": "41e8864b-810f-575a-935a-acbd18d0db63",
+          "title": "changeproof policy gate",
+          "description": "Rules named in the policy section of changeproof.yaml: no-new-quantum-vulnerable-crypto, agent-changes-need-independent-approval, equivalence-required-outside-impact-set."
+        }
+      ]
+    }
+  }
+}

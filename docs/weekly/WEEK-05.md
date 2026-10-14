@@ -107,10 +107,13 @@ screen, so most online seeds reach every online program, at the probable tier.
 |---|---|---|
 | RTS 2024/1774 Art. 16, Art. 17(1)(a)-(h), Art. 6 and 6(4), Art. 7, recital 9 | **checked 2026-10-01** | [EUR-Lex](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202401774) |
 | ECB ITRQ 2026 Q23a, Q23c-e | checked 2026-09-27 (fact-check) | [ECB](https://www.bankingsupervision.europa.eu/activities/srep/2026/html/ssm.srep_ITRQ2026.en.pdf) |
-| DORA Art. 9(4)(e), 28(3), 30 | unverified; RTS Art. 17(1) itself cites Art. 9(4)(e) | [EUR-Lex 2022/2554](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32022R2554) (approval prompt timed out; the fetch returned the RTS page instead) |
-| SOC 2 CC8.1 | unverified | [AICPA](https://www.aicpa-cima.com/resources/download/2017-trust-services-criteria-with-revised-points-of-focus-2022) (approval timed out) |
+| DORA Art. 9(4)(e), 28(3), 30 | unverified at EUR-Lex. Update 2026-10-07: the wording of all three matches the [springlex.eu reproduction of OJ L 333](https://www.springlex.eu/en/packages/dora/dora-regulation/article-9/); the EUR-Lex page is too long for the build's page reader | [EUR-Lex 2022/2554](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32022R2554) |
+| SOC 2 CC8.1 | unverified. Update 2026-10-07: the AICPA page offers only a download behind a sign-in | [AICPA](https://www.aicpa-cima.com/resources/download/2017-trust-services-criteria-with-revised-points-of-focus-2022) |
 | ISO/IEC 27001:2022 A.8.25, 8.28, 8.29, 8.32 | unverified | Paid standard; a copy of the standard would settle all four |
-| NIST SP 800-53 CM-3, CM-4, SC-12, SC-13; SP 800-218; CNSA 2.0; GDPR Chapter V | unverified | links in the mapping (approval timed out) |
+| NIST SP 800-53 CM-3, CM-4, SC-12, SC-13 | **checked 2026-10-07** (titles, statements and SP 800-53A objectives, Rev. 5.2.0) | [NIST OSCAL catalog](https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_catalog.json) |
+| NIST SP 800-218 | **checked 2026-10-07**; the single row is now PS.2.1, PS.3.1 and PW.8.2, read in the text | [NIST](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218.pdf) |
+| GDPR Chapter V | **checked 2026-10-07** ("Transfers of personal data to third countries or international organisations", Art. 44) | [EUR-Lex consolidated text](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02016R0679-20160504) |
+| CNSA 2.0 | **checked 2026-10-14** in NSA's CNSA 2.0 FAQ (v2.1, December 2024): ML-DSA-87, LMS (SHA-256/192 preferred) or XMSS for software and firmware signing, SHA-384 or SHA-512. The algorithm sheet itself still refuses the build | [NSA FAQ](https://media.defense.gov/2022/Sep/07/2003071836/-1/-1/0/CSI_CNSA_2.0_FAQ_.PDF) |
 
 Found while checking: Art. 17(1) also covers emergency changes ((f), (g)) and "the potential impact
 of a change on existing ICT security measures" ((h)). Both are now mapped. Recital 9 does name

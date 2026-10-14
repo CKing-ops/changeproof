@@ -16,6 +16,7 @@ class Source:
     title: str
     url: str
     checked: str | None = None  # ISO date the ID and topic were read in this source; None means unverified
+    note: str = ""  # where the wording was read when the source itself could not be
 
 
 @dataclass(frozen=True)
@@ -44,6 +45,9 @@ ISO_27001 = Source(  # RENAME: ISO/IEC 27001 SOURCE; THE STANDARD IS PAID, ISO P
 DORA = Source(  # RENAME: DORA REGULATION SOURCE
     "Regulation (EU) 2022/2554 (DORA), EUR-Lex",
     "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32022R2554",
+    note="Art. 9(4)(e), 28(3) and 30 matched on 2026-10-07 in the springlex.eu reproduction of OJ L 333 "
+         "(https://www.springlex.eu/en/packages/dora/dora-regulation/article-9/); the EUR-Lex page is too long "
+         "for the build's page reader, which stopped before Article 6",
 )
 DORA_RTS = Source(  # RENAME: DORA RTS ON ICT RISK MANAGEMENT SOURCE, ARTICLES 6, 7, 16, 17 AND RECITAL 9 READ
     "Commission Delegated Regulation (EU) 2024/1774, EUR-Lex",
@@ -55,14 +59,21 @@ ECB_ITRQ = Source(  # RENAME: ECB IT RISK QUESTIONNAIRE SOURCE, CHECKED BY THE 2
     "https://www.bankingsupervision.europa.eu/activities/srep/2026/html/ssm.srep_ITRQ2026.en.pdf",
     checked="2026-09-27",
 )
-NIST_800_53 = Source(  # RENAME: NIST SP 800-53 SOURCE
-    "NIST SP 800-53 Rev. 5",
-    "https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final",
+NIST_800_53 = Source(  # RENAME: NIST SP 800-53 SOURCE; CONTROL TITLES, STATEMENTS AND 800-53A OBJECTIVES READ HERE
+    "NIST SP 800-53 Rev. 5.2.0 with SP 800-53A, NIST OSCAL catalog",
+    "https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/SP800-53/rev5/json/"
+    "NIST_SP-800-53_rev5_catalog.json",
+    checked="2026-10-07",
 )
-NIST_SSDF = Source("NIST SP 800-218 (SSDF) v1.1", "https://csrc.nist.gov/pubs/sp/800/218/final")
-NSA_CNSA2 = Source(  # RENAME: CNSA 2.0 SOURCE
-    "NSA, Commercial National Security Algorithm Suite 2.0",
-    "https://media.defense.gov/2022/Sep/07/2003071834/-1/-1/0/CSA_CNSA_2.0_ALGORITHMS_.PDF",
+NIST_SSDF = Source(  # RENAME: NIST SSDF SOURCE; PRACTICE AND TASK TEXT READ HERE
+    "NIST SP 800-218 (SSDF) v1.1",
+    "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218.pdf",
+    checked="2026-10-07",
+)
+NSA_CNSA2 = Source(  # RENAME: CNSA 2.0 SOURCE; THE ALGORITHM SHEET REFUSED THE BUILD, THE FAQ OPENED
+    "NSA, The Commercial National Security Algorithm Suite 2.0 and Quantum Computing FAQ (v2.1, December 2024)",
+    "https://media.defense.gov/2022/Sep/07/2003071836/-1/-1/0/CSI_CNSA_2.0_FAQ_.PDF",
+    checked="2026-10-14",
 )
 
 IMPACT = Evidence("impact predicate: changed and impacted entities, each with provenance",
@@ -94,7 +105,12 @@ GATE_APPROVALS = Evidence("policy gate: high-criticality-needs-two-approvers",
                           "tests/test_gate.py::test_a_high_criticality_change_needs_two_independent_approvers")
 OSCAL = Evidence("OSCAL 1.1.2 assessment results, validated against the NIST schema",
                  "tests/test_gate.py::test_exit_check_oscal_assessment_results_validate")
-TEST_SELECTION = Evidence("test subset selected to cover the impact set (Week 10)", PLANNED)
+TEST_SELECTION = Evidence("test subset selected to cover the impact set",
+                         "tests/test_selection.py::test_exit_check_selected_subsets_catch_the_same_mutations_as_the_full_suite")
+INSIDE = Evidence("evidence pack: tests run inside the impact set at base and head, with what the change altered",
+                  "tests/test_pack.py::test_the_report_shows_the_tests_run_inside_the_impact_set_and_what_they_changed")
+PACK = Evidence("evidence pack: every attestation, report and OSCAL file verifiable and rebuildable offline",
+                "tests/test_pack.py::test_exit_check_the_pack_reconstructs_offline_from_attestations_alone")
 
 CONTROLS = (
     Control("soc2", "CC8.1", "change management: changes are authorized, designed, tested, approved and implemented",
@@ -127,18 +143,31 @@ CONTROLS = (
             (IMPACT, TEST_SELECTION, EQUIVALENCE)),
     Control("ecb-itrq", "Q23a", "emergency changes", ECB_ITRQ, (EMERGENCY, WHO)),
     Control("nist-800-53-cm", "CM-3", "configuration change control", NIST_800_53, (RECORD, WHO, WHY, GATE_APPROVALS, SIGNED, OSCAL)),
+    Control("nist-800-53-cm", "CM-3(2)", "testing, validation and documentation of changes", NIST_800_53,
+            (INSIDE, EQUIVALENCE, RECORD)),
     Control("nist-800-53-cm", "CM-4", "impact analyses", NIST_800_53, (IMPACT, TIERS, RELIANT)),
     Control("nist-800-53-sc", "SC-12", "cryptographic key establishment and management", NIST_800_53, (CRYPTO,)),
     Control("nist-800-53-sc", "SC-13", "cryptographic protection", NIST_800_53, (CRYPTO, GATE_CRYPTO)),
-    Control("nist-ssdf", "SP 800-218", "secure software development practices", NIST_SSDF, (RECORD, IMPACT, SIGNED)),
+    Control("nist-ssdf", "PS.2.1", "software integrity verification information for acquirers", NIST_SSDF,
+            (SIGNED, PACK)),
+    Control("nist-ssdf", "PS.3.1", "archive the files and supporting data of each release", NIST_SSDF, (PACK,)),
+    Control("nist-ssdf", "PW.8.2", "scope, design and perform testing and document the results", NIST_SSDF,
+            (INSIDE, EQUIVALENCE, TEST_SELECTION)),
     Control("cnsa2", "CNSA 2.0", "quantum-resistant algorithms for national security systems", NSA_CNSA2,
             (CRYPTO, GATE_CRYPTO, SIGNED)),
 )
 
+FRAMEWORK_LABELS = {  # RENAME: FRAMEWORK KEY TO THE SHORT NAME A REPORT PUTS BEFORE A CONTROL ID
+    "soc2": "SOC 2", "iso-27001": "ISO/IEC 27001", "dora": "DORA", "dora-rts-ict-risk": "DORA RTS 2024/1774",
+    "ecb-itrq": "ECB ITRQ", "eu-pqc-roadmap": "EU PQC roadmap", "gdpr": "GDPR", "nist-ssdf": "NIST SSDF",
+    "nist-800-53-cm": "NIST SP 800-53", "nist-800-53-sc": "NIST SP 800-53", "swft": "SWFT", "cnsa2": "CNSA 2.0",
+}
 NOT_MAPPED = {  # RENAME: FRAMEWORKS A PROFILE NAMES THAT HAVE NO CONTROLS MAPPED YET, WITH THE REASON
     "eu-pqc-roadmap": "a roadmap with dates, not controls; mapped with the crypto inventory (planned, Week 16)",
     "gdpr": "applies to data egress (ADR 003), not to change evidence",
-    "swft": "artifact list not yet read at source; mapped with the evidence pack (planned, Week 12)",
+    "swft": "the DoD CIO page (https://dodcio.defense.gov/In-the-News/Article/4367436/software-fast-track-initiative, "
+            "read 2026-10-14) names the 24 April 2025 memo and its four focus areas but no vendor artifacts; the "
+            "SBOM and third-party assessment asks are in press reports only, so unverified",
 }
 REFERENCES = (  # RENAME: OTHER OUTSIDE REFERENCES IN THE REPO, AS (WHERE, REFERENCE, SOURCE)
     ("src/changeproof/markets.py, src/changeproof/config.py, docs/adr/003-data-egress.md",
@@ -146,8 +175,8 @@ REFERENCES = (  # RENAME: OTHER OUTSIDE REFERENCES IN THE REPO, AS (WHERE, REFER
     ("src/changeproof/markets.py, docs/adr/003-data-egress.md", "DORA Art. 30: contract states where data is processed",
      DORA),
     ("src/changeproof/markets.py", "GDPR Chapter V: transfers of personal data to third countries",
-     Source("Regulation (EU) 2016/679 (GDPR), EUR-Lex",
-            "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32016R0679")),
+     Source("Regulation (EU) 2016/679 (GDPR), EUR-Lex consolidated text",
+            "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02016R0679-20160504", checked="2026-10-07")),
     ("docs/adr/002-crypto-agility.md, docs/adr/003-data-egress.md",
      "RTS 2024/1774 Art. 6 (encryption and cryptographic controls) and 6(4) (updating cryptography on the basis of "
      "developments in cryptanalysis)", DORA_RTS),
