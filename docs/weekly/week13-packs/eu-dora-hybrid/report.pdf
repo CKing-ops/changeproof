@@ -47,9 +47,9 @@ BT
 /F2 12 Tf 1 0 0 1 56 463.6 Tm (Crypto profile) Tj
 /F1 10 Tf 1 0 0 1 56 450.6 Tm (Crypto profile: hybrid) Tj
 /F1 8 Tf 1 0 0 1 56 440.2 Tm (evidence signing: ml-dsa-87, ecdsa-p384; release signing: lms-sha256-192; hash: sha-384) Tj
-/F1 8 Tf 1 0 0 1 56 429.8 Tm (this pack is signed with ml-dsa-87 \(key 0468c7188f199c5d\)) Tj
-/F1 8 Tf 1 0 0 1 56 419.4 Tm (this pack is signed with ecdsa-p384 \(key c5eed6ec5d81b334\)) Tj
-/F1 8 Tf 1 0 0 1 56 409.0 Tm (release signature: lms-sha256-192 \(key d869d4844634fccb\)) Tj
+/F1 8 Tf 1 0 0 1 56 429.8 Tm (this pack is signed with ml-dsa-87 \(key ce58c10e18a1b205\)) Tj
+/F1 8 Tf 1 0 0 1 56 419.4 Tm (this pack is signed with ecdsa-p384 \(key 8477f308417476ce\)) Tj
+/F1 8 Tf 1 0 0 1 56 409.0 Tm (release signature: lms-sha256-192 \(key f29308d78603b961\)) Tj
 /F2 12 Tf 1 0 0 1 56 393.4 Tm () Tj
 /F2 12 Tf 1 0 0 1 56 377.8 Tm (Change 1 of 2: commit ed5641a66abe) Tj
 /F1 10 Tf 1 0 0 1 56 364.8 Tm (Who and why) Tj
@@ -87,7 +87,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 9 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> >>
 endobj
 9 0 obj
-<< /Length 6551 >>
+<< /Length 6593 >>
 stream
 BT
 /F1 10 Tf 1 0 0 1 56 773.0 Tm (Who and why) Tj
@@ -125,8 +125,8 @@ BT
 /F2 12 Tf 1 0 0 1 56 409.0 Tm (Controls this evidence answers) Tj
 /F1 10 Tf 1 0 0 1 56 396.0 Tm (Mapped by the engine's framework table. A control number marked unverified has) Tj
 /F1 10 Tf 1 0 0 1 56 383.0 Tm (not been read in its source yet. Planned evidence is not in this pack.) Tj
-/F1 8 Tf 1 0 0 1 56 372.6 Tm (DORA Art. 9\(4\)\(e\) \(source unverified\): ICT change management procedures \(cited by RTS 2024/1774 Art.) Tj
-/F1 8 Tf 1 0 0 1 56 362.2 Tm (    17\(1\)\)) Tj
+/F1 8 Tf 1 0 0 1 56 372.6 Tm (DORA Art. 9\(4\)\(e\) \(source unverified; stand-in read 2026-10-14 at springlex.eu\): ICT change) Tj
+/F1 8 Tf 1 0 0 1 56 362.2 Tm (    management procedures \(cited by RTS 2024/1774 Art. 17\(1\)\)) Tj
 /F1 8 Tf 1 0 0 1 56 351.8 Tm (  change record: who, what, when, where and how for every commit) Tj
 /F1 8 Tf 1 0 0 1 56 341.4 Tm (  impact predicate: changed and impacted entities, each with provenance) Tj
 /F1 8 Tf 1 0 0 1 56 331.0 Tm (DORA Art. 28\(3\) \(source unverified\): register of information on ICT third-party contractual) Tj
@@ -217,10 +217,10 @@ xref
 0000000594 00000 n 
 0000005425 00000 n 
 0000005561 00000 n 
-0000012164 00000 n 
-0000012302 00000 n 
+0000012206 00000 n 
+0000012344 00000 n 
 trailer
 << /Size 12 /Root 1 0 R /Info 5 0 R >>
 startxref
-15964
+16006
 %%EOF
