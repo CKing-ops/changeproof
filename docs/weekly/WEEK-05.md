@@ -113,7 +113,7 @@ screen, so most online seeds reach every online program, at the probable tier.
 | NIST SP 800-53 CM-3, CM-4, SC-12, SC-13 | **checked 2026-10-07** (titles, statements and SP 800-53A objectives, Rev. 5.2.0) | [NIST OSCAL catalog](https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_catalog.json) |
 | NIST SP 800-218 | **checked 2026-10-07**; the single row is now PS.2.1, PS.3.1 and PW.8.2, read in the text | [NIST](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218.pdf) |
 | GDPR Chapter V | **checked 2026-10-07** ("Transfers of personal data to third countries or international organisations", Art. 44) | [EUR-Lex consolidated text](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02016R0679-20160504) |
-| CNSA 2.0 | unverified; the NSA page refused the build (403) on 2026-10-07 | [NSA](https://media.defense.gov/2022/Sep/07/2003071834/-1/-1/0/CSA_CNSA_2.0_ALGORITHMS_.PDF) |
+| CNSA 2.0 | **checked 2026-10-14** in NSA's CNSA 2.0 FAQ (v2.1, December 2024): ML-DSA-87, LMS (SHA-256/192 preferred) or XMSS for software and firmware signing, SHA-384 or SHA-512. The algorithm sheet itself still refuses the build | [NSA FAQ](https://media.defense.gov/2022/Sep/07/2003071836/-1/-1/0/CSI_CNSA_2.0_FAQ_.PDF) |
 
 Found while checking: Art. 17(1) also covers emergency changes ((f), (g)) and "the potential impact
 of a change on existing ICT security measures" ((h)). Both are now mapped. Recital 9 does name

@@ -70,9 +70,10 @@ NIST_SSDF = Source(  # RENAME: NIST SSDF SOURCE; PRACTICE AND TASK TEXT READ HER
     "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218.pdf",
     checked="2026-10-07",
 )
-NSA_CNSA2 = Source(  # RENAME: CNSA 2.0 SOURCE
-    "NSA, Commercial National Security Algorithm Suite 2.0",
-    "https://media.defense.gov/2022/Sep/07/2003071834/-1/-1/0/CSA_CNSA_2.0_ALGORITHMS_.PDF",
+NSA_CNSA2 = Source(  # RENAME: CNSA 2.0 SOURCE; THE ALGORITHM SHEET REFUSED THE BUILD, THE FAQ OPENED
+    "NSA, The Commercial National Security Algorithm Suite 2.0 and Quantum Computing FAQ (v2.1, December 2024)",
+    "https://media.defense.gov/2022/Sep/07/2003071836/-1/-1/0/CSI_CNSA_2.0_FAQ_.PDF",
+    checked="2026-10-14",
 )
 
 IMPACT = Evidence("impact predicate: changed and impacted entities, each with provenance",
@@ -164,7 +165,9 @@ FRAMEWORK_LABELS = {  # RENAME: FRAMEWORK KEY TO THE SHORT NAME A REPORT PUTS BE
 NOT_MAPPED = {  # RENAME: FRAMEWORKS A PROFILE NAMES THAT HAVE NO CONTROLS MAPPED YET, WITH THE REASON
     "eu-pqc-roadmap": "a roadmap with dates, not controls; mapped with the crypto inventory (planned, Week 16)",
     "gdpr": "applies to data egress (ADR 003), not to change evidence",
-    "swft": "the DoD CIO memo and RFIs did not open from the build (403); press reports only, so unverified",
+    "swft": "the DoD CIO page (https://dodcio.defense.gov/In-the-News/Article/4367436/software-fast-track-initiative, "
+            "read 2026-10-14) names the 24 April 2025 memo and its four focus areas but no vendor artifacts; the "
+            "SBOM and third-party assessment asks are in press reports only, so unverified",
 }
 REFERENCES = (  # RENAME: OTHER OUTSIDE REFERENCES IN THE REPO, AS (WHERE, REFERENCE, SOURCE)
     ("src/changeproof/markets.py, src/changeproof/config.py, docs/adr/003-data-egress.md",

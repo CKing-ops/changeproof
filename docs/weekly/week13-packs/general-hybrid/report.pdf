@@ -47,9 +47,9 @@ BT
 /F2 12 Tf 1 0 0 1 56 463.6 Tm (Crypto profile) Tj
 /F1 10 Tf 1 0 0 1 56 450.6 Tm (Crypto profile: hybrid) Tj
 /F1 8 Tf 1 0 0 1 56 440.2 Tm (evidence signing: ml-dsa-87, ecdsa-p384; release signing: lms-sha256-192; hash: sha-384) Tj
-/F1 8 Tf 1 0 0 1 56 429.8 Tm (this pack is signed with ml-dsa-87 \(key fac2216cb84a03aa\)) Tj
-/F1 8 Tf 1 0 0 1 56 419.4 Tm (this pack is signed with ecdsa-p384 \(key 90729c14b7040b4e\)) Tj
-/F1 8 Tf 1 0 0 1 56 409.0 Tm (release signature: lms-sha256-192 \(key 2b244cf4b9bfbac8\)) Tj
+/F1 8 Tf 1 0 0 1 56 429.8 Tm (this pack is signed with ml-dsa-87 \(key 0468c7188f199c5d\)) Tj
+/F1 8 Tf 1 0 0 1 56 419.4 Tm (this pack is signed with ecdsa-p384 \(key c5eed6ec5d81b334\)) Tj
+/F1 8 Tf 1 0 0 1 56 409.0 Tm (release signature: lms-sha256-192 \(key d869d4844634fccb\)) Tj
 /F2 12 Tf 1 0 0 1 56 393.4 Tm () Tj
 /F2 12 Tf 1 0 0 1 56 377.8 Tm (Change 1 of 2: commit 085d6bff07ee) Tj
 /F1 10 Tf 1 0 0 1 56 364.8 Tm (Who and why) Tj

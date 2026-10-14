@@ -46,10 +46,10 @@ project's own knowledge and must be checked against the source before anyone rel
 Checked so far: the ECB IT Risk Questionnaire rows (fact-check of 2026-09-27); the Delegated
 Regulation (EU) 2024/1774 rows (EUR-Lex, 2026-10-01); NIST SP 800-53 control titles, statements and
 SP 800-53A objectives (NIST's OSCAL catalog), NIST SP 800-218 practices and tasks, and GDPR
-Chapter V (EUR-Lex), all on 2026-10-07. Still unverified: DORA itself (its wording matches a
-reproduction of the Official Journal, but the EUR-Lex page is too long for the build's page reader),
-SOC 2 (the AICPA criteria are a download behind a sign-in) and CNSA 2.0 (the NSA page refused the
-build). ISO/IEC 27001 is sold by ISO, so its Annex A rows stay unverified until someone with a copy
+Chapter V (EUR-Lex), all on 2026-10-07; CNSA 2.0 in NSA's CNSA 2.0 FAQ (v2.1) on 2026-10-14. Still
+unverified: DORA itself (its wording matches a reproduction of the Official Journal, but the EUR-Lex
+page is too long for the build's page reader) and SOC 2 (the AICPA criteria are a download behind a
+sign-in). ISO/IEC 27001 is sold by ISO, so its Annex A rows stay unverified until someone with a copy
 of the standard confirms the four control numbers and titles.
 """
 

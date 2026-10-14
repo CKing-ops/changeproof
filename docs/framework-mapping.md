@@ -22,10 +22,10 @@ project's own knowledge and must be checked against the source before anyone rel
 Checked so far: the ECB IT Risk Questionnaire rows (fact-check of 2026-09-27); the Delegated
 Regulation (EU) 2024/1774 rows (EUR-Lex, 2026-10-01); NIST SP 800-53 control titles, statements and
 SP 800-53A objectives (NIST's OSCAL catalog), NIST SP 800-218 practices and tasks, and GDPR
-Chapter V (EUR-Lex), all on 2026-10-07. Still unverified: DORA itself (its wording matches a
-reproduction of the Official Journal, but the EUR-Lex page is too long for the build's page reader),
-SOC 2 (the AICPA criteria are a download behind a sign-in) and CNSA 2.0 (the NSA page refused the
-build). ISO/IEC 27001 is sold by ISO, so its Annex A rows stay unverified until someone with a copy
+Chapter V (EUR-Lex), all on 2026-10-07; CNSA 2.0 in NSA's CNSA 2.0 FAQ (v2.1) on 2026-10-14. Still
+unverified: DORA itself (its wording matches a reproduction of the Official Journal, but the EUR-Lex
+page is too long for the build's page reader) and SOC 2 (the AICPA criteria are a download behind a
+sign-in). ISO/IEC 27001 is sold by ISO, so its Annex A rows stay unverified until someone with a copy
 of the standard confirms the four control numbers and titles.
 
 ## `general`
@@ -108,13 +108,13 @@ No controls mapped: applies to data egress (ADR 003), not to change evidence.
 
 ### SWFT (`swft`)
 
-No controls mapped: the DoD CIO memo and RFIs did not open from the build (403); press reports only, so unverified.
+No controls mapped: the DoD CIO page (https://dodcio.defense.gov/In-the-News/Article/4367436/software-fast-track-initiative, read 2026-10-14) names the 24 April 2025 memo and its four focus areas but no vendor artifacts; the SBOM and third-party assessment asks are in press reports only, so unverified.
 
 ### CNSA 2.0 (`cnsa2`)
 
 | Control | Topic | Source | Status | Engine evidence | Proof |
 |---|---|---|---|---|---|
-| CNSA 2.0 | quantum-resistant algorithms for national security systems | [NSA, Commercial National Security Algorithm Suite 2.0](https://media.defense.gov/2022/Sep/07/2003071834/-1/-1/0/CSA_CNSA_2.0_ALGORITHMS_.PDF) | unverified | impact predicate: touches_crypto when a change touches a crypto call<br>policy gate: no-new-quantum-vulnerable-crypto blocks a change that adds RSA, ECC, DSA or DH<br>signed attestation, verifiable offline; hybrid signatures survive a distrusted algorithm | `tests/test_impact.py::test_crypto_flag`<br>`tests/test_gate.py::test_exit_check_policy_blocks_a_pr_that_adds_rsa_2048`<br>`tests/test_signer.py::test_exit_check_hybrid_verifies_when_either_component_is_distrusted` |
+| CNSA 2.0 | quantum-resistant algorithms for national security systems | [NSA, The Commercial National Security Algorithm Suite 2.0 and Quantum Computing FAQ (v2.1, December 2024)](https://media.defense.gov/2022/Sep/07/2003071836/-1/-1/0/CSI_CNSA_2.0_FAQ_.PDF) | checked 2026-10-14 | impact predicate: touches_crypto when a change touches a crypto call<br>policy gate: no-new-quantum-vulnerable-crypto blocks a change that adds RSA, ECC, DSA or DH<br>signed attestation, verifiable offline; hybrid signatures survive a distrusted algorithm | `tests/test_impact.py::test_crypto_flag`<br>`tests/test_gate.py::test_exit_check_policy_blocks_a_pr_that_adds_rsa_2048`<br>`tests/test_signer.py::test_exit_check_hybrid_verifies_when_either_component_is_distrusted` |
 
 ## Other outside references in the repo
 

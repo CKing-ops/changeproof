@@ -64,7 +64,13 @@ def test_the_sources_read_on_2026_10_07_are_checked_and_the_rest_stay_unverified
     assert {t for t in checked if "2016/679" in t}
     unverified = {t for t, s in by_title.items() if s.checked is None}
     assert {t for t in unverified if "2022/2554" in t} and {t for t in unverified if "AICPA" in t}
-    assert {t for t in unverified if "ISO/IEC 27001" in t} and {t for t in unverified if "National Security Algorithm" in t}
+    assert {t for t in unverified if "ISO/IEC 27001" in t}
+
+
+def test_cnsa2_is_checked_in_the_nsa_faq_and_swft_says_what_its_memo_page_does_not_give():
+    cnsa2 = next(c.source for c in CONTROLS if c.framework == "cnsa2")
+    assert cnsa2.checked == "2026-10-14" and cnsa2.url.startswith("https://media.defense.gov/")
+    assert "dodcio.defense.gov" in NOT_MAPPED["swft"] and "press" in NOT_MAPPED["swft"]
 
 
 def test_dora_says_where_its_wording_was_read_while_eur_lex_stays_unchecked():

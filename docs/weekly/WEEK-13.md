@@ -46,8 +46,12 @@ Read on 2026-10-07 (`tests/test_frameworks.py::test_the_sources_read_on_2026_10_
 - **Still unverified:** DORA Art. 9(4)(e), 28(3) and 30. Their wording matches a reproduction of
   OJ L 333 on springlex.eu, but the EUR-Lex page is too long for the build's page reader, so the
   rows say where they were read and stay unverified. SOC 2 CC8.1 (the AICPA criteria are a download
-  behind a sign-in). CNSA 2.0 and the SWFT memo (the NSA and DoD CIO sites refused the build).
-  ISO/IEC 27001 (needs a copy of the standard).
+  behind a sign-in). ISO/IEC 27001 (needs a copy of the standard).
+- **Update 2026-10-14:** CNSA 2.0 checked in NSA's CNSA 2.0 FAQ (v2.1), which matches the `cnsa2`
+  profile's ML-DSA-87, LMS and SHA-384 (`tests/test_frameworks.py::test_cnsa2_is_checked_in_the_nsa_faq_and_swft_says_what_its_memo_page_does_not_give`).
+  The SWFT memo's date, signer and focus areas checked on the DoD CIO page; its vendor asks (SBOM,
+  third-party assessment) are still in press reports only. The Internet Archive is blocked from the
+  build, and the EUR-Lex PDF stops at Article 6, so DORA stays as it was.
 
 `docs/framework-mapping.md` and the Week 5 source table carry these results.
 

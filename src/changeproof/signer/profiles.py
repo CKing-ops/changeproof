@@ -14,7 +14,7 @@ class Profile:
     signing_needs: frozenset[str]  # families evidence signing must include
     signing_allows: frozenset[str]  # families evidence signing may use
     release_allows: frozenset[str]  # families release signing may use
-    hashes: frozenset[str] = frozenset({"sha-384"})  # hash IDs evidence may use; SHA-384 per CNSA 2.0 (unverified)
+    hashes: frozenset[str] = frozenset({"sha-384"})  # hash IDs evidence may use; CNSA 2.0 allows SHA-384 or SHA-512 (NSA CNSA 2.0 FAQ v2.1)
 
 
 BOTH = frozenset({CLASSICAL, POST_QUANTUM})
@@ -22,7 +22,8 @@ PQ = frozenset({POST_QUANTUM})
 PROFILES = {  # RENAME: CRYPTO PROFILE NAME TO ITS RULES
     "hybrid": Profile(BOTH, BOTH, BOTH),
     "nist-pqc": Profile(PQ, PQ, PQ),
-    # classical signatures may sit beside post-quantum ones during the CNSA 2.0 transition (unverified)
+    # the NSA CNSA 2.0 FAQ (v2.1) keeps CNSA 1.0 in use until a solution runs in CNSA 2.0 mode, but does not
+    # address classical signatures beside post-quantum ones, so allowing them here is unverified
     "cnsa2": Profile(PQ, BOTH, PQ),
     "classical-legacy": Profile(frozenset({CLASSICAL}), BOTH, BOTH, frozenset({"sha-384", "sha-256"})),
 }

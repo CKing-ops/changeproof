@@ -47,8 +47,8 @@ BT
 /F2 12 Tf 1 0 0 1 56 463.6 Tm (Crypto profile) Tj
 /F1 10 Tf 1 0 0 1 56 450.6 Tm (Crypto profile: cnsa2) Tj
 /F1 8 Tf 1 0 0 1 56 440.2 Tm (evidence signing: ml-dsa-87; release signing: lms-sha256-192; hash: sha-384) Tj
-/F1 8 Tf 1 0 0 1 56 429.8 Tm (this pack is signed with ml-dsa-87 \(key fac2216cb84a03aa\)) Tj
-/F1 8 Tf 1 0 0 1 56 419.4 Tm (release signature: lms-sha256-192 \(key 2b244cf4b9bfbac8\)) Tj
+/F1 8 Tf 1 0 0 1 56 429.8 Tm (this pack is signed with ml-dsa-87 \(key 0468c7188f199c5d\)) Tj
+/F1 8 Tf 1 0 0 1 56 419.4 Tm (release signature: lms-sha256-192 \(key d869d4844634fccb\)) Tj
 /F2 12 Tf 1 0 0 1 56 403.8 Tm () Tj
 /F2 12 Tf 1 0 0 1 56 388.2 Tm (Change 1 of 2: commit 4b060f669f41) Tj
 /F1 10 Tf 1 0 0 1 56 375.2 Tm (Who and why) Tj
@@ -164,26 +164,28 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 11 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> >>
 endobj
 11 0 obj
-<< /Length 1847 >>
+<< /Length 2119 >>
 stream
 BT
 /F1 8 Tf 1 0 0 1 56 775.6 Tm (  policy gate: no-new-quantum-vulnerable-crypto blocks a change that adds RSA, ECC, DSA or DH) Tj
-/F1 8 Tf 1 0 0 1 56 765.2 Tm (SWFT: no controls mapped \(the DoD CIO memo and RFIs did not open from the build \(403\); press reports) Tj
-/F1 8 Tf 1 0 0 1 56 754.8 Tm (    only, so unverified\)) Tj
-/F1 8 Tf 1 0 0 1 56 744.4 Tm (CNSA 2.0 \(source unverified\): quantum-resistant algorithms for national security systems) Tj
-/F1 8 Tf 1 0 0 1 56 734.0 Tm (  impact predicate: touches_crypto when a change touches a crypto call) Tj
-/F1 8 Tf 1 0 0 1 56 723.6 Tm (  policy gate: no-new-quantum-vulnerable-crypto blocks a change that adds RSA, ECC, DSA or DH) Tj
-/F1 8 Tf 1 0 0 1 56 713.2 Tm (  signed attestation, verifiable offline; hybrid signatures survive a distrusted algorithm) Tj
-/F2 12 Tf 1 0 0 1 56 697.6 Tm () Tj
-/F2 12 Tf 1 0 0 1 56 682.0 Tm (Attestations) Tj
-/F1 8 Tf 1 0 0 1 56 671.6 Tm (attestations/01-4b060f669f41-impact.dsse.json  e638e5753c030524b2d77ee0) Tj
-/F1 8 Tf 1 0 0 1 56 661.2 Tm (attestations/01-4b060f669f41-policy-decision.dsse.json  18f5d110777ebe0d68c126cb) Tj
-/F1 8 Tf 1 0 0 1 56 650.8 Tm (attestations/01-4b060f669f41-behavioral-equivalence.dsse.json  38c1eb5453d77f42760a4bb1) Tj
-/F1 8 Tf 1 0 0 1 56 640.4 Tm (attestations/01-4b060f669f41-full-suite.dsse.json  c9848898259f04bb4a5bf426) Tj
-/F1 8 Tf 1 0 0 1 56 630.0 Tm (attestations/02-ce1ab964abbc-impact.dsse.json  8b6a1c129f85ec02fc15f6df) Tj
-/F1 8 Tf 1 0 0 1 56 619.6 Tm (attestations/02-ce1ab964abbc-policy-decision.dsse.json  6bb68aebf17c8597ed901ea8) Tj
-/F1 8 Tf 1 0 0 1 56 609.2 Tm (attestations/02-ce1ab964abbc-behavioral-equivalence.dsse.json  31593a788f1662cba091ad5e) Tj
-/F1 8 Tf 1 0 0 1 56 598.8 Tm (attestations/02-ce1ab964abbc-full-suite.dsse.json  3f0a046e924f1d4ba618ef32) Tj
+/F1 8 Tf 1 0 0 1 56 765.2 Tm (SWFT: no controls mapped \(the DoD CIO page) Tj
+/F1 8 Tf 1 0 0 1 56 754.8 Tm (    \(https://dodcio.defense.gov/In-the-News/Article/4367436/software-fast-track-initiative, read) Tj
+/F1 8 Tf 1 0 0 1 56 744.4 Tm (    2026-10-14\) names the 24 April 2025 memo and its four focus areas but no vendor artifacts; the) Tj
+/F1 8 Tf 1 0 0 1 56 734.0 Tm (    SBOM and third-party assessment asks are in press reports only, so unverified\)) Tj
+/F1 8 Tf 1 0 0 1 56 723.6 Tm (CNSA 2.0 \(source checked 2026-10-14\): quantum-resistant algorithms for national security systems) Tj
+/F1 8 Tf 1 0 0 1 56 713.2 Tm (  impact predicate: touches_crypto when a change touches a crypto call) Tj
+/F1 8 Tf 1 0 0 1 56 702.8 Tm (  policy gate: no-new-quantum-vulnerable-crypto blocks a change that adds RSA, ECC, DSA or DH) Tj
+/F1 8 Tf 1 0 0 1 56 692.4 Tm (  signed attestation, verifiable offline; hybrid signatures survive a distrusted algorithm) Tj
+/F2 12 Tf 1 0 0 1 56 676.8 Tm () Tj
+/F2 12 Tf 1 0 0 1 56 661.2 Tm (Attestations) Tj
+/F1 8 Tf 1 0 0 1 56 650.8 Tm (attestations/01-4b060f669f41-impact.dsse.json  e638e5753c030524b2d77ee0) Tj
+/F1 8 Tf 1 0 0 1 56 640.4 Tm (attestations/01-4b060f669f41-policy-decision.dsse.json  18f5d110777ebe0d68c126cb) Tj
+/F1 8 Tf 1 0 0 1 56 630.0 Tm (attestations/01-4b060f669f41-behavioral-equivalence.dsse.json  38c1eb5453d77f42760a4bb1) Tj
+/F1 8 Tf 1 0 0 1 56 619.6 Tm (attestations/01-4b060f669f41-full-suite.dsse.json  c9848898259f04bb4a5bf426) Tj
+/F1 8 Tf 1 0 0 1 56 609.2 Tm (attestations/02-ce1ab964abbc-impact.dsse.json  8b6a1c129f85ec02fc15f6df) Tj
+/F1 8 Tf 1 0 0 1 56 598.8 Tm (attestations/02-ce1ab964abbc-policy-decision.dsse.json  6bb68aebf17c8597ed901ea8) Tj
+/F1 8 Tf 1 0 0 1 56 588.4 Tm (attestations/02-ce1ab964abbc-behavioral-equivalence.dsse.json  31593a788f1662cba091ad5e) Tj
+/F1 8 Tf 1 0 0 1 56 578.0 Tm (attestations/02-ce1ab964abbc-full-suite.dsse.json  3f0a046e924f1d4ba618ef32) Tj
 /F1 8 Tf 1 0 0 1 56 28 Tm (page 3 of 3) Tj
 ET
 endstream
@@ -205,5 +207,5 @@ xref
 trailer
 << /Size 12 /Root 1 0 R /Info 5 0 R >>
 startxref
-14273
+14545
 %%EOF
