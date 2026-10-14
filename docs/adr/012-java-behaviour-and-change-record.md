@@ -77,3 +77,15 @@ option.
   pack verifies offline; the `record` command writes the chosen layout.
 - `docs/weekly/java-behaviour-commons-lang.json` (from `scripts/java_behaviour_check.py`): the check
   on Apache Commons Lang commits and three planted bugs.
+
+## Commons Lang result (2026-10-14)
+
+`scripts/java_behaviour_check.py` on the pinned Apache Commons Lang history, scoped to the files each
+commit changed: 12 commits, 6,952 cases. Ten commits came out all `same`. Two commits change which
+random generator the library uses (`17c3208`, "secure() now uses SecureRandom() instead of
+getInstanceStrong()", and `f92016c`, LANG-1750); they show 24 and 1 differences, in the methods
+that return or use that generator. The messages say behaviour changed there, so these are taken as
+true differences; that the base side blocked or printed another generator is inferred, not traced.
+Three bugs planted in the pinned head were all caught (67, 2 and 7 differing cases). A first run
+showed 7 false differences from identity hashes and random methods; fixed by the constant identity
+hash and by leaving out any method unstable on either side.

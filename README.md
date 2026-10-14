@@ -107,14 +107,18 @@ Weeks 1-13 (planned capabilities are labeled; proven ones cite their test):
   configured crypto profile is enforced when a pack is built and verified, and `--release-key`
   countersigns it (`tests/test_pack.py`, `docs/weekly/week13-review.md`). Three packs, one signed
   under CNSA 2.0 with ML-DSA-87 and LMS only, are in `docs/weekly/week13-packs/`.
-- Java behaviour check: with a JDK on the PATH, equivalence also probes Java. Public static methods,
-  and instance methods of classes with a no-argument constructor, are called with their types'
-  boundary values and the literals in their own code, at the base and at the head, twice each;
-  methods that do not repeat are left out, and every method or class it cannot probe is listed with
-  the reason. Each method is called twice, to show state the first call left behind. It catches all 10 planted bugs in a seeded system, a refactor comes out all `same`,
-  and with no JDK the verdict is inconclusive (`tests/test_java_behaviour.py`,
-  `docs/adr/012-java-behaviour-and-change-record.md`). JAVA_LANG_RESULT It is evidence from tests,
-  not a proof. A class path for third-party jars: **planned**.
+- Java behaviour check (a demo; COBOL at banks leads the MVP): with a JDK on the PATH, equivalence
+  also probes Java. Public static methods, and instance methods of classes with a no-argument
+  constructor, are called with their types' boundary values and the literals in their own code, at
+  the base and at the head, twice each. Each method is called twice per run, to show state the first
+  call left behind. Methods that do not repeat are left out, and every method or class it cannot
+  probe is listed with the reason. It catches all 10 planted bugs in a seeded system, a refactor
+  comes out all `same`, and with no JDK the verdict is inconclusive (`tests/test_java_behaviour.py`,
+  `docs/adr/012-java-behaviour-and-change-record.md`). On 12 recent Apache Commons Lang commits it
+  ran 6,952 cases: 10 commits came out all `same`, the 2 that change which random generator the
+  library uses showed differences, as their messages say they should, and three bugs planted in the
+  pinned head were all caught (`docs/weekly/java-behaviour-commons-lang.json`). It is evidence from
+  tests, not a proof. A class path for third-party jars: **planned**.
 - One change record per commit: `changeproof record <commit or range> --out <folder> --key ...` signs
   one `change-record` statement per commit holding the impact, the policy decision and both
   equivalence runs. `--layout separate` writes the four attestations as before, and `changeproof

@@ -9,7 +9,7 @@
       "files": [
         "src/main/java/org/apache/commons/lang3/StringUtils.java"
       ],
-      "cases": 4989,
+      "cases": 4934,
       "different": 0,
       "methods_different": [],
       "untested": [
@@ -19,7 +19,7 @@
         },
         {
           "program": "StringUtils",
-          "reason": "27 probe cases gave different results on two runs of the base or of the head (time, randomness or identity), so they are left out"
+          "reason": "82 probe cases gave different results on two runs of the base or of the head (time, randomness or identity), so they are left out"
         }
       ]
     },
@@ -29,13 +29,13 @@
       "files": [
         "src/main/java/org/apache/commons/lang3/RandomUtils.java"
       ],
-      "cases": 3,
+      "cases": 4,
       "different": 0,
       "methods_different": [],
       "untested": [
         {
           "program": "RandomUtils",
-          "reason": "214 probe cases gave different results on two runs of the base or of the head (time, randomness or identity), so they are left out"
+          "reason": "213 probe cases gave different results on two runs of the base or of the head (time, randomness or identity), so they are left out"
         }
       ]
     },
@@ -46,7 +46,7 @@
         "src/main/java/org/apache/commons/lang3/RandomStringUtils.java",
         "src/main/java/org/apache/commons/lang3/RandomUtils.java"
       ],
-      "cases": 7,
+      "cases": 9,
       "different": 0,
       "methods_different": [],
       "untested": [
@@ -56,11 +56,11 @@
         },
         {
           "program": "RandomStringUtils",
-          "reason": "517 probe cases gave different results on two runs of the base or of the head (time, randomness or identity), so they are left out"
+          "reason": "516 probe cases gave different results on two runs of the base or of the head (time, randomness or identity), so they are left out"
         },
         {
           "program": "RandomUtils",
-          "reason": "214 probe cases gave different results on two runs of the base or of the head (time, randomness or identity), so they are left out"
+          "reason": "213 probe cases gave different results on two runs of the base or of the head (time, randomness or identity), so they are left out"
         }
       ]
     },
@@ -86,17 +86,13 @@
       "files": [
         "src/main/java/org/apache/commons/lang3/time/CalendarUtils.java"
       ],
-      "cases": 0,
+      "cases": 1,
       "different": 0,
       "methods_different": [],
       "untested": [
         {
           "program": "CalendarUtils",
           "reason": "7 of 8 public methods not probed: 5 no public constructor without arguments; 2 parameter types the probe cannot build (Calendar)"
-        },
-        {
-          "program": "CalendarUtils",
-          "reason": "1 probe cases gave different results on two runs of the base or of the head (time, randomness or identity), so they are left out"
         }
       ]
     },
@@ -122,7 +118,7 @@
       "files": [
         "src/main/java/org/apache/commons/lang3/RandomStringUtils.java"
       ],
-      "cases": 4,
+      "cases": 5,
       "different": 0,
       "methods_different": [],
       "untested": [
@@ -132,7 +128,7 @@
         },
         {
           "program": "RandomStringUtils",
-          "reason": "517 probe cases gave different results on two runs of the base or of the head (time, randomness or identity), so they are left out"
+          "reason": "516 probe cases gave different results on two runs of the base or of the head (time, randomness or identity), so they are left out"
         }
       ]
     },
@@ -175,11 +171,10 @@
         "src/main/java/org/apache/commons/lang3/RandomStringUtils.java",
         "src/main/java/org/apache/commons/lang3/RandomUtils.java"
       ],
-      "cases": 47,
-      "different": 45,
+      "cases": 28,
+      "different": 24,
       "methods_different": [
         "RandomStringUtils.nextNumeric(int,int)",
-        "RandomStringUtils.nextPrint(int,int)",
         "RandomStringUtils.secure()",
         "RandomStringUtils.toString()",
         "RandomUtils.secure()"
@@ -191,11 +186,11 @@
         },
         {
           "program": "RandomStringUtils",
-          "reason": "475 probe cases gave different results on two runs of the base or of the head (time, randomness or identity), so they are left out"
+          "reason": "495 probe cases gave different results on two runs of the base or of the head (time, randomness or identity), so they are left out"
         },
         {
           "program": "RandomUtils",
-          "reason": "214 probe cases gave different results on two runs of the base or of the head (time, randomness or identity), so they are left out"
+          "reason": "213 probe cases gave different results on two runs of the base or of the head (time, randomness or identity), so they are left out"
         }
       ]
     },
@@ -206,10 +201,8 @@
         "src/main/java/org/apache/commons/lang3/RandomUtils.java"
       ],
       "cases": 3,
-      "different": 1,
-      "methods_different": [
-        "RandomUtils.nextBoolean()"
-      ],
+      "different": 0,
+      "methods_different": [],
       "untested": [
         {
           "program": "RandomUtils",
@@ -224,9 +217,11 @@
         "src/main/java/org/apache/commons/lang3/RandomStringUtils.java",
         "src/main/java/org/apache/commons/lang3/RandomUtils.java"
       ],
-      "cases": 5,
-      "different": 0,
-      "methods_different": [],
+      "cases": 28,
+      "different": 1,
+      "methods_different": [
+        "RandomStringUtils.randomAlphabetic(int,int)"
+      ],
       "untested": [
         {
           "program": "RandomStringUtils",
@@ -234,11 +229,11 @@
         },
         {
           "program": "RandomStringUtils",
-          "reason": "517 probe cases gave different results on two runs of the base or of the head (time, randomness or identity), so they are left out"
+          "reason": "495 probe cases gave different results on two runs of the base or of the head (time, randomness or identity), so they are left out"
         },
         {
           "program": "RandomUtils",
-          "reason": "214 probe cases gave different results on two runs of the base or of the head (time, randomness or identity), so they are left out"
+          "reason": "213 probe cases gave different results on two runs of the base or of the head (time, randomness or identity), so they are left out"
         }
       ]
     }
@@ -309,7 +304,7 @@
       "files": [
         "src/main/java/org/apache/commons/lang3/StringUtils.java"
       ],
-      "cases": 4968,
+      "cases": 5016,
       "different": 2,
       "methods_different": [
         "StringUtils.capitalize(String)"
@@ -318,10 +313,6 @@
         {
           "program": "StringUtils",
           "reason": "58 of 234 public methods not probed: 19 parameter types the probe cannot build (CharSequence...); 5 parameter types the probe cannot build (char...); 4 parameter types the probe cannot build (T); 4 parameter types the probe cannot build (Object[]); 3 parameter types the probe cannot build (T...); 3 parameter types the probe cannot build (Locale); 3 parameter types the probe cannot build (char[]); 2 parameter types the probe cannot build (Charset); 2 parameter types the probe cannot build (boolean[]); 2 parameter types the probe cannot build (double[]); 2 parameter types the probe cannot build (float[]); 2 parameter types the probe cannot build (Iterable); 2 parameter types the probe cannot build (Iterator); 2 parameter types the probe cannot build (List); 2 parameter types the probe cannot build (short[]); 1 parameter types the probe cannot build (Object...)"
-        },
-        {
-          "program": "StringUtils",
-          "reason": "48 probe cases gave different results on two runs of the base or of the head (time, randomness or identity), so they are left out"
         }
       ]
     },
