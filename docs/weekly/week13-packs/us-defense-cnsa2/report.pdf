@@ -47,8 +47,8 @@ BT
 /F2 12 Tf 1 0 0 1 56 463.6 Tm (Crypto profile) Tj
 /F1 10 Tf 1 0 0 1 56 450.6 Tm (Crypto profile: cnsa2) Tj
 /F1 8 Tf 1 0 0 1 56 440.2 Tm (evidence signing: ml-dsa-87; release signing: lms-sha256-192; hash: sha-384) Tj
-/F1 8 Tf 1 0 0 1 56 429.8 Tm (this pack is signed with ml-dsa-87 \(key 0468c7188f199c5d\)) Tj
-/F1 8 Tf 1 0 0 1 56 419.4 Tm (release signature: lms-sha256-192 \(key d869d4844634fccb\)) Tj
+/F1 8 Tf 1 0 0 1 56 429.8 Tm (this pack is signed with ml-dsa-87 \(key ce58c10e18a1b205\)) Tj
+/F1 8 Tf 1 0 0 1 56 419.4 Tm (release signature: lms-sha256-192 \(key f29308d78603b961\)) Tj
 /F2 12 Tf 1 0 0 1 56 403.8 Tm () Tj
 /F2 12 Tf 1 0 0 1 56 388.2 Tm (Change 1 of 2: commit 4b060f669f41) Tj
 /F1 10 Tf 1 0 0 1 56 375.2 Tm (Who and why) Tj

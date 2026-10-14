@@ -242,7 +242,7 @@ def test_a_pack_missing_a_signature_its_profile_states_fails_the_check(built, ke
 def test_the_report_maps_its_evidence_to_the_controls_in_scope(built, cnsa2):
     general = " ".join(report_text((built[0] / REPORT).read_bytes()).split())
     assert "Controls this evidence answers" in general
-    assert "SOC 2 CC8.1 (source unverified)" in general
+    assert "SOC 2 CC8.1 (source unverified" in general
     defense = " ".join(report_text((cnsa2[0] / REPORT).read_bytes()).split())
     assert "NIST SP 800-53 CM-4 (source checked 2026-10-07)" in defense
     assert "NIST SP 800-53 CM-3(2) (source checked 2026-10-07)" in defense

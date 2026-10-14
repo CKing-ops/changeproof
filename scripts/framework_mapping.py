@@ -10,6 +10,7 @@ from pathlib import Path
 
 from changeproof.frameworks import NOT_MAPPED, PLANNED, REFERENCES, Source, controls_for
 from changeproof.markets import MARKETS
+from changeproof.standins import StandIn, stand_in_for
 
 ROOT = Path(__file__).resolve().parent.parent
 DOC = ROOT / "docs" / "framework-mapping.md"
@@ -51,12 +52,18 @@ unverified: DORA itself (its wording matches a reproduction of the Official Jour
 page is too long for the build's page reader) and SOC 2 (the AICPA criteria are a download behind a
 sign-in). ISO/IEC 27001 is sold by ISO, so its Annex A rows stay unverified until someone with a copy
 of the standard confirms the four control numbers and titles.
+
+A **stand-in** is a public reproduction read in place of an official text the build could not open,
+so the product can be tested end to end. It does not make a control checked; it stays unverified
+until the official text is read (`src/changeproof/standins.py`).
 """
 
 
-# PURPOSE: A MARKDOWN LINK TO A SOURCE AND ITS CHECK STATUS, AS TWO TABLE CELLS
-def source_cells(source: Source) -> str:
+# PURPOSE: A MARKDOWN LINK TO A SOURCE AND ITS CHECK STATUS, AS TWO TABLE CELLS, WITH ANY STAND-IN READ IN ITS PLACE
+def source_cells(source: Source, found: StandIn | None = None) -> str:
     status = f"checked {source.checked}" if source.checked else "unverified" + (f"; {source.note}" if source.note else "")
+    if found and not source.checked:
+        status += f"; stand-in read {found.read} in [{found.title}]({found.url}): \"{found.quote}\""
     return f"[{source.title}]({source.url}) | {status}"
 
 
@@ -75,7 +82,7 @@ def render() -> str:
             for c in controls:
                 outputs = "<br>".join(e.output for e in c.evidence)
                 proofs = "<br>".join("**planned**" if e.proof == PLANNED else f"`{e.proof}`" for e in c.evidence)
-                rows.append(f"| {c.id} | {c.topic} | {source_cells(c.source)} | {outputs} | {proofs} |")
+                rows.append(f"| {c.id} | {c.topic} | {source_cells(c.source, stand_in_for(framework, c.id))} | {outputs} | {proofs} |")
             parts.append("\n".join(rows) + "\n")
     rows = ["| Where | Reference | Source | Status |", "|---|---|---|---|"]
     rows += [f"| {where} | {reference} | {source_cells(source)} |" for where, reference, source in REFERENCES]
