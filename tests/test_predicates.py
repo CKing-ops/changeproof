@@ -27,6 +27,7 @@ def test_predicate_types_are_versioned_uris():
         "release": "urn:changeproof:predicate:release:v0.1",
         "policy-decision": "urn:changeproof:predicate:policy-decision:v0.1",
         "evidence-pack": "urn:changeproof:predicate:evidence-pack:v0.1",
+        "change-record": "urn:changeproof:predicate:change-record:v0.1",
     }
 
 

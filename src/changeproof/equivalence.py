@@ -17,7 +17,7 @@ from changeproof.adapters.cobol import CobolAdapter
 from changeproof.adapters.cobol.parse import CobolSyntaxError
 from changeproof.change.git import checkout_tree, empty_tree
 from changeproof.change.record import PROGRAM_SUFFIXES
-from changeproof.characterize import LocalRunner, Runner, characterize, output_digest, rerun
+from changeproof.characterize import LocalRunner, Runner, characterize, java, output_digest, rerun
 from changeproof.impact import ImpactRun, run_impact
 from changeproof.impact.run import CONFIG_NAME, files_with
 from changeproof.predicates import PREDICATE_TYPES, statement, validate_predicate
@@ -43,6 +43,11 @@ def change_subject(predicate: dict) -> dict:
 def impact_statement_digest(impact_predicate: dict) -> dict:
     found = statement([change_subject(impact_predicate)], PREDICATE_TYPES["impact"], impact_predicate)
     return digest(json.dumps(found, sort_keys=True, separators=(",", ":")).encode())
+
+
+# PURPOSE: FILES THAT HOLD A CHANGED OR IMPACTED ENTITY
+def impact_files(predicate: dict) -> set[str]:
+    return {e["provenance"]["file"] for e in predicate["changed"] + predicate["impacted"]}
 
 
 # PURPOSE: PROGRAMS THAT OWN A CHANGED OR IMPACTED ENTITY
@@ -84,10 +89,10 @@ def compare(suite: dict, after: Path, runner: Runner, copybook_dirs: list[str], 
             for t, r in zip(suite["tests"], runs)]
 
 
-# PURPOSE: RUNNER, IMAGE AND NETWORK AS THE PREDICATE RECORDS THEM
-def environment(runner: Runner) -> dict:
+# PURPOSE: RUNNER, IMAGE AND NETWORK AS THE PREDICATE RECORDS THEM, WITH THE JDK WHEN JAVA WAS PROBED
+def environment(runner: Runner, java_ran: bool = False) -> dict:
     found = runner.describe()
-    env = {"runner": f"{found['kind']}: {found['cobc']}"}
+    env = {"runner": f"{found['kind']}: {found['cobc']}" + (f"; java: {java.describe()}" if java_ran else "")}
     if "image_id" in found:
         env |= {"image": {"sha-256": found["image_id"].removeprefix("sha256:")}, "network": "disabled"}
     return env
@@ -137,6 +142,12 @@ def equivalence_of(run: ImpactRun, root: Path, copybook_dirs: list[str] = (), sc
                 untested.append(gap | {"reason": f"no baseline: {exc}"})
                 continue
             tests += compare(suite, after, runner, copybook_dirs, entity_ref(program))
+        touched = impact_files(run.predicate)
+        java_tests, java_untested = java.compare(
+            before, after, lambda path: scope != "outside-impact-set" or path not in touched, Path(scratch) / "java")
+        tests += java_tests
+        untested += java_untested
+        in_set |= {t.owner["name"] for t in java.targets(after, lambda path: path in touched)[0]} if touched else set()
     summary = {"total": len(tests)} | {k: sum(t["result"] == k for t in tests) for k in ("same", "different", "error")}
     if summary["different"]:
         verdict = "not-equivalent"
@@ -152,9 +163,10 @@ def equivalence_of(run: ImpactRun, root: Path, copybook_dirs: list[str] = (), sc
         "untested": untested,
         "summary": summary,
         "verdict": verdict,
-        "environment": environment(runner),
+        "environment": environment(runner, bool(java_tests)),
         "engine": {"name": "changeproof", "version": __version__,
-                   "adapters": [{"language": "cobol", "version": __version__, "parser": "antlr4-cobol85"}]},
+                   "adapters": [{"language": "cobol", "version": __version__, "parser": "antlr4-cobol85"}]
+                   + ([{"language": "java", "version": __version__, "parser": "tree-sitter-java"}] if java_tests else [])},
     }
     validate_predicate(PREDICATE_TYPES["behavioral-equivalence"], predicate)
     return EquivalenceRun(predicate, run, sorted(in_set))

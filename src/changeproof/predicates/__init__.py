@@ -8,7 +8,7 @@ from referencing import Registry, Resource
 
 STATEMENT_TYPE = "https://in-toto.io/Statement/v1"
 PREDICATE_NAMES = (  # RENAME: DRAFT PREDICATES SHIPPED IN V0.1
-    "impact", "behavioral-equivalence", "crypto-inventory", "release", "policy-decision", "evidence-pack",
+    "impact", "behavioral-equivalence", "crypto-inventory", "release", "policy-decision", "evidence-pack", "change-record",
 )
 PREDICATE_TYPES = {name: f"urn:changeproof:predicate:{name}:v0.1" for name in PREDICATE_NAMES}
 

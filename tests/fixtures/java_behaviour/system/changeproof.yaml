@@ -1,0 +1,18 @@
+version: 0.1
+market: general
+system:
+  name: rules-library
+  owner: payments-engineering
+  classification: confidential
+components:
+  - id: rules
+    path: src/main/java/com/example/rules
+    language: java
+    criticality: high
+crypto:
+  profile: hybrid
+  signing: [ml-dsa-87, ecdsa-p384]
+  release_signing: lms-sha256-192
+  hash: sha-384
+policy:
+  - rule: equivalence-required-outside-impact-set

@@ -44,7 +44,8 @@ def main() -> int:
             shas = seed.seed(repo, name)
             build_pack(repo, f"{shas['base']}..{shas['co-authored']}", OUT / name,
                        [load_private(made[a].private_path) for a in algs], release=f"card-billing v1.4 ({name}, synthetic)",
-                       at=AT, runner=LocalRunner(), release_key=load_private(made["lms-sha256-192"].private_path))
+                       at=AT, runner=LocalRunner(), release_key=load_private(made["lms-sha256-192"].private_path),
+                       layout="separate")
         for key in made.values():
             shutil.copy(key.public_path, OUT / "keys" / key.public_path.name)
     print(f"wrote {len(SIGNING)} packs and their public keys in {OUT.relative_to(ROOT)}")

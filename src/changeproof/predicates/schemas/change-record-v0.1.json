@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:changeproof:predicate:change-record:v0.1",
+  "title": "changeproof change-record predicate v0.1 (draft)",
+  "description": "Everything the engine attests for one change, in one statement: the impact, the policy decision, behaviour outside the impact set and the full suite. Each part is the predicate its own attestation would carry, so the separate layout and this one hold the same evidence.",
+  "type": "object",
+  "required": ["change", "impact", "policy_decision", "behavioral_equivalence", "full_suite", "engine"],
+  "additionalProperties": false,
+  "properties": {
+    "change": {"$ref": "urn:changeproof:schema:common:v0.1#/$defs/change"},
+    "impact": {"$ref": "urn:changeproof:predicate:impact:v0.1"},
+    "policy_decision": {"$ref": "urn:changeproof:predicate:policy-decision:v0.1"},
+    "behavioral_equivalence": {"$ref": "urn:changeproof:predicate:behavioral-equivalence:v0.1"},
+    "full_suite": {"$ref": "urn:changeproof:predicate:behavioral-equivalence:v0.1"},
+    "engine": {"$ref": "urn:changeproof:schema:common:v0.1#/$defs/engine"}
+  }
+}
