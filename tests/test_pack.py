@@ -42,7 +42,8 @@ def built(tmp_path_factory, keys, release_key):
     shas = _seed.seed(root)
     out = tmp_path_factory.mktemp("out") / "v1.4"
     build_pack(root, f"{shas['base']}..{shas['co-authored']}", out, [load_private(k.private_path) for k in keys],
-               release="v1.4", at=NOW, runner=LocalRunner(), release_key=load_private(release_key.private_path))
+               release="v1.4", at=NOW, runner=LocalRunner(), release_key=load_private(release_key.private_path),
+               layout="separate")
     return out, shas
 
 
@@ -52,7 +53,8 @@ def cnsa2(tmp_path_factory, keys, release_key):
     shas = _seed.seed(root, "us-defense-cnsa2")
     out = tmp_path_factory.mktemp("out") / "cnsa2"
     build_pack(root, f"{shas['base']}..{shas['co-authored']}", out, [load_private(keys[0].private_path)],
-               release="v1.4", at=NOW, runner=LocalRunner(), release_key=load_private(release_key.private_path))
+               release="v1.4", at=NOW, runner=LocalRunner(), release_key=load_private(release_key.private_path),
+               layout="separate")
     return out, shas
 
 

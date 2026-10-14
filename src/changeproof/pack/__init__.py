@@ -1,8 +1,9 @@
 """Assessor evidence pack for a release (ROADMAP Week 12).
 
-For each commit in the release the pack holds four signed attestations: impact, policy decision,
-behavioral equivalence outside the impact set, and the full suite (which shows what the change
-altered inside the impact set, Week 13). The PDF report and the OSCAL assessment results are built from those
+For each commit in the release the pack holds one signed change record with four parts: impact,
+policy decision, behavioral equivalence outside the impact set, and the full suite (which shows what
+the change altered inside the impact set, Week 13). The separate layout keeps the four as their own
+attestations instead; the report and OSCAL files are the same either way. The PDF report and the OSCAL assessment results are built from those
 attestations only, so anyone holding the pack and the public keys can verify every signature and
 rebuild both, byte for byte, with no repository and no network. A signed pack statement lists the
 attestations, states the crypto profile, and carries the digest of every file in the pack.
@@ -16,7 +17,9 @@ from pathlib import Path
 
 from changeproof.change.git import commits_in
 from changeproof.characterize import Runner
-from changeproof.equivalence import change_subject, equivalence_of, impact_programs, impact_statement_digest
+from changeproof.config import Config
+from changeproof.equivalence import (change_subject, equivalence_of, impact_files, impact_programs,
+                                    impact_statement_digest)
 from changeproof.frameworks import FRAMEWORK_LABELS, NOT_MAPPED, PLANNED, controls_for
 from changeproof.gate import gate, policy_decision
 from changeproof.impact.run import CONFIG_NAME
@@ -27,12 +30,18 @@ from changeproof.signer import Policy, PrivateKey, PublicKey, Verification, dige
 
 PACK_FILE = "pack.dsse.json"
 REPORT = "report.pdf"
-KINDS = {  # RENAME: ATTESTATION KIND KEPT FOR EACH COMMIT TO ITS PREDICATE TYPE
+KINDS = {  # RENAME: ATTESTATION KIND KEPT FOR EACH COMMIT TO ITS PREDICATE TYPE, IN THE SEPARATE LAYOUT
     "impact": PREDICATE_TYPES["impact"],
     "policy-decision": PREDICATE_TYPES["policy-decision"],
     "behavioral-equivalence": PREDICATE_TYPES["behavioral-equivalence"],
     "full-suite": PREDICATE_TYPES["behavioral-equivalence"],
 }
+RECORD_TYPES = KINDS | {"change-record": PREDICATE_TYPES["change-record"]}
+PARTS = {  # RENAME: SEPARATE ATTESTATION KIND TO ITS KEY INSIDE A CHANGE RECORD
+    "impact": "impact", "policy-decision": "policy_decision",
+    "behavioral-equivalence": "behavioral_equivalence", "full-suite": "full_suite",
+}
+LAYOUTS = ("combined", "separate")
 LISTED = 40  # RENAME: CHANGED OR IMPACTED ENTITIES THE REPORT LISTS PER CHANGE; THE ATTESTATION HOLDS ALL
 
 
@@ -68,30 +77,47 @@ def key_mismatch(crypto, keys: list[PrivateKey], release_key: PrivateKey | None)
     return None
 
 
-# PURPOSE: BUILDS THE PACK FOR A RELEASE INTO A NEW FOLDER, SIGNING EVERY ATTESTATION AND THE PACK STATEMENT
-def build_pack(root: Path, revisions: str, out: Path, keys: list[PrivateKey], release: str | None = None,
-               copybook_dirs: list[str] = (), config_path: str = CONFIG_NAME, at: datetime | None = None,
-               runner: Runner | None = None, release_key: PrivateKey | None = None) -> dict:
+# PURPOSE: SIGNS EACH COMMIT'S EVIDENCE INTO OUT, ONE CHANGE RECORD OR FOUR ATTESTATIONS PER COMMIT; LISTS WHAT IT WROTE
+def write_records(root: Path, revisions: str, out: Path, keys: list[PrivateKey], copybook_dirs: list[str] = (),
+                  config_path: str = CONFIG_NAME, at: datetime | None = None, runner: Runner | None = None,
+                  layout: str = "combined", release_key: PrivateKey | None = None,
+                  prefix: str = "") -> tuple[list[dict], Config | None]:
     root, out, at = Path(root), Path(out), at or datetime.now(UTC)
-    if out.exists() and any(out.iterdir()):
-        raise FileExistsError(f"{out} is not empty")
-    (out / "attestations").mkdir(parents=True, exist_ok=True)
-    listed, changes = [], []
+    out.mkdir(parents=True, exist_ok=True)
+    listed, config = [], None
     for n, sha in enumerate(commits_in(root, revisions), 1):
         result = gate(root, sha, copybook_dirs, config_path)
-        config, engine = result.run.config, result.run.predicate["engine"]
+        config = result.run.config
         if config and (problem := key_mismatch(config.crypto, keys, release_key)):
             raise ValueError(f"{sha[:12]}: {problem}")
         tested = result.equivalence or equivalence_of(result.run, root, copybook_dirs, runner=runner)
         full = equivalence_of(result.run, root, copybook_dirs, "full-suite", runner)
-        changes.append(result.run.predicate["change"])
         bodies = dict(zip(KINDS, (result.run.predicate, policy_decision(result, at), tested.predicate, full.predicate)))
+        if layout == "combined":
+            bodies = {"change-record": {"change": result.run.predicate["change"],
+                                        **{key: bodies[kind] for kind, key in PARTS.items()},
+                                        "engine": result.run.predicate["engine"]}}
         for kind, body in bodies.items():
-            found = statement([change_subject(body)], KINDS[kind], body)
-            path = f"attestations/{stem(n, sha)}-{kind}.dsse.json"
+            found = statement([change_subject(body)], RECORD_TYPES[kind], body)
+            path = f"{prefix}{stem(n, sha)}-{kind}.dsse.json"
             (out / path).write_text(json.dumps(sign_envelope(found, keys, at), indent=2) + "\n", encoding="utf-8")
-            listed.append({"path": path, "predicate_type": KINDS[kind], "commit": sha,
+            listed.append({"path": path, "predicate_type": RECORD_TYPES[kind], "commit": sha,
                            "payload": digest(canonical(found))})
+    return listed, config
+
+
+# PURPOSE: BUILDS THE PACK FOR A RELEASE INTO A NEW FOLDER, SIGNING EVERY RECORD AND THE PACK STATEMENT
+def build_pack(root: Path, revisions: str, out: Path, keys: list[PrivateKey], release: str | None = None,
+               copybook_dirs: list[str] = (), config_path: str = CONFIG_NAME, at: datetime | None = None,
+               runner: Runner | None = None, release_key: PrivateKey | None = None, layout: str = "combined") -> dict:
+    root, out, at = Path(root), Path(out), at or datetime.now(UTC)
+    if out.exists() and any(out.iterdir()):
+        raise FileExistsError(f"{out} is not empty")
+    (out / "attestations").mkdir(parents=True, exist_ok=True)
+    listed, config = write_records(root, revisions, out, keys, copybook_dirs, config_path, at, runner, layout,
+                                   release_key, "attestations/")
+    evidence = evidence_of(out, {"attestations": listed})
+    changes = [kinds["impact"]["change"] for kinds in evidence.values()]
     signers = [*keys, *([release_key] if release_key else [])]
     crypto = {"profile": config.crypto.profile, "signing": list(config.crypto.signing),
               "release_signing": config.crypto.release_signing, "hash": config.crypto.hash} if config else {"profile": None}
@@ -101,10 +127,10 @@ def build_pack(root: Path, revisions: str, out: Path, keys: list[PrivateKey], re
         "crypto": crypto | {"signed_with": [{"alg": k.alg, "keyid": k.keyid} for k in signers]},
         "attestations": listed,
         "generated_at": at.astimezone(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "engine": engine,
+        "engine": evidence[listed[-1]["commit"]]["impact"]["engine"],
     }
     validate_predicate(PREDICATE_TYPES["evidence-pack"], predicate)
-    for path, data in derived(predicate, evidence_of(out, predicate)).items():
+    for path, data in derived(predicate, evidence).items():
         (out / path).parent.mkdir(parents=True, exist_ok=True)
         (out / path).write_bytes(data)
     subjects = [{"name": p.relative_to(out).as_posix(), "digest": digest(p.read_bytes())}
@@ -123,8 +149,10 @@ def kind_of(path: str) -> str:
 def evidence_of(folder: Path, predicate: dict) -> dict[str, dict[str, dict]]:
     found: dict[str, dict[str, dict]] = {}
     for item in predicate["attestations"]:
-        body = payload_of(json.loads((folder / item["path"]).read_text(encoding="utf-8")))
-        found.setdefault(item["commit"], {})[kind_of(item["path"])] = body["predicate"]
+        body = payload_of(json.loads((folder / item["path"]).read_text(encoding="utf-8")))["predicate"]
+        kind = kind_of(item["path"])
+        found.setdefault(item["commit"], {}).update(
+            {part: body[key] for part, key in PARTS.items()} if kind == "change-record" else {kind: body})
     return found
 
 
@@ -201,19 +229,23 @@ def more(items: list, kind: str) -> list[tuple[str, str]]:
     return [("code", f"... and {len(items) - LISTED} more in the {kind} attestation")] if len(items) > LISTED else []
 
 
-# PURPOSE: REPORT LINES FOR THE TESTS RUN INSIDE THE IMPACT SET: WHAT THE CHANGE ALTERED, PROGRAM BY PROGRAM
+# PURPOSE: REPORT LINES FOR THE TESTS RUN INSIDE THE IMPACT SET: WHAT THE CHANGE ALTERED, PROGRAM OR CLASS BY CLASS
 def inside_blocks(impact: dict, full: dict | None) -> list[tuple[str, str]]:
     if full is None:
         return [("text", "Inside the impact set: no full-suite attestation in this pack.")]
     gaps = {u["program"]: u for u in full.get("untested", []) if "program" in u}
-    programs = sorted(impact_programs(impact, {t["target"]["name"] for t in full["tests"]} | set(gaps)))
+    touched = impact_files(impact)
+    by_file = {t["target"]["name"] for t in full["tests"] if t["target"]["provenance"]["file"] in touched}
+    programs = sorted(impact_programs(impact, {t["target"]["name"] for t in full["tests"]} | set(gaps)) | by_file
+                      | {name for name, u in gaps.items() if u["provenance"]["file"] in touched})
     blocks = []
     for program in programs:
+        tests = [t for t in full["tests"] if t["target"]["name"] == program]
         if program in gaps:
             blocks.append(("text", f"Inside the impact set: {program} untested ({where(gaps[program]['provenance'])}): "
                                    f"{gaps[program]['reason']}"))
-            continue
-        tests = [t for t in full["tests"] if t["target"]["name"] == program]
+            if not tests:
+                continue
         changed = [t for t in tests if t["result"] != "same"]
         blocks.append(("text", f"Inside the impact set: {program} {len(tests)} tests, {len(changed)} different"
                                + (": behaviour this change altered, to check against its ticket." if changed else

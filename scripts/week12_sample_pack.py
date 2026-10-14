@@ -38,7 +38,7 @@ def main() -> int:
         shas = seed.seed(repo)
         keys = [generate_key(alg, Path(scratch) / alg) for alg in ("ml-dsa-87", "ecdsa-p384")]
         build_pack(repo, f"{shas['base']}..{shas['co-authored']}", OUT, [load_private(k.private_path) for k in keys],
-                   release="card-billing v1.4 (synthetic)", at=AT, runner=LocalRunner())
+                   release="card-billing v1.4 (synthetic)", at=AT, runner=LocalRunner(), layout="separate")
         for k in keys:
             shutil.copy(k.public_path, KEYS / k.public_path.name)
     print(f"wrote {OUT.relative_to(ROOT)} and the public keys in {KEYS.relative_to(ROOT)}")
