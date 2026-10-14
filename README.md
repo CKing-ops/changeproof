@@ -107,7 +107,7 @@ Weeks 1-13 (planned capabilities are labeled; proven ones cite their test):
   configured crypto profile is enforced when a pack is built and verified, and `--release-key`
   countersigns it (`tests/test_pack.py`, `docs/weekly/week13-review.md`). Three packs, one signed
   under CNSA 2.0 with ML-DSA-87 and LMS only, are in `docs/weekly/week13-packs/`.
-- Java behaviour check (a demo; COBOL at banks leads the MVP): with a JDK on the PATH, equivalence
+- Java behaviour check (kept beside COBOL, which leads the MVP): with a JDK on the PATH, equivalence
   also probes Java. Public static methods, and instance methods of classes with a no-argument
   constructor, are called with their types' boundary values and the literals in their own code, at
   the base and at the head, twice each. Each method is called twice per run, to show state the first

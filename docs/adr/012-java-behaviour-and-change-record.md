@@ -1,7 +1,8 @@
 # ADR 012: Java behaviour check and one change record per commit
 
 - Status: proposed. Asked for by the owner on 2026-10-14, outside the roadmap's week plan. The same day
-  the owner made COBOL at banks the MVP lead, so the Java check is kept as a demo and not grown further.
+  the owner made COBOL at banks the MVP lead, with Java kept and maintained beside it, since bank
+  systems mix the two; changes that span a Java service and a COBOL program are the next Java work.
 - Date: 2026-10-14
 - Related: ADR 006 (characterization), ADR 007 (equivalence), ADR 009 (Java adapter), ADR 010 (evidence pack)
 
