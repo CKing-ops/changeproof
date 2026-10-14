@@ -86,6 +86,13 @@ def read_commit(root: Path, sha: str) -> Commit:
     return Commit(sha=sha, parents=parents, author=people["author"], committer=people["committer"], message=message)
 
 
+# PURPOSE: THE COMMITS A MERGE COMMIT BRINGS IN FROM ITS OTHER PARENTS, OLDEST FIRST; NONE FOR AN ORDINARY COMMIT
+def merged_commits(root: Path, commit: Commit) -> list[Commit]:
+    shas = [sha for parent in commit.parents[1:]
+            for sha in git(root, "rev-list", "--reverse", f"{commit.parents[0]}..{parent}").decode().split()]
+    return [read_commit(root, sha) for sha in dict.fromkeys(shas)]
+
+
 # PURPOSE: PAIRS UP NUL-SEPARATED NAME-STATUS OUTPUT INTO (STATUS, PATH, PREVIOUS PATH) PER CHANGED FILE
 def name_status(raw: bytes) -> list[tuple[str, str, str | None]]:
     parts = raw.decode("utf-8").split("\0")

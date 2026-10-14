@@ -17,8 +17,9 @@ from changeproof.adapters.base import EntityChange, IRModule, diff_by_id
 from changeproof.adapters.cobol import CobolAdapter
 from changeproof.adapters.cobol.parse import CobolSyntaxError
 from changeproof.adapters.java import JavaAdapter, JavaSyntaxError
-from changeproof.change.git import Commit, FileDiff, Ident, checkout_tree, commits_in, file_diffs, origin_url, read_commit
-from changeproof.change.message import Trailer, agent_trailers, person, tickets, trailers
+from changeproof.change.git import (Commit, FileDiff, Ident, checkout_tree, commits_in, file_diffs, merged_commits,
+                                   origin_url, read_commit)
+from changeproof.change.message import Trailer, agent_trailers, is_agent, person, tickets, trailers
 from changeproof.config import Config
 from changeproof.graph.jcl import jcl_module
 from changeproof.provenance import Provenance
@@ -27,8 +28,8 @@ PROGRAM_SUFFIXES = frozenset({".cbl", ".cob", ".cobol"})  # RENAME: COBOL PROGRA
 COPYBOOK_SUFFIXES = frozenset({".cpy", ".copy"})  # RENAME: COPYBOOK FILE EXTENSIONS, LOWERCASE
 JCL_SUFFIXES = frozenset({".jcl", ".prc", ".proc"})  # RENAME: JCL AND PROC FILE EXTENSIONS, LOWERCASE
 JAVA_SUFFIXES = frozenset({".java"})  # RENAME: JAVA SOURCE FILE EXTENSIONS, LOWERCASE
-ROLE_TRAILERS = {  # RENAME: TRAILER THAT NAMES EACH ROLE; THE IMPLEMENTER IS ALWAYS THE COMMIT AUTHOR
-    "requester": "requested-by", "approver": "approved-by", "reviewer": "reviewed-by",
+ROLE_TRAILERS = {  # RENAME: TRAILER THAT NAMES EACH ROLE; IMPLEMENTERS ARE COMMIT AUTHORS
+    "requester": "requested-by", "approver": "approved-by", "reviewer": "reviewed-by", "merger": "merged-by",
 }
 CHANGE_TYPE_TRAILER = "change-type"  # RENAME: TRAILER HOLDING THE CHANGE TYPE (STANDARD, NORMAL OR EMERGENCY)
 EMERGENCY_TYPES = frozenset({"emergency", "expedited"})  # RENAME: CHANGE TYPES THAT COUNT AS EMERGENCY
@@ -51,13 +52,15 @@ class Person(Model):
 
 
 class Who(Model):
-    implementer: Person  # the commit author
+    implementer: Person  # the commit author; on a merge commit, the person who merged
+    implementers: list[Person]  # who wrote the change: the author, or on a merge commit the merged commits' authors
+    merged_by: Person | None  # on a merge commit: the Merged-by trailer, else the merge commit's author
     committer: Person
     requester: Person | None
-    approvers: list[Person]
-    reviewers: list[Person]
-    agents: list[Person]  # AI agents named in agent trailers, or as co-authors at a known agent address
-    independent: bool | None  # no approver is the implementer; None when no approver is recorded
+    approvers: list[Person]  # people only; an agent or bot named as approver is listed in agents
+    reviewers: list[Person]  # the same
+    agents: list[Person]  # AI agents and bots: agent trailers, trailers naming a known agent, bot authors
+    independent: bool | None  # an approver who implemented none of it; None when no approver is recorded
 
 
 class Moment(Model):
@@ -160,6 +163,8 @@ class ChangeRecord(Model):
             found.append("no approver recorded")
         elif not self.who.independent:
             found.append("an approver is also the implementer")
+        elif any(same_person(a, i) for a in self.who.approvers for i in self.who.implementers):
+            found.append("an approver also implemented the change; another approver did not")
         if self.why.change_request is None:
             found.append("no change request number")
         if self.why.change_type is None:
@@ -185,17 +190,30 @@ def same_person(a: Person, b: Person) -> bool:
     return a.name.casefold() == b.name.casefold()
 
 
-# PURPOSE: BUILDS THE WHO PART: IMPLEMENTER FROM THE AUTHOR, OTHER ROLES FROM TRAILERS
-def who_of(commit: Commit, found: list[Trailer]) -> Who:
-    implementer = from_ident(commit.author)
-    requesters = people(found, ROLE_TRAILERS["requester"])
-    approvers = people(found, ROLE_TRAILERS["approver"])
-    independent = not any(same_person(a, implementer) for a in approvers) if approvers else None
-    return Who(implementer=implementer, committer=from_ident(commit.committer),
-               requester=requesters[0] if requesters else None, approvers=approvers,
-               reviewers=people(found, ROLE_TRAILERS["reviewer"]),
-               agents=[Person(name=name, email=email, provenance=t.provenance)
-                       for t in agent_trailers(found) for name, email in [person(t.value)]],
+# PURPOSE: PEOPLE IN ORDER, EACH ONCE
+def distinct(found: list[Person]) -> list[Person]:
+    kept: list[Person] = []
+    for p in found:
+        if not any(same_person(p, k) for k in kept):
+            kept.append(p)
+    return kept
+
+
+# PURPOSE: BUILDS THE WHO PART: IMPLEMENTERS FROM THE AUTHORS (OF THE MERGED COMMITS ON A MERGE), ROLES FROM TRAILERS
+def who_of(commit: Commit, found: list[Trailer], merged: list[Commit] = ()) -> Who:
+    author = from_ident(commit.author)
+    implementers = distinct([from_ident(c.author) for c in merged]) if merged else [author]
+    mergers = people(found, ROLE_TRAILERS["merger"])
+    named = [Person(name=name, email=email, provenance=t.provenance)
+             for t in agent_trailers(found) for name, email in [person(t.value)]]
+    approvers = [p for p in people(found, ROLE_TRAILERS["approver"]) if not is_agent(p.name, p.email)]
+    independent = any(not any(same_person(a, i) for i in implementers) for a in approvers) if approvers else None
+    return Who(implementer=author, implementers=implementers,
+               merged_by=(mergers[0] if mergers else author) if merged else None,
+               committer=from_ident(commit.committer),
+               requester=next(iter(people(found, ROLE_TRAILERS["requester"])), None), approvers=approvers,
+               reviewers=[p for p in people(found, ROLE_TRAILERS["reviewer"]) if not is_agent(p.name, p.email)],
+               agents=distinct(named + [i for i in implementers if is_agent(i.name, i.email)]),
                independent=independent)
 
 
@@ -294,7 +312,7 @@ def change_record(root: Path, sha: str, copybook_dirs: list[str] = (), config: C
         insertions=sum(d.insertions or 0 for d in diffs), deletions=sum(d.deletions or 0 for d in diffs),
     )
     return ChangeRecord(
-        who=who_of(commit, found),
+        who=who_of(commit, found, merged_commits(root, commit)),
         when=When(authored=Moment(at=commit.author.at, provenance=commit.author.provenance),
                   committed=Moment(at=commit.committer.at, provenance=commit.committer.provenance)),
         where=Where(repository=origin_url(root) or Path(root).resolve().name,

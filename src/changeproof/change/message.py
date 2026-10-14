@@ -23,8 +23,13 @@ SERVICENOW_TYPES = {  # RENAME: SERVICENOW NUMBER PREFIX TO RECORD TYPE
     "REQ": "request",
 }
 AGENT_TRAILERS = frozenset({"assisted-by", "generated-by", "ai-agent"})  # RENAME: TRAILERS WHOSE VALUE NAMES AN AI AGENT
-# a co-author is an agent only at one of these addresses; the owner adds the agents the team uses
-AGENT_ADDRESSES = frozenset({"noreply@anthropic.com"})  # RENAME: CO-AUTHOR EMAILS THAT MARK AN AI AGENT
+# a person named in a trailer, or a commit author, is an agent only at one of these addresses or by one of
+# these patterns; the owner adds the agents and bots the team uses
+AGENT_ADDRESSES = frozenset({  # RENAME: EMAILS THAT MARK AN AI AGENT OR BOT
+    "noreply@anthropic.com", "gitlab-duo@gitlab.com",
+})
+AGENT_NAMES = re.compile(r"\[bot\]$|\bbot$", re.IGNORECASE)  # RENAME: NAMES THAT MARK A BOT, SUCH AS RENOVATE BOT
+AGENT_EMAILS = re.compile(r"(^|[-_.+])bot@", re.IGNORECASE)  # RENAME: EMAIL LOCAL PARTS THAT MARK A BOT
 PERSON_TRAILERS = frozenset({  # RENAME: TRAILERS WHOSE VALUE NAMES A PERSON OR AGENT, SO NO TICKET IS READ FROM THEM
     "requested-by", "approved-by", "reviewed-by", "signed-off-by", "co-authored-by", "acked-by", "tested-by",
 }) | AGENT_TRAILERS
@@ -95,7 +100,13 @@ def tickets(message: list[tuple[str, Provenance]], found: list[Trailer]) -> list
     return list(refs.values())
 
 
-# PURPOSE: TRAILERS THAT NAME AN AI AGENT: AN AGENT TRAILER, OR A CO-AUTHOR AT A KNOWN AGENT ADDRESS
+# PURPOSE: TRUE FOR A KNOWN AI AGENT OR BOT IDENTITY
+def is_agent(name: str, email: str | None) -> bool:
+    return (email or "").lower() in AGENT_ADDRESSES or bool(AGENT_NAMES.search(name.strip())) \
+        or bool(AGENT_EMAILS.search(email or ""))
+
+
+# PURPOSE: TRAILERS THAT NAME AN AI AGENT: AN AGENT TRAILER, OR A PERSON TRAILER NAMING A KNOWN AGENT OR BOT
 def agent_trailers(found: list[Trailer]) -> list[Trailer]:
     return [t for t in found if t.key.lower() in AGENT_TRAILERS
-            or (t.key.lower() == "co-authored-by" and (person(t.value)[1] or "").lower() in AGENT_ADDRESSES)]
+            or (t.key.lower() in PERSON_TRAILERS and is_agent(*person(t.value)))]
