@@ -90,7 +90,7 @@ Weeks 1-13 (planned capabilities are labeled; proven ones cite their test):
   Six seeded changes match their hand-marked impact, and on 16 Apache Commons Lang commits every
   changed entity lies in a changed hunk and every graph edge cites its line
   (`tests/test_java_adapter.py`, `tests/test_java_impact.py`, `tests/test_java_corpus.py`,
-  `docs/adr/009-java-adapter.md`). Running Java for equivalence tests: **planned**. Other
+  `docs/adr/009-java-adapter.md`). Java behaviour is checked as described below. Other
   languages: **planned**.
 - AI attribution: an agent named in an `Assisted-by`, `Generated-by` or `AI-agent` trailer, any
   person trailer naming a known agent or bot address or a bot name (an AI reviewer in `Reviewed-by`,
@@ -102,7 +102,7 @@ Weeks 1-13 (planned capabilities are labeled; proven ones cite their test):
   who merged is recorded apart, from `Merged-by` or the merge commit's author. A change counts as
   independently approved when one approver implemented none of it (`tests/test_merge_authors.py`).
 - Evidence pack: `changeproof pack <release>` signs impact, policy-decision and behavioral-equivalence
-  attestations for each commit and builds a PDF report and OSCAL from them, with the crypto profile
+  evidence for each commit and builds a PDF report and OSCAL from them, with the crypto profile
   stated. `changeproof pack-verify` checks every signature and rebuilds the report and OSCAL offline
   from the attestations alone, byte for byte (`tests/test_pack.py`, `docs/adr/010-evidence-pack-and-mcp.md`).
   A sample is in `docs/weekly/week12-pack/`.
@@ -112,6 +112,23 @@ Weeks 1-13 (planned capabilities are labeled; proven ones cite their test):
   configured crypto profile is enforced when a pack is built and verified, and `--release-key`
   countersigns it (`tests/test_pack.py`, `docs/weekly/week13-review.md`). Three packs, one signed
   under CNSA 2.0 with ML-DSA-87 and LMS only, are in `docs/weekly/week13-packs/`.
+- Java behaviour check (kept beside COBOL, which leads the MVP): with a JDK on the PATH, equivalence
+  also probes Java. Public static methods, and instance methods of classes with a no-argument
+  constructor, are called with their types' boundary values and the literals in their own code, at
+  the base and at the head, twice each. Each method is called twice per run, to show state the first
+  call left behind. Methods that do not repeat are left out, and every method or class it cannot
+  probe is listed with the reason. It catches all 10 planted bugs in a seeded system, a refactor
+  comes out all `same`, and with no JDK the verdict is inconclusive (`tests/test_java_behaviour.py`,
+  `docs/adr/012-java-behaviour-and-change-record.md`). On 12 recent Apache Commons Lang commits it
+  ran 6,952 cases: 10 commits came out all `same`, the 2 that change which random generator the
+  library uses showed differences, as their messages say they should, and three bugs planted in the
+  pinned head were all caught (`docs/weekly/java-behaviour-commons-lang.json`). It is evidence from
+  tests, not a proof. A class path for third-party jars: **planned**.
+- One change record per commit: `changeproof record <commit or range> --out <folder> --key ...` signs
+  one `change-record` statement per commit holding the impact, the policy decision and both
+  equivalence runs. `--layout separate` writes the four attestations as before, and `changeproof
+  pack` takes the same option; the report and OSCAL come out the same either way
+  (`tests/test_change_record.py`).
 - MCP server: `changeproof mcp` gives AI agents the `impact`, `lineage`, `equivalence_status` and
   `crypto_inventory` tools over stdio, read-only and offline (`tests/test_mcp.py`). Tested with a
   scripted client; a third-party MCP client has not been tried yet.

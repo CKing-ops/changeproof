@@ -42,7 +42,8 @@ def built(tmp_path_factory, keys, release_key):
     shas = _seed.seed(root)
     out = tmp_path_factory.mktemp("out") / "v1.4"
     build_pack(root, f"{shas['base']}..{shas['co-authored']}", out, [load_private(k.private_path) for k in keys],
-               release="v1.4", at=NOW, runner=LocalRunner(), release_key=load_private(release_key.private_path))
+               release="v1.4", at=NOW, runner=LocalRunner(), release_key=load_private(release_key.private_path),
+               layout="separate")
     return out, shas
 
 
@@ -52,7 +53,8 @@ def cnsa2(tmp_path_factory, keys, release_key):
     shas = _seed.seed(root, "us-defense-cnsa2")
     out = tmp_path_factory.mktemp("out") / "cnsa2"
     build_pack(root, f"{shas['base']}..{shas['co-authored']}", out, [load_private(keys[0].private_path)],
-               release="v1.4", at=NOW, runner=LocalRunner(), release_key=load_private(release_key.private_path))
+               release="v1.4", at=NOW, runner=LocalRunner(), release_key=load_private(release_key.private_path),
+               layout="separate")
     return out, shas
 
 
@@ -171,7 +173,7 @@ def test_the_cli_builds_and_verifies_a_pack(built, keys, release_key, tmp_path, 
     assert main(["pack", f"{shas['base']}..{shas['assisted']}", "--repo", str(root), "--out", str(tmp_path / "cli"),
                  *[a for k in keys for a in ("--key", str(k.private_path))],
                  "--release-key", str(release_key.private_path)]) == 0
-    assert json.loads(capsys.readouterr().out)["attestations"] == 4
+    assert json.loads(capsys.readouterr().out)["attestations"] == 1  # the default layout: one change record
     assert main(["pack-verify", str(out), *[a for k in [*keys, release_key] for a in ("--trust", str(k.public_path))],
                  "--rebuild", str(tmp_path / "rebuilt")]) == 0
     assert json.loads(capsys.readouterr().out)["ok"] is True

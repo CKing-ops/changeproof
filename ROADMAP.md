@@ -9,7 +9,7 @@
 
 Each evidence record answers **who / what / when / where / how** at code depth and links to **why** (ticket, requirement, approval), which the engine links but never invents.
 
-**The focus:** the link between what a change touches in the code and proof that nothing else changed behaviour, joined in one evidence record for every ordinary change (owner, 2026-10-01). The impact half is proven for COBOL (`tests/test_impact.py`, Week 5). The equivalence half is proven for COBOL linkage subprograms (`tests/test_equivalence.py`, Week 9); its predicate names the impact statement by digest, and the policy gate checks both. Programs that read files, Db2 or CICS need stubs (**planned**), and a single combined record per change is **planned**.
+**The focus:** the link between what a change touches in the code and proof that nothing else changed behaviour, joined in one evidence record for every ordinary change (owner, 2026-10-01). The impact half is proven for COBOL (`tests/test_impact.py`, Week 5). The equivalence half is proven for COBOL linkage subprograms (`tests/test_equivalence.py`, Week 9); its predicate names the impact statement by digest, and the policy gate checks both. Programs that read files, Db2 or CICS need stubs (**planned**). One combined, signed record per change holds the impact, the policy decision and both equivalence runs, with the four separate attestations kept as an option (`tests/test_change_record.py`, ADR 012).
 
 **The gap it fills:** SBOM tools (Anchore, Lineaje, Manifest Cyber, NetRise, ReversingLabs) prove *what is inside* software. Process tools (Kosli, ServiceNow, GRC) prove a change was *approved and tested*. Neither proves *what a change actually does*. DoD's Software Fast Track (SWFT) is moving authorization toward continuous, machine-readable, per-change evidence.
 
@@ -31,9 +31,11 @@ Each half exists somewhere on its own, so neither half is the moat; the join is.
 
 One build serves every market through the `market:` setting (`general` default, `eu-dora`, `us-defense`; ADR 004).
 
-**Main path: universal (`general`) (owner decision, 2026-09-27).** Any software company that answers to change-management controls: SOC 2 CC8.1 and ISO/IEC 27001:2022 Annex A 8.25/8.28/8.29/8.32. The engine, schemas, examples and mappings are built for `general` first. Selling here needs a mainstream-language adapter (Java, Week 11); until then COBOL is the only adapter.
+**MVP lead: COBOL systems at banks, made strong for auditors (owner decisions, 2026-10-14).** The MVP is sold to banks and payment firms that change COBOL cores. Language work goes to COBOL first: file, Db2 and CICS stubs for equivalence, and the evidence an auditor reads. Java is kept and maintained beside COBOL, not left behind, because bank systems mix the two: impact analysis (Week 11) and the behaviour check (ADR 012) stay tested, and the Java work worth doing next is where the two meet, such as one change that spans a Java service and the COBOL program it calls (**planned**, after the COBOL work for auditors). Python is pinned: not built now, kept as the owner's later step once the engine's components are strong, and planned then (see Parking lot). The market profiles below are unchanged: a bank picks `eu-dora` under DORA, or `general` for SOC 2 and ISO/IEC 27001.
 
-**Strong second: EU financial sector under DORA (`eu-dora`).** The first regulated vertical, and where the COBOL adapter (Weeks 2-4) pays off first. Week 0 desk research supports it (`docs/weekly/WEEK-00.md`).
+**Default profile: universal (`general`) (owner decision, 2026-09-27).** Any software company that answers to change-management controls: SOC 2 CC8.1 and ISO/IEC 27001:2022 Annex A 8.25/8.28/8.29/8.32. It stays the default `market:` and the first profile examples and mappings are built for. Banks outside the EU use it. Java (Week 11) serves it beside COBOL, per the MVP lead above.
+
+**Strong second, and the MVP's first regulated buyer: EU financial sector under DORA (`eu-dora`).** The first regulated vertical, and where the COBOL adapter (Weeks 2-4) pays off first. Week 0 desk research supports it (`docs/weekly/WEEK-00.md`).
 - **Buyer 1: ICT risk and change-management functions at EU banks and payment firms** running COBOL cores (DORA in force since 17 Jan 2025; ICT change management in the RTS on ICT risk management, Art. 17).
 - **Buyer 2: Their internal audit teams and external auditors / Big 4 IT-audit practices** (distribution channel and trust moat, the role SWFT assessors play in the US market).
 - **Buyer 3: Core-banking and payment software vendors** that must hand their bank customers change evidence.
@@ -47,7 +49,7 @@ One build serves every market through the `market:` setting (`general` default, 
 
 **Later:** SOX / FDA CSA.
 
-**Moat targets:** (1) impact and equivalence joined per change (linked by digest and gated since Week 9 for COBOL linkage subprograms; one combined record **planned**; see The focus), (2) assessor acceptance, (3) line-level provenance on every fact, machine-checked (proven for COBOL: `tests/test_graph.py::test_every_edge_has_provenance`); not deep legacy coverage, where CAST, OpenText and IBM already go deeper and wider, (4) deterministic facts with no AI-generated evidence (CLAUDE.md rule 3), unlike AI-generated equivalence tests, (5) air-gapped, offline-first operation, (6) accumulated per-system baselines, (7) CNSA 2.0-native evidence plus PQC-migration proof, which few change-evidence tools offer.
+**Moat targets:** (1) impact and equivalence joined per change (linked by digest and gated since Week 9 for COBOL linkage subprograms; one combined record per change, `tests/test_change_record.py`; see The focus), (2) assessor acceptance, (3) line-level provenance on every fact, machine-checked (proven for COBOL: `tests/test_graph.py::test_every_edge_has_provenance`); not deep legacy coverage, where CAST, OpenText and IBM already go deeper and wider, (4) deterministic facts with no AI-generated evidence (CLAUDE.md rule 3), unlike AI-generated equivalence tests, (5) air-gapped, offline-first operation, (6) accumulated per-system baselines, (7) CNSA 2.0-native evidence plus PQC-migration proof, which few change-evidence tools offer.
 
 **Compliance realities:**
 - No CUI or classified code until you're on a CMMC Level 2 path. Pilot on unclassified, public or synthetic code.
@@ -301,4 +303,4 @@ Recheck these dates each quarter; NIST IR 8547 was still a draft as of mid-2026.
 - Migration sequencing and service decomposition as further QUBO problems.
 - Hardware roots of trust (TPM / confidential computing) attesting the engine itself.
 - Audience packs: cyber insurers, M&A due diligence, enterprise procurement.
-- **Python adapter (not scheduled).** Lets the engine analyze its own code (`parse → IR`, `diff → entities`), so changeproof can produce impact and equivalence evidence for its own releases. Trust story for assessors.
+- **Python adapter (pinned by the owner, 2026-10-14: a later step, planned once the engine's components are strong; a monthly check of the current MVP, listing the engine's strong components to reuse for a Python parser and engine, is in the project files, `changeproof/PYTHON-LATER.md`, outside this repository).** Lets the engine analyze its own code (`parse → IR`, `diff → entities`), so changeproof can produce impact and equivalence evidence for its own releases. Trust story for assessors.

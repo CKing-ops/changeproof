@@ -20,7 +20,7 @@ from changeproof.gate import gate, known_rules
 from changeproof.markets import DEFAULT_MARKET, MARKETS
 from changeproof.mcp import serve
 from changeproof.oscal import assessment_results, validate_oscal
-from changeproof.pack import build_pack, verify_pack
+from changeproof.pack import LAYOUTS, build_pack, verify_pack, write_records
 from changeproof.predicates import PREDICATE_TYPES, statement
 from changeproof.release import check_subjects, release_statement
 from changeproof.selection import changed_lines, select_tests, selection_problem
@@ -135,10 +135,19 @@ def cmd_pack(args: argparse.Namespace) -> int:
     signed = build_pack(Path(args.repo), args.revisions, Path(args.out), [load_private(k) for k in args.key],
                         release=args.release, copybook_dirs=args.copybooks, config_path=args.config,
                         runner=DockerRunner(args.docker) if args.docker else LocalRunner(),
-                        release_key=load_private(args.release_key) if args.release_key else None)
+                        release_key=load_private(args.release_key) if args.release_key else None, layout=args.layout)
     pack = json.loads(base64.b64decode(signed["payload"]))
     print(json.dumps({"pack": args.out, "files": len(pack["subject"]) + 1,
                       "attestations": len(pack["predicate"]["attestations"])}, indent=2))
+    return 0
+
+
+# PURPOSE: WRITES THE SIGNED RECORD OF EACH COMMIT, COMBINED OR AS FOUR ATTESTATIONS, AND PRINTS WHAT IT WROTE
+def cmd_record(args: argparse.Namespace) -> int:
+    listed, _ = write_records(Path(args.repo), args.revisions, Path(args.out), [load_private(k) for k in args.key],
+                              copybook_dirs=args.copybooks, config_path=args.config,
+                              runner=DockerRunner(args.docker) if args.docker else LocalRunner(), layout=args.layout)
+    print(json.dumps([{"path": item["path"], "predicate_type": item["predicate_type"]} for item in listed], indent=2))
     return 0
 
 
@@ -336,7 +345,22 @@ def build_parser() -> argparse.ArgumentParser:
     packs.add_argument("--config", default=CONFIG_NAME, help="repo-relative path of the config at each commit")
     packs.add_argument("--copybooks", action="append", default=[], help="copybook folder, repo-relative; repeatable")
     packs.add_argument("--docker", metavar="IMAGE", help="run equivalence tests in this GnuCOBOL image, networking off")
+    packs.add_argument("--layout", choices=LAYOUTS, default=LAYOUTS[0],
+                       help="one change record per commit, or the four attestations as separate files")
     packs.set_defaults(func=cmd_pack)
+
+    records = sub.add_parser("record", help="signed evidence for each commit: one change record, or four attestations")
+    records.add_argument("revisions", help="a commit, or a range such as main..HEAD")
+    records.add_argument("--out", required=True, help="folder for the signed files")
+    records.add_argument("--key", action="append", required=True, help="private key file to sign with; repeatable")
+    records.add_argument("--layout", choices=LAYOUTS, default=LAYOUTS[0],
+                         help="combined: one change-record file per commit; separate: impact, policy decision, "
+                              "equivalence and full suite as four files")
+    records.add_argument("--repo", default=".")
+    records.add_argument("--config", default=CONFIG_NAME, help="repo-relative path of the config at each commit")
+    records.add_argument("--copybooks", action="append", default=[], help="copybook folder, repo-relative; repeatable")
+    records.add_argument("--docker", metavar="IMAGE", help="run equivalence tests in this GnuCOBOL image, networking off")
+    records.set_defaults(func=cmd_record)
 
     checks = sub.add_parser("pack-verify", help="verify a pack offline and rebuild its report and OSCAL")
     checks.add_argument("pack", help="pack folder")
