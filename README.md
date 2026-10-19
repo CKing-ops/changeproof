@@ -4,11 +4,11 @@ Semantic change evidence engine. See `ROADMAP.md` for the build plan and `CLAUDE
 Market: universal (`general`) is the main path and EU DORA (`eu-dora`) the strong second.
 
 Focus: the link between what a change touches in the code and proof that nothing else changed
-behaviour, in one evidence record per change. Both halves are proven for COBOL linkage
-subprograms: impact (`tests/test_impact.py`) and behavioral equivalence outside the impact set,
-joined by the impact statement's digest and checked by the policy gate (`tests/test_equivalence.py`,
-`tests/test_gate.py`). Programs that read files, Db2 or CICS still show as untested until stubs exist
-(**planned**). Neither half alone is new: CAST, OpenText and IBM ADDI do impact analysis, IBM
+behaviour, in one evidence record per change. Both halves are proven for COBOL subprograms and
+batch jobs that read and write files, packed decimal included: impact (`tests/test_impact.py`) and
+behavioral equivalence outside the impact set, joined by the impact statement's digest and checked by
+the policy gate (`tests/test_equivalence.py`, `tests/test_gate.py`, `tests/test_cobol_io.py`). CICS,
+Db2 and IMS programs still show as untested until stand-ins for those calls exist (**planned**). Neither half alone is new: CAST, OpenText and IBM ADDI do impact analysis, IBM
 watsonx Code Assistant for Z tests equivalence for COBOL-to-Java translation, and Kosli keeps
 tamper-evident change records. Sources and the full comparison are in `ROADMAP.md` (Positioning).
 
@@ -62,8 +62,14 @@ Weeks 1-13 (planned capabilities are labeled; proven ones cite their test):
   traces which way each `IF`, `WHEN` and `PERFORM UNTIL` went, and writes a golden suite with every
   condition's `file:line`. On the three synthetic batch programs every one of the 21 conditions has
   tests both ways, suites are reproducible, and `--replay` catches a changed fee rate
-  (`tests/test_characterize.py`, `docs/adr/006-characterization.md`). Programs that read files, Db2
-  or CICS need stubs: **planned**.
+  (`tests/test_characterize.py`, `docs/adr/006-characterization.md`). Packed and binary numbers,
+  tables and redefinitions are filled and shown, and batch jobs run on files generated for each test,
+  with their output files, display output and return code compared (`tests/test_cobol_io.py`,
+  `docs/adr/013-cobol-files-and-packed-data.md`). On CardDemo's 31 programs in `app/cbl`, 11 batch
+  programs now run (none did before) and all 6 bugs planted in the posting job `CBTRN02C` are caught;
+  17 CICS programs are listed untested with the line of their first `EXEC CICS`, and 3 do not build
+  under GnuCOBOL (`scripts/cobol_io_check.py`, `docs/weekly/cobol-io-carddemo.json`). Stand-ins for
+  CICS, Db2 and IMS calls: **planned**.
 - Behavioral equivalence: `changeproof equivalence <commit or range>` builds characterization tests
   from each program before the change, replays them after it, and prints a behavioral-equivalence
   predicate (signed with `--key`). By default it tests only programs outside the impact set and

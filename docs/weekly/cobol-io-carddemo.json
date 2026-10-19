@@ -1,0 +1,286 @@
+{
+  "corpus": "aws-samples/aws-mainframe-modernization-carddemo",
+  "runner": {
+    "kind": "local",
+    "cobc": "cobc (GnuCOBOL) 3.1.2.0"
+  },
+  "programs": {
+    "CBACT01C": {
+      "tests": 2,
+      "runs": 633,
+      "outcomes_reached": 19,
+      "outcomes": 46,
+      "return_codes": [
+        0,
+        1
+      ],
+      "seconds": 29
+    },
+    "CBACT02C": {
+      "tests": 2,
+      "runs": 2,
+      "outcomes_reached": 15,
+      "outcomes": 24,
+      "return_codes": [
+        0
+      ],
+      "seconds": 3
+    },
+    "CBACT03C": {
+      "tests": 2,
+      "runs": 2,
+      "outcomes_reached": 15,
+      "outcomes": 24,
+      "return_codes": [
+        0
+      ],
+      "seconds": 3
+    },
+    "CBACT04C": {
+      "tests": 6,
+      "runs": 755,
+      "outcomes_reached": 52,
+      "outcomes": 88,
+      "return_codes": [
+        0,
+        1
+      ],
+      "seconds": 47
+    },
+    "CBCUS01C": {
+      "tests": 2,
+      "runs": 2,
+      "outcomes_reached": 15,
+      "outcomes": 24,
+      "return_codes": [
+        0
+      ],
+      "seconds": 4
+    },
+    "CBEXPORT": {
+      "reason": "CBEXPORT.cbl did not build: CBEXPORT.cbl:68: error: 'EXPORT-SEQUENCE-NUM' is not defined"
+    },
+    "CBIMPORT": {
+      "reason": "CBIMPORT.cbl did not build: CBIMPORT.cbl:40: error: 'EXPORT-SEQUENCE-NUM' is not defined"
+    },
+    "CBSTM03A": {
+      "reason": "CBSTM03A.CBL did not build: copy/0//CUSTREC.cpy:6: error: unbalanced parentheses"
+    },
+    "CBSTM03B": {
+      "tests": 17,
+      "runs": 167,
+      "outcomes_reached": 32,
+      "outcomes": 32,
+      "return_codes": [
+        0
+      ],
+      "seconds": 10
+    },
+    "CBTRN01C": {
+      "tests": 6,
+      "runs": 151,
+      "outcomes_reached": 39,
+      "outcomes": 68,
+      "return_codes": [
+        0
+      ],
+      "seconds": 18
+    },
+    "CBTRN02C": {
+      "tests": 8,
+      "runs": 1658,
+      "outcomes_reached": 58,
+      "outcomes": 98,
+      "return_codes": [
+        0,
+        4
+      ],
+      "seconds": 73
+    },
+    "CBTRN03C": {
+      "tests": 4,
+      "runs": 224,
+      "outcomes_reached": 50,
+      "outcomes": 86,
+      "return_codes": [
+        0,
+        1
+      ],
+      "seconds": 36
+    },
+    "COACTUPC": {
+      "reason": "uses EXEC CICS at app/cbl/COACTUPC.cbl:862-864; stand-ins for CICS, Db2 and IMS calls are planned"
+    },
+    "COACTVWC": {
+      "reason": "uses EXEC CICS at app/cbl/COACTVWC.cbl:264-266; stand-ins for CICS, Db2 and IMS calls are planned"
+    },
+    "COADM01C": {
+      "reason": "uses EXEC CICS at app/cbl/COADM01C.cbl:77-79; stand-ins for CICS, Db2 and IMS calls are planned"
+    },
+    "COBIL00C": {
+      "reason": "uses EXEC CICS at app/cbl/COBIL00C.cbl:146-149; stand-ins for CICS, Db2 and IMS calls are planned"
+    },
+    "COBSWAIT": {
+      "tests": 1,
+      "runs": 1,
+      "outcomes_reached": 0,
+      "outcomes": 0,
+      "return_codes": [
+        1
+      ],
+      "seconds": 1
+    },
+    "COCRDLIC": {
+      "reason": "uses EXEC CICS at app/cbl/COCRDLIC.cbl:402-405; stand-ins for CICS, Db2 and IMS calls are planned"
+    },
+    "COCRDSLC": {
+      "reason": "uses EXEC CICS at app/cbl/COCRDSLC.cbl:250-252; stand-ins for CICS, Db2 and IMS calls are planned"
+    },
+    "COCRDUPC": {
+      "reason": "uses EXEC CICS at app/cbl/COCRDUPC.cbl:370-372; stand-ins for CICS, Db2 and IMS calls are planned"
+    },
+    "COMEN01C": {
+      "reason": "uses EXEC CICS at app/cbl/COMEN01C.cbl:107-110; stand-ins for CICS, Db2 and IMS calls are planned"
+    },
+    "CORPT00C": {
+      "reason": "uses EXEC CICS at app/cbl/CORPT00C.cbl:199-202; stand-ins for CICS, Db2 and IMS calls are planned"
+    },
+    "COSGN00C": {
+      "reason": "uses EXEC CICS at app/cbl/COSGN00C.cbl:98-102; stand-ins for CICS, Db2 and IMS calls are planned"
+    },
+    "COTRN00C": {
+      "reason": "uses EXEC CICS at app/cbl/COTRN00C.cbl:138-141; stand-ins for CICS, Db2 and IMS calls are planned"
+    },
+    "COTRN01C": {
+      "reason": "uses EXEC CICS at app/cbl/COTRN01C.cbl:136-139; stand-ins for CICS, Db2 and IMS calls are planned"
+    },
+    "COTRN02C": {
+      "reason": "uses EXEC CICS at app/cbl/COTRN02C.cbl:156-159; stand-ins for CICS, Db2 and IMS calls are planned"
+    },
+    "COUSR00C": {
+      "reason": "uses EXEC CICS at app/cbl/COUSR00C.cbl:141-144; stand-ins for CICS, Db2 and IMS calls are planned"
+    },
+    "COUSR01C": {
+      "reason": "uses EXEC CICS at app/cbl/COUSR01C.cbl:107-110; stand-ins for CICS, Db2 and IMS calls are planned"
+    },
+    "COUSR02C": {
+      "reason": "uses EXEC CICS at app/cbl/COUSR02C.cbl:135-138; stand-ins for CICS, Db2 and IMS calls are planned"
+    },
+    "COUSR03C": {
+      "reason": "uses EXEC CICS at app/cbl/COUSR03C.cbl:134-137; stand-ins for CICS, Db2 and IMS calls are planned"
+    },
+    "CSUTLDTC": {
+      "tests": 1,
+      "runs": 1,
+      "outcomes_reached": 0,
+      "outcomes": 18,
+      "return_codes": [
+        1
+      ],
+      "seconds": 2
+    }
+  },
+  "planted": [
+    {
+      "from": "ADD DALYTRAN-AMT  TO ACCT-CURR-BAL",
+      "to": "SUBTRACT DALYTRAN-AMT FROM ACCT-CURR-BAL",
+      "caught": true,
+      "tests_differing": 2,
+      "fields_differing": [
+        "ACCOUNT-FILE#00001.ACCT-CURR-BAL"
+      ]
+    },
+    {
+      "from": "IF DALYTRAN-AMT >= 0",
+      "to": "IF DALYTRAN-AMT < 0",
+      "caught": true,
+      "tests_differing": 2,
+      "fields_differing": [
+        "ACCOUNT-FILE#00001.ACCT-CURR-CYC-CREDIT",
+        "ACCOUNT-FILE#00001.ACCT-CURR-CYC-DEBIT"
+      ]
+    },
+    {
+      "from": "- ACCT-CURR-CYC-DEBIT",
+      "to": "+ ACCT-CURR-CYC-DEBIT",
+      "caught": true,
+      "tests_differing": 1,
+      "fields_differing": [
+        "DALYREJS-FILE#00001.REJECT-TRAN-DATA",
+        "DALYREJS-FILE#00001.VALIDATION-TRAILER",
+        "SYSOUT",
+        "rc"
+      ]
+    },
+    {
+      "from": "IF ACCT-CREDIT-LIMIT >= WS-TEMP-BAL",
+      "to": "IF ACCT-CREDIT-LIMIT > WS-TEMP-BAL",
+      "caught": true,
+      "tests_differing": 4,
+      "fields_differing": [
+        "ACCOUNT-FILE#00001.ACCT-CURR-BAL",
+        "ACCOUNT-FILE#00001.ACCT-CURR-CYC-DEBIT",
+        "SYSOUT",
+        "TCATBAL-FILE#00001.TRAN-CAT-BAL",
+        "TCATBAL-FILE#00002.TRAN-CAT-BAL",
+        "TCATBAL-FILE#00002.TRANCAT-ACCT-ID",
+        "TCATBAL-FILE#00002.TRANCAT-CD",
+        "TCATBAL-FILE#00002.TRANCAT-TYPE-CD",
+        "TRANSACT-FILE#00001.TRAN-AMT",
+        "TRANSACT-FILE#00001.TRAN-CARD-NUM",
+        "TRANSACT-FILE#00001.TRAN-CAT-CD",
+        "TRANSACT-FILE#00001.TRAN-DESC",
+        "TRANSACT-FILE#00001.TRAN-ID",
+        "TRANSACT-FILE#00001.TRAN-MERCHANT-CITY",
+        "TRANSACT-FILE#00001.TRAN-MERCHANT-ID",
+        "TRANSACT-FILE#00001.TRAN-MERCHANT-NAME",
+        "TRANSACT-FILE#00001.TRAN-MERCHANT-ZIP",
+        "TRANSACT-FILE#00001.TRAN-ORIG-TS",
+        "TRANSACT-FILE#00001.TRAN-PROC-TS",
+        "TRANSACT-FILE#00001.TRAN-SOURCE",
+        "TRANSACT-FILE#00001.TRAN-TYPE-CD",
+        "rc"
+      ]
+    },
+    {
+      "from": "IF ACCT-EXPIRAION-DATE >= DALYTRAN-ORIG-TS (1:10)",
+      "to": "IF ACCT-EXPIRAION-DATE > DALYTRAN-ORIG-TS (1:10)",
+      "caught": true,
+      "tests_differing": 5,
+      "fields_differing": [
+        "ACCOUNT-FILE#00001.ACCT-CURR-BAL",
+        "ACCOUNT-FILE#00001.ACCT-CURR-CYC-DEBIT",
+        "DALYREJS-FILE#00001.VALIDATION-TRAILER",
+        "SYSOUT",
+        "TCATBAL-FILE#00001.TRAN-CAT-BAL",
+        "TCATBAL-FILE#00002.TRAN-CAT-BAL",
+        "TCATBAL-FILE#00002.TRANCAT-ACCT-ID",
+        "TCATBAL-FILE#00002.TRANCAT-CD",
+        "TCATBAL-FILE#00002.TRANCAT-TYPE-CD",
+        "TRANSACT-FILE#00001.TRAN-AMT",
+        "TRANSACT-FILE#00001.TRAN-CARD-NUM",
+        "TRANSACT-FILE#00001.TRAN-CAT-CD",
+        "TRANSACT-FILE#00001.TRAN-DESC",
+        "TRANSACT-FILE#00001.TRAN-ID",
+        "TRANSACT-FILE#00001.TRAN-MERCHANT-CITY",
+        "TRANSACT-FILE#00001.TRAN-MERCHANT-ID",
+        "TRANSACT-FILE#00001.TRAN-MERCHANT-NAME",
+        "TRANSACT-FILE#00001.TRAN-MERCHANT-ZIP",
+        "TRANSACT-FILE#00001.TRAN-ORIG-TS",
+        "TRANSACT-FILE#00001.TRAN-PROC-TS",
+        "TRANSACT-FILE#00001.TRAN-SOURCE",
+        "TRANSACT-FILE#00001.TRAN-TYPE-CD",
+        "rc"
+      ]
+    },
+    {
+      "from": "MOVE 4 TO RETURN-CODE",
+      "to": "MOVE 0 TO RETURN-CODE",
+      "caught": true,
+      "tests_differing": 3,
+      "fields_differing": [
+        "rc"
+      ]
+    }
+  ]
+}

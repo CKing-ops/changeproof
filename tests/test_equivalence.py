@@ -94,7 +94,7 @@ def test_programs_that_cannot_be_characterized_make_the_verdict_inconclusive(tmp
     p = equivalence(tmp_path / "repo", shas["refactor"], runner=LocalRunner()).predicate
     assert p["verdict"] == "inconclusive"
     assert [(u["program"], u["provenance"]["file"]) for u in p["untested"]] == [("PKDCALC", "src/batch/PKDCALC.cbl")]
-    assert "COMP-3" in p["untested"][0]["reason"]
+    assert "POINTER" in p["untested"][0]["reason"]
     assert p["summary"]["different"] == 0
 
 

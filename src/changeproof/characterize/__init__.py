@@ -4,14 +4,15 @@ from pathlib import Path
 
 from changeproof.adapters.base import Entity, IRModule
 from changeproof.adapters.cobol import CobolAdapter
-from changeproof.adapters.cobol.driver import boundary_values, candidates, linkage_fields, parse_picture
+from changeproof.adapters.cobol.driver import Field, boundary_values, candidates, linkage_fields, parse_picture
 from changeproof.adapters.cobol.gnucobol import DockerRunner, LocalRunner, Run, Runner, read_trace
 from changeproof.signer import digest
 
-__all__ = ["DockerRunner", "LocalRunner", "Runner", "candidates", "characterize", "linkage_fields", "outcomes",
+__all__ = ["DockerRunner", "LocalRunner", "Runner", "candidates", "characterize", "input_fields", "linkage_fields", "outcomes",
            "output_digest", "parse_picture", "read_trace", "replay", "rerun"]
 
 MAX_ROUNDS = 6  # RENAME: SEARCH ROUNDS BEFORE GIVING UP ON AN OUTCOME NO INPUT HAS REACHED
+HUNG = 124  # exit code of a run stopped by its timeout
 
 
 # PURPOSE: WHICH WAYS A BRANCH WENT IN ONE RUN, READ FROM HOW OFTEN ITS LINES RAN
@@ -56,7 +57,7 @@ def on_point(inputs: dict[str, str], bounds: dict[str, dict[str, set[str]]], got
 
 # PURPOSE: BOUNDARY SEARCH, KEEPING THE FIRST RUN DOWN EACH PATH AND THE FIRST RUN ON EACH BOUNDARY POINT
 def search(adapter: CobolAdapter, module: IRModule, branches: list[Entity], pools: dict[str, list[str]],
-           bounds: dict[str, dict[str, set[str]]]) -> tuple[list, int]:
+           bounds: dict[str, dict[str, set[str]]], batch: bool = False) -> tuple[list, int]:
     bases = [{n: p[0] for n, p in pools.items()}, {n: p[len(p) // 2] for n, p in pools.items()},
              {n: p[-1] for n, p in pools.items()}]
     goal = {(b.id, o) for b in branches for o in (True, False)}
@@ -74,7 +75,8 @@ def search(adapter: CobolAdapter, module: IRModule, branches: list[Entity], pool
         _, runs = adapter.execute(module, batch)
         seeds = []
         for inputs, run in zip(batch, runs):
-            if run.rc:
+            # a batch job's return code is part of its behaviour; a subprogram's driver only fails when the call did
+            if run.rc == HUNG or (run.rc and not batch):
                 continue
             got = reached(branches, run.lines)
             if got - covered:
@@ -97,16 +99,35 @@ def search(adapter: CobolAdapter, module: IRModule, branches: list[Entity], pool
     return chosen, len(tried)
 
 
-# PURPOSE: GOLDEN SUITE FOR ONE LINKAGE SUBPROGRAM: A TEST PER PATH AND PER ON-POINT BOUNDARY VALUE
+# PURPOSE: RUNS THE CHOSEN INPUTS AGAIN AND DROPS ANY WHOSE OUTPUT CHANGED, LISTING THEM WITH THE FIELDS THAT MOVED
+def steady(adapter: CobolAdapter, module: IRModule, chosen: list) -> tuple[list, list[dict]]:
+    _, again = adapter.execute(module, [inputs for inputs, _, _ in chosen])
+    kept, unstable = [], []
+    for (inputs, run, got), second in zip(chosen, again):
+        moved = sorted(k for k in {*run.output, *second.output} if run.output.get(k) != second.output.get(k))
+        if moved or run.rc != second.rc:
+            unstable.append({"input": inputs, "fields": moved + ["rc"] * (run.rc != second.rc)})
+        else:
+            kept.append((inputs, run, got))
+    return kept, unstable
+
+
+# PURPOSE: WHAT A RUN OF THIS PROGRAM SETS: LINKAGE LEAVES, OR THE RECORDS OF THE FILES A BATCH PROGRAM READS
+def input_fields(module: IRModule) -> list[Field]:
+    return CobolAdapter([]).inputs(module)
+
+
+# PURPOSE: GOLDEN SUITE FOR ONE PROGRAM: A TEST PER PATH AND PER ON-POINT BOUNDARY VALUE
 def characterize(path: Path, root: Path, runner: Runner, copybook_dirs: list[str] = ()) -> dict:
     adapter = CobolAdapter(list(copybook_dirs), root=root, runner=runner)
     module = adapter.parse(Path(path), Path(root))
     program = next(e for e in module.entities if e.kind == "program")
     branches = [e for e in module.entities if e.kind == "branch"]
-    fields = [f for f in linkage_fields(module) if f.picture]
-    pools = {f.name: candidates(f, module) for f in fields}
-    bounds = {f.name: boundary_values(f, module) for f in fields}  # RENAME: FIELD TO LITERAL TO CONDITIONS COMPARING THEM
-    chosen, count = search(adapter, module, branches, pools, bounds)
+    fields = adapter.inputs(module)
+    pools = {f.key: candidates(f, module) for f in fields}
+    bounds = {f.key: boundary_values(f, module) for f in fields}  # RENAME: FIELD TO LITERAL TO CONDITIONS COMPARING THEM
+    chosen, count = search(adapter, module, branches, pools, bounds, adapter.is_batch(module))
+    chosen, unstable = steady(adapter, module, chosen)
     tests = []
     for n, (inputs, run, got) in enumerate(chosen, 1):
         tests.append({"id": f"{program.name}-{n:02d}", "input": inputs, "output": run.output,
@@ -128,9 +149,9 @@ def characterize(path: Path, root: Path, runner: Runner, copybook_dirs: list[str
     return {"program": program.name,
             "source": {"file": module.path, "digest": digest(Path(path).read_bytes())},
             "runner": runner.describe(),
-            "fields": [{"name": f.name, "picture": f.picture, "provenance": f.provenance.model_dump(exclude_none=True),
-                        "candidates": pools[f.name]} for f in fields],
-            "conditions": conditions, "tests": tests, "runs": count}
+            "fields": [{"name": f.key, "picture": f.picture, "provenance": f.provenance.model_dump(exclude_none=True),
+                        "candidates": pools[f.key]} for f in fields],
+            "conditions": conditions, "tests": tests, "runs": count} | ({"unstable": unstable} if unstable else {})
 
 
 # PURPOSE: RE-RUNS A SUITE'S INPUTS AGAINST THE SOURCE NOW AT ITS PATH; RETURNS THE PROGRAM AND ONE RUN PER TEST

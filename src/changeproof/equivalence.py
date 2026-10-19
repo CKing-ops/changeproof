@@ -24,7 +24,6 @@ from changeproof.predicates import PREDICATE_TYPES, statement, validate_predicat
 from changeproof.signer import digest
 
 SCOPES = ("outside-impact-set", "full-suite")
-NO_STUBS = "not a linkage subprogram (no PROCEDURE DIVISION USING); programs that read files, Db2 or CICS need stubs, which are planned"
 
 
 @dataclass(frozen=True)
@@ -130,9 +129,6 @@ def equivalence_of(run: ImpactRun, root: Path, copybook_dirs: list[str] = (), sc
             if scope == "outside-impact-set" and program.name in in_set:
                 continue
             gap = {"program": program.name, "provenance": program.provenance.model_dump(mode="json")}
-            if "using" not in program.attributes:
-                untested.append(gap | {"reason": NO_STUBS})
-                continue
             if before is None or not (before / path).is_file():
                 untested.append(gap | {"reason": "not in the base, so there is nothing to compare with"})
                 continue

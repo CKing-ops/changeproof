@@ -42,9 +42,9 @@ def test_linkage_fields_come_from_the_ir_with_their_88_values_and_lines():
 
 def test_linkage_items_the_driver_cannot_fill_are_refused(tmp_path):
     (tmp_path / "batch").mkdir()
-    source = (CORPUS / "batch" / "FEECALC.cbl").read_text().replace("PIC S9(7)V99.", "PIC S9(7)V99 COMP-3.", 1)
+    source = (CORPUS / "batch" / "FEECALC.cbl").read_text().replace("PIC S9(7)V99.", "USAGE POINTER.", 1)
     (tmp_path / "batch" / "FEECALC.cbl").write_text(source)
-    with pytest.raises(ValueError, match="LK-AMOUNT.*COMP-3"):
+    with pytest.raises(ValueError, match="LK-AMOUNT.*POINTER"):
         linkage_fields(module("FEECALC", tmp_path))
 
 
