@@ -70,6 +70,9 @@ Weeks 1-13 (planned capabilities are labeled; proven ones cite their test):
   17 CICS programs are listed untested with the line of their first `EXEC CICS`, and 3 do not build
   under GnuCOBOL (`scripts/cobol_io_check.py`, `docs/weekly/cobol-io-carddemo.json`). Stand-ins for
   CICS, Db2 and IMS calls: **planned**.
+- Bank simulation: six invented banks (three US on `general`, three EU on `eu-dora`) commit one change
+  a simulated day and the engine scans each, scored against what the change really does
+  (`scripts/bank_sim.py`, `tests/test_banksim.py`, `docs/adr/014-bank-simulation.md`).
 - Behavioral equivalence: `changeproof equivalence <commit or range>` builds characterization tests
   from each program before the change, replays them after it, and prints a behavioral-equivalence
   predicate (signed with `--key`). By default it tests only programs outside the impact set and
