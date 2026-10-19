@@ -10,6 +10,7 @@ from pathlib import Path
 
 TRACE_RE = re.compile(r"^Program-Id:\s+(\S+)\s.*\bLine:\s+(\d+)\s*$")
 RUN_TIMEOUT = 10  # RENAME: SECONDS ONE RUN MAY TAKE BEFORE IT COUNTS AS HUNG (EXIT 124)
+FIXED_CLOCK = "2026/01/15 10:00:00.00"  # RENAME: DATE AND TIME A BATCH PROGRAM SEES, SO RUNS REPEAT EXACTLY
 # One script for every runner, so a local run and a container run build and execute the same way.
 RUN_SCRIPT = """set -eu
 cd "$1"
@@ -25,6 +26,36 @@ for f in in/*.txt; do
   echo $? > "out/$i.rc"
 done
 """ % RUN_TIMEOUT
+# A batch program runs as itself: the loader writes its input files, the unloader shows its output files.
+BATCH_SCRIPT = """set -eu
+cd "$1"
+COBC="${COBC:-cobc}"
+INCLUDES=""
+for d in copy/*/; do [ -d "$d" ] && INCLUDES="$INCLUDES -I $d"; done
+if [ -f drv.cbl ]; then
+  "$COBC" -c -ftraceall $INCLUDES -o prog.o "$(cat program)" > build.log 2>&1
+  "$COBC" -x -free -o prog drv.cbl prog.o >> build.log 2>&1
+else
+  "$COBC" -x -ftraceall $INCLUDES -o prog "$(cat program)" > build.log 2>&1
+fi
+"$COBC" -x -free -o load load.cbl >> build.log 2>&1
+"$COBC" -x -free -o unload unload.cbl >> build.log 2>&1
+set +e
+export COB_CURRENT_DATE="%s"
+for f in in/*.txt; do
+  i=$(basename "$f" .txt)
+  mkdir -p "data/$i"
+  FILES=""
+  for name in $(cat assign); do FILES="$FILES DD_$name=$PWD/data/$i/$name"; done
+  PARM=/dev/null
+  [ -f "in/$i.drv" ] && PARM="in/$i.drv"
+  env $FILES ./load < "$f" > "out/$i.load" 2>&1
+  env $FILES COB_SET_TRACE=Y COB_TRACE_FILE="$PWD/out/$i.trace" timeout %d ./prog < "$PARM" > "out/$i.out" 2> "out/$i.err"
+  echo $? > "out/$i.rc"
+  env $FILES ./unload > "out/$i.files" 2>> "out/$i.err"
+  rm -rf "data/$i"
+done
+""" % (FIXED_CLOCK, RUN_TIMEOUT)
 
 
 @dataclass
@@ -48,28 +79,37 @@ def read_output(text: str) -> dict[str, str]:
     return dict(line.split("=", 1) for line in text.splitlines() if "=" in line)
 
 
-# PURPOSE: WORK FOLDER WITH THE PROGRAM, ITS DRIVER, COPYBOOKS AND ONE INPUT FILE PER RUN
-def stage(work: Path, source: Path, driver: str, copybook_dirs: list[Path], inputs: list[list[str]]) -> None:
+# PURPOSE: WORK FOLDER WITH THE PROGRAM, ITS GENERATED PROGRAMS, COPYBOOKS AND ONE INPUT FILE PER RUN
+def stage(work: Path, source: Path, generated: dict[str, str], script: str, copybook_dirs: list[Path],
+          inputs: list[list[str]], parms: list[list[str]] = ()) -> None:
     shutil.copy(source, work / source.name)
     (work / "program").write_text(source.name)
-    (work / "drv.cbl").write_text(driver)
-    (work / "run.sh").write_text(RUN_SCRIPT)
+    for name, text in generated.items():
+        (work / name).write_text(text)
+    (work / "run.sh").write_text(script)
     for i, folder in enumerate(copybook_dirs):
         shutil.copytree(folder, work / "copy" / str(i))
     (work / "in").mkdir()
     (work / "out").mkdir()
     for i, values in enumerate(inputs):
         (work / "in" / f"{i:05d}.txt").write_text("".join(f"{v}\n" for v in values))
+    for i, values in enumerate(parms):
+        (work / "in" / f"{i:05d}.drv").write_text("".join(f"{v}\n" for v in values))
 
 
-# PURPOSE: READS EACH RUN'S OUTPUT, TRACE AND EXIT CODE BACK FROM THE WORK FOLDER
-def collect(work: Path, program: str, count: int) -> list[Run]:
+# PURPOSE: READS EACH RUN'S OUTPUT, TRACE AND EXIT CODE BACK; A BATCH RUN'S OUTPUT IS ITS SYSOUT AND ITS FILES
+def collect(work: Path, program: str, count: int, batch: bool = False) -> list[Run]:
     runs = []
     for i in range(count):
         out = work / "out" / f"{i:05d}"
         trace = out.with_suffix(".trace")
-        runs.append(Run(read_output(out.with_suffix(".out").read_text()),
-                        read_trace(trace.read_text() if trace.exists() else "", program),
+        if batch:
+            # latin-1 keeps every byte a program writes, packed fields included, as one character
+            output = {"SYSOUT": out.with_suffix(".out").read_text(encoding="latin-1").removesuffix("\n")}
+            output |= read_output(out.with_suffix(".files").read_text(encoding="latin-1"))
+        else:
+            output = read_output(out.with_suffix(".out").read_text())
+        runs.append(Run(output, read_trace(trace.read_text() if trace.exists() else "", program),
                         int(out.with_suffix(".rc").read_text())))
     return runs
 
@@ -86,14 +126,29 @@ class Runner(ABC):
     # PURPOSE: BUILDS THE PROGRAM WITH ITS DRIVER ONCE AND RUNS IT ON EVERY INPUT
     def run(self, source: Path, program: str, driver: str, copybook_dirs: list[Path],
             inputs: list[list[str]]) -> list[Run]:
+        return self.build_and_run(source, program, {"drv.cbl": driver}, RUN_SCRIPT, copybook_dirs, inputs)
+
+    # PURPOSE: BUILDS A BATCH PROGRAM WITH ITS LOADER AND UNLOADER ONCE AND RUNS IT ON FRESH FILES FOR EVERY INPUT
+    def run_batch(self, source: Path, program: str, loader: str, unloader: str, assigns: list[str],
+                  copybook_dirs: list[Path], inputs: list[list[str]], driver: str | None = None,
+                  parms: list[list[str]] = ()) -> list[Run]:
+        generated = {"load.cbl": loader, "unload.cbl": unloader, "assign": "\n".join(assigns) + "\n"}
+        if driver:
+            generated["drv.cbl"] = driver
+        return self.build_and_run(source, program, generated, BATCH_SCRIPT, copybook_dirs, inputs, parms, batch=True)
+
+    # PURPOSE: STAGES A WORK FOLDER, RUNS THE SCRIPT IN THIS RUNNER AND COLLECTS EVERY RUN
+    def build_and_run(self, source: Path, program: str, generated: dict[str, str], script: str,
+                      copybook_dirs: list[Path], inputs: list[list[str]], parms: list[list[str]] = (),
+                      batch: bool = False) -> list[Run]:
         with tempfile.TemporaryDirectory(prefix="changeproof-characterize-") as tmp:
             work = Path(tmp)
-            stage(work, source, driver, copybook_dirs, inputs)
+            stage(work, source, generated, script, copybook_dirs, inputs, parms)
             proc = subprocess.run(self.command(work), capture_output=True, text=True)
             if proc.returncode:
                 log = work / "build.log"
                 raise RuntimeError(f"{source.name} did not build: {(log.read_text() if log.exists() else proc.stderr).strip()}")
-            return collect(work, program, len(inputs))
+            return collect(work, program, len(inputs), batch)
 
 
 class LocalRunner(Runner):

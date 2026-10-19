@@ -21,6 +21,12 @@ DATA_SECTIONS = {  # RENAME: PARSE-TREE SECTION TYPE TO THE SECTION NAME STORED 
     P.LocalStorageSectionContext: "local-storage",
     P.LinkageSectionContext: "linkage",
 }
+OPEN_MODES = (  # RENAME: OPEN PHRASE, HOW ITS FILES ARE LISTED, AND THE MODE RECORDED ON THE FILE
+    ("openInputStatement", "openInput", "INPUT"),
+    ("openOutputStatement", "openOutput", "OUTPUT"),
+    ("openIOStatement", None, "I-O"),
+    ("openExtendStatement", None, "EXTEND"),
+)
 CICS_OPTIONS = {  # RENAME: CICS OPTION NAMES TO THE ATTRIBUTE THEY FILL (LITERAL) OR ITS _REF (DATA NAME)
     "program": "PROGRAM", "file": "FILE|DATASET", "transid": "TRANSID", "map": "MAP", "mapset": "MAPSET",
 }
@@ -154,6 +160,8 @@ class Builder:
         self.levels: list[tuple[int, str, str]] = []  # RENAME: OPEN DATA GROUPS AS (LEVEL, PATH, ID)
         self.values: dict[str, tuple[str, str]] = {}  # RENAME: DATA NAME TO (LITERAL VALUE, ENTITY ID)
         self.paragraph_spans: list[tuple[int, int, str]] = []
+        self.files: dict[str, Entity] = {}  # RENAME: SELECT NAME TO ITS FILE ENTITY
+        self.fd = ""  # RENAME: FILE WHOSE FD IS BEING WALKED
 
     # PURPOSE: PROVENANCE FOR A CONTEXT, WITH AN END LINE WHEN IT ENDS IN THE SAME FILE
     def span(self, ctx: ParserRuleContext) -> Provenance:
@@ -223,6 +231,10 @@ class Builder:
                 self.enter_condition(node)
             case P.FileControlEntryContext():
                 self.enter_file(node)
+            case P.FileDescriptionEntryContext():
+                self.fd = node.fileName().getText().upper()
+            case P.OpenStatementContext():
+                self.enter_open(node)
             case P.CallStatementContext():
                 self.enter_call(node)
             case P.PerformProcedureStatementContext():
@@ -273,6 +285,8 @@ class Builder:
         attributes = {"level": level_text.zfill(2), "section": self.data_section, "text": self.text(node)}
         if parent_id:
             attributes["parent"] = parent_id
+        elif self.data_section == "file":
+            attributes["fd"] = self.fd
         literal = None  # RENAME: QUOTED VALUE, KEPT SO A DYNAMIC CALL THROUGH THIS ITEM CAN BE RESOLVED
         if isinstance(node, P.DataDescriptionEntryFormat1Context):
             if pic := node.dataPictureClause():
@@ -306,6 +320,16 @@ class Builder:
             if assign := clause.assignClause():
                 attributes["assign"] = " ".join(self.text(assign).split()[1:]).removeprefix("TO ").strip("'\"")
         self.add("file", f"{self.program}.{name}", name, self.span(node), attributes)
+        self.files[name] = self.entities[-1]
+
+    # PURPOSE: RECORDS ON EACH FILE THE MODES THE PROGRAM OPENS IT IN
+    def enter_open(self, node: P.OpenStatementContext) -> None:
+        for phrase, each, mode in OPEN_MODES:
+            for statement in getattr(node, phrase)():
+                names = [o.fileName() for o in getattr(statement, each)()] if each else statement.fileName()
+                for name in names:
+                    if (found := self.files.get(name.getText().upper())) and mode not in found.attributes.setdefault("opened", []):
+                        found.attributes["opened"] = sorted([*found.attributes["opened"], mode])
 
     # PURPOSE: RECORDS A CALL, TAGGING IT AS A CRYPTO CALL WHEN IT REACHES A CRYPTO SERVICE
     def enter_call(self, node: P.CallStatementContext) -> None:
