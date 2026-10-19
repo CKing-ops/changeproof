@@ -6,3 +6,4 @@ __pycache__/
 /spike/_build/
 /corpus/carddemo-graph.sqlite
 /corpus/java/
+/.banksim/
