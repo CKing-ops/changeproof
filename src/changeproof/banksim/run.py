@@ -1,24 +1,31 @@
-"""One simulated business day: each bank's developers commit a change and the engine scans it.
+"""One simulated business day: each bank's developers commit a change, the engine scans it, and the bank
+runs its day's business on whatever main now holds.
 
 The scan is the same one a bank would run: the change record (who, why, approvals) and the
 behavioural-equivalence check over every program. Each result is scored against what the change
 really does, kept in an append-only ledger, and the bank's main branch moves only when its
-reviewers would accept the change on that evidence.
+reviewers would accept the change on that evidence. The day's real traffic is also run through the
+changed program before and after the change, to see whether live data would have shown what the
+scan did or did not.
 """
 
 import json
 import random
 import shutil
 import subprocess
+import tempfile
 import time
 from collections import Counter
 from concurrent.futures import ProcessPoolExecutor
-from datetime import date, timedelta
+from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 
 from changeproof.banksim.banks import BANKS, Bank
-from changeproof.banksim.estate import BEHAVIOUR, Change, catalogue, render
+from changeproof.banksim.estate import BEHAVIOUR, PROGRAMS, Change, catalogue, render
+from changeproof.banksim.record import page
+from changeproof.banksim.operations import load_book, run_rows, save_book, settle, traffic
 from changeproof.change import change_record
+from changeproof.change.git import checkout_tree
 from changeproof.characterize import LocalRunner
 from changeproof.config import load_config
 from changeproof.equivalence import equivalence
@@ -26,6 +33,8 @@ from changeproof.equivalence import equivalence
 FIRST_DAY = date(2026, 10, 20)  # RENAME: SIMULATED DATE OF THE IMPORT COMMIT
 GOVERNANCE = {"governed": 7, "self-approved": 1, "no-ticket": 1, "emergency": 1}  # RENAME: HOW CHANGES ARE APPROVED, WITH WEIGHTS
 LEDGER = "ledger.jsonl"
+OPERATIONS = "operations.jsonl"
+RECORD = "RECORD.md"  # RENAME: THE ONE-PAGE RECORD THE OWNER READS
 
 
 # PURPOSE: RUNS GIT IN A BANK REPOSITORY WITH NO USER OR SYSTEM CONFIG
@@ -93,9 +102,10 @@ def governance_outcome(expected: bool, flagged: bool) -> str:
             (False, True): "false-flag"}[expected, flagged]
 
 
-# PURPOSE: ONE BANK'S CHANGE FOR THE DAY, SCANNED AND SCORED; MAIN KEEPS IT ONLY IF REVIEWERS WOULD
-def scan(bank: Bank, state: Path, day: int, runner=None, only: str | None = None) -> dict:
+# PURPOSE: ONE BANK'S CHANGE FOR THE DAY, SCANNED AND SCORED, THEN THE DAY'S BUSINESS RUN ON MAIN
+def scan(bank: Bank, state: Path, day: int, runner=None, only: str | None = None) -> tuple[dict, dict]:
     started = time.monotonic()
+    runner = runner or LocalRunner()
     root = repository(bank, state)
     rng = random.Random(f"{bank.id}:{day}")
     open_changes = [c for c in catalogue(bank) if (root / c.path).read_text(encoding="utf-8").count(c.old) == 1]
@@ -109,14 +119,26 @@ def scan(bank: Bank, state: Path, day: int, runner=None, only: str | None = None
     sha = commit(bank, root, day, developer, message(bank, day, change, governance, developer))
     kept = state / "baselines" / bank.id  # RENAME: CHARACTERIZATION SUITES KEPT BETWEEN DAYS
     kept.mkdir(parents=True, exist_ok=True)
-    found = equivalence(root, "HEAD", scope="full-suite", runner=runner or LocalRunner(), baselines=kept).predicate
+    found = equivalence(root, "HEAD", scope="full-suite", runner=runner, baselines=kept).predicate
     record = change_record(root, sha, config=load_config(root / "changeproof.yaml"), environ={})
     flags = record.gaps() + record.open_items()
     merged = found["verdict"] == "equivalent" or (
         change.kind == "intended" and governance == "governed" and found["verdict"] == "not-equivalent")
+    base = git(root, "rev-parse", "HEAD~1")
     if not merged:
         git(root, "update-ref", f"refs/rejected/day-{day}", sha)
-        git(root, "reset", "-q", "--hard", "HEAD~1")
+        git(root, "reset", "-q", "--hard", base)
+    on = FIRST_DAY + timedelta(days=day)
+    book = load_book(bank, state)
+    today = traffic(bank, book, day, on)
+    changed = Path(change.path).stem
+    with tempfile.TemporaryDirectory() as scratch:
+        before, after = checkout_tree(root, base, Path(scratch) / "before"), checkout_tree(root, sha, Path(scratch) / "after")
+        live, other = (after, before) if merged else (before, after)
+        results = {p: run_rows(live, p, today[p], runner) for p in PROGRAMS}
+        shadow = run_rows(other, changed, today[changed], runner)
+    operations = {"day": day, "bank": bank.id, "market": bank.market} | settle(book, today, results, on)
+    save_book(bank, state, book)
     expected_flag = governance != "governed"
     return {
         "day": day, "date": str(FIRST_DAY + timedelta(days=day)), "bank": bank.id, "name": bank.name,
@@ -131,34 +153,38 @@ def scan(bank: Bank, state: Path, day: int, runner=None, only: str | None = None
         "outcome": outcome(change.kind, found["verdict"]),
         "governance": {"expected_flag": expected_flag, "open_items": flags,
                        "outcome": governance_outcome(expected_flag, bool(flags))},
+        "traffic": {"program": changed, "runs": len(shadow),
+                    "different": sum(a != b for a, b in zip(results[changed], shadow))},
         "merged": merged, "seconds": round(time.monotonic() - started),
-    }
+    }, operations
 
 
-# PURPOSE: APPENDS ROWS TO THE STATE'S LEDGER
-def append(state: Path, rows: list[dict]) -> None:
-    with (state / LEDGER).open("a", encoding="utf-8") as ledger:
-        ledger.writelines(json.dumps(row, sort_keys=True) + "\n" for row in rows)
+# PURPOSE: APPENDS ROWS TO ONE OF THE STATE'S JSON-LINES FILES
+def append(state: Path, rows: list[dict], name: str = LEDGER) -> None:
+    with (state / name).open("a", encoding="utf-8") as out:
+        out.writelines(json.dumps(row, sort_keys=True) + "\n" for row in rows)
 
 
-# PURPOSE: SCANS ONE BANK'S CHANGE FOR THE DAY AND LEDGERS IT
+# PURPOSE: SCANS ONE BANK'S CHANGE FOR THE DAY, RUNS ITS BUSINESS AND LEDGERS BOTH
 def tick(bank: Bank, state: Path, day: int, runner=None, only: str | None = None) -> dict:
-    row = scan(bank, state, day, runner, only)
+    row, operations = scan(bank, state, day, runner, only)
     append(state, [row])
+    append(state, [operations], OPERATIONS)
     return row
 
 
-# PURPOSE: ONE SIMULATED DAY ACROSS EVERY BANK, BANKS SCANNED SIDE BY SIDE
+# PURPOSE: ONE SIMULATED DAY ACROSS EVERY BANK, BANKS RUN SIDE BY SIDE
 def business_day(state: Path, day: int, workers: int) -> list[dict]:
     with ProcessPoolExecutor(workers) as pool:
-        rows = list(pool.map(scan, BANKS, [state] * len(BANKS), [day] * len(BANKS)))
-    append(state, rows)
-    return rows
+        found = list(pool.map(scan, BANKS, [state] * len(BANKS), [day] * len(BANKS)))
+    append(state, [row for row, _ in found])
+    append(state, [operations for _, operations in found], OPERATIONS)
+    return [row for row, _ in found]
 
 
-# PURPOSE: THE LEDGER'S ROWS, OLDEST FIRST
-def ledger(state: Path) -> list[dict]:
-    path = state / LEDGER
+# PURPOSE: THE ROWS OF ONE OF THE STATE'S JSON-LINES FILES, OLDEST FIRST
+def ledger(state: Path, name: str = LEDGER) -> list[dict]:
+    path = state / name
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()] if path.exists() else []
 
 
@@ -181,12 +207,19 @@ def scorecard(rows: list[dict]) -> dict:
                            "seconds": sum(r["seconds"] for r in rows)}
 
 
-# PURPOSE: COPIES THE LEDGER, SCORECARD AND EACH BANK'S HISTORY (AS ONE GIT BUNDLE) TO A KEEPING FOLDER
+# PURPOSE: COPIES THE LEDGERS, BOOKS, SCORECARD, ONE-PAGE RECORD AND EACH BANK'S HISTORY (AS A GIT BUNDLE) TO A KEEPING FOLDER
 def save(state: Path, keep: Path) -> None:
-    (keep / "banks").mkdir(parents=True, exist_ok=True)
-    rows = ledger(state)
-    shutil.copyfile(state / LEDGER, keep / LEDGER)
+    for folder in ("banks", "accounts"):
+        (keep / folder).mkdir(parents=True, exist_ok=True)
+    rows, operations = ledger(state), ledger(state, OPERATIONS)
+    for name in (LEDGER, OPERATIONS):
+        if (state / name).exists():
+            shutil.copyfile(state / name, keep / name)
+    for book in sorted((state / "accounts").glob("*.json")) if (state / "accounts").is_dir() else []:
+        shutil.copyfile(book, keep / "accounts" / book.name)
     (keep / "scorecard.json").write_text(json.dumps(scorecard(rows), indent=1) + "\n", encoding="utf-8")
+    updated = datetime.now(UTC).strftime("%Y-%m-%d %H:%M UTC")  # RENAME: WHEN THE PAGE WAS LAST WRITTEN
+    (keep / RECORD).write_text(page(rows, operations, updated), encoding="utf-8")
     for bank in BANKS:
         if (root := state / "banks" / bank.id).is_dir():
             git(root, "bundle", "create", "-q", str((keep / "banks" / f"{bank.id}.bundle").resolve()), "--all")
@@ -194,9 +227,12 @@ def save(state: Path, keep: Path) -> None:
 
 # PURPOSE: REBUILDS A WORKING STATE FROM A KEEPING FOLDER, SO A FRESH MACHINE CARRIES ON WHERE THE LAST LEFT OFF
 def restore(state: Path, keep: Path) -> None:
-    state.mkdir(parents=True, exist_ok=True)
-    if (keep / LEDGER).exists():
-        shutil.copyfile(keep / LEDGER, state / LEDGER)
+    (state / "accounts").mkdir(parents=True, exist_ok=True)
+    for name in (LEDGER, OPERATIONS):
+        if (keep / name).exists():
+            shutil.copyfile(keep / name, state / name)
+    for book in sorted((keep / "accounts").glob("*.json")) if (keep / "accounts").is_dir() else []:
+        shutil.copyfile(book, state / "accounts" / book.name)
     for bundle in sorted((keep / "banks").glob("*.bundle")) if (keep / "banks").is_dir() else []:
         root = state / "banks" / bundle.stem
         if not root.exists():

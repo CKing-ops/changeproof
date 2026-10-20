@@ -36,7 +36,19 @@ a design partner sees it. No real bank code may be used (CLAUDE.md compliance gu
    `scripts/bank_sim.py` runs N days. A scheduled task runs it while the owner is offline and writes
    what it learns to a notes file next to the ledger. Those notes are commentary on the scores, not
    evidence; the scores come only from the engine and the catalogue (CLAUDE.md rule 3).
-5. **No schema changed and nothing leaves the machine.** The simulation calls the engine's existing
+5. **The banks do business, not just changes** (owner request, 2026-10-19: "simulate real life but
+   expedited ... transactions, data, accounts"). Each bank has 300 invented accounts
+   (`operations.py`). Every simulated day, interest accrues on every account, 25 to 45 deposits and
+   withdrawals post (fewer at weekends), 15 to 30 payments are screened, and fees are charged on the last
+   day of the month. The bank's own programs, as main holds them after the day's review, do that work
+   under GnuCOBOL, and their results move the balances, so a missed defect shows in the bank's numbers.
+   The day's traffic for the changed program is also run before and after the change; the ledger
+   records whether live data would have shown the difference (`traffic`). Each bank-day's business is
+   kept in `operations.jsonl`.
+6. **One page to read.** After every simulated day `RECORD.md` is rebuilt from the two ledgers
+   (`record.py`): how the engine is doing overall and per market, per program, each bank's latest day,
+   totals per simulated month, and the latest misses with their `file:line`.
+7. **No schema changed and nothing leaves the machine.** The simulation calls the engine's existing
    functions offline.
 
 ## Consequences
@@ -52,7 +64,10 @@ a design partner sees it. No real bank code may be used (CLAUDE.md compliance gu
 - `tests/test_banksim.py`: three US banks on `general` and three EU banks on `eu-dora`; every estate
   parses and every catalogued change applies once; a planted rounding defect is caught and kept off main;
   a refactor is proven equivalent and merged; approvals are scored from the change record; the ledger and
-  scorecard add up and the stream repeats; a saved simulation carries on from its bundles.
+  scorecard add up and the stream repeats; a saved simulation carries on from its bundles; each bank
+  opens the same book of accounts; a day's traffic accrues interest on every account and charges fees only at
+  month end; the banks run their business on main and live traffic shows a caught defect; the one-page
+  record counts only what the ledgers hold.
 
 ## First run (2026-10-19)
 
