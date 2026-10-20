@@ -71,7 +71,9 @@ Weeks 1-13 (planned capabilities are labeled; proven ones cite their test):
   under GnuCOBOL (`scripts/cobol_io_check.py`, `docs/weekly/cobol-io-carddemo.json`). Stand-ins for
   CICS, Db2 and IMS calls: **planned**.
 - Bank simulation: six invented banks (three US on `general`, three EU on `eu-dora`) commit one change
-  a simulated day and the engine scans each, scored against what the change really does
+  a simulated day and the engine scans each, scored against what the change really does; each bank then
+  runs the day's interest, postings, payments and month-end fees for 300 invented accounts on its own
+  programs, and a one-page record is rebuilt from the ledgers
   (`scripts/bank_sim.py`, `tests/test_banksim.py`, `docs/adr/014-bank-simulation.md`).
 - Behavioral equivalence: `changeproof equivalence <commit or range>` builds characterization tests
   from each program before the change, replays them after it, and prints a behavioral-equivalence
