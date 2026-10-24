@@ -75,6 +75,11 @@ Weeks 1-13 (planned capabilities are labeled; proven ones cite their test):
   runs the day's interest, postings, payments and month-end fees for 300 invented accounts on its own
   programs, and a one-page record is rebuilt from the ledgers
   (`scripts/bank_sim.py`, `tests/test_banksim.py`, `docs/adr/014-bank-simulation.md`).
+- Wider test search: each kept path is tried one unit below, on and above every literal it compares a
+  field with, and an outcome no single-field change reaches gets its fields set together. Replaying the
+  simulation's 18 missed commits, 17 are now caught; recorded refactors stay proven equivalent
+  (`tests/test_search.py`, `scripts/search_replay.py`, `docs/weekly/search-replay.json`,
+  `docs/adr/015-boundary-and-joint-search.md`). Rounding at a half cent: **planned**.
 - Behavioral equivalence: `changeproof equivalence <commit or range>` builds characterization tests
   from each program before the change, replays them after it, and prints a behavioral-equivalence
   predicate (signed with `--key`). By default it tests only programs outside the impact set and
