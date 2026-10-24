@@ -149,6 +149,15 @@ def boundary_values(f: Field, module: IRModule) -> dict[str, set[str]]:
     return found
 
 
+# PURPOSE: VALUES ONE UNIT BELOW, ON AND ONE UNIT ABOVE AN ON-POINT VALUE; A TEXT LITERAL HAS NO SIDES
+def sides(f: Field, value: str) -> list[str]:
+    shape = f.shape
+    if not shape["numeric"]:
+        return [value]
+    unit = Decimal(1).scaleb(-shape["scale"])
+    return [format(Decimal(value) + step, "f") for step in (-unit, 0 * unit, unit)]
+
+
 # PURPOSE: ACCEPT AND MOVE LINES THAT FILL EACH FIELD FROM ONE STDIN LINE
 def fill_lines(fields: list[Field]) -> list[str]:
     lines = []
