@@ -2,6 +2,10 @@
 
 Each catalogued change says what it really does (its ground truth) so the scan can be scored:
 a refactor keeps behaviour, a defect breaks it, an intended change alters it on purpose.
+
+Once a change is on main its old text is gone, so it can never be drawn again. Each change
+therefore has a revert, and each intended change a re-target, that open only after it merges.
+That keeps refactors and intended changes in the mix instead of leaving only repeat defects.
 """
 
 from dataclasses import dataclass
@@ -24,6 +28,23 @@ class Change:
     summary: str
     old: str
     new: str
+    follows: "Change | None" = None  # the change whose merge brings this one into play
+
+
+# PURPOSE: THE CHANGE THAT PUTS A MERGED CHANGE BACK; BACKING OUT A DEFECT IS A FIX, SO IT IS INTENDED
+def revert(change: Change) -> Change:
+    kind = "refactor" if change.kind == "refactor" else "intended"
+    return Change(f"{change.id}-revert", change.path, kind, f'Revert "{change.summary}"',
+                  change.new, change.old, change)
+
+
+# PURPOSE: A MERGED CHANGE TO A RATE, FEE OR LIMIT SET AGAIN, HALFWAY BACK TO WHERE IT STARTED
+def retarget(change: Change) -> Change:
+    before, after = change.old.split()[1], change.new.split()[1]
+    halfway = literal((Decimal(before) + Decimal(after)) / 2, before)
+    summary = "Set " + change.summary.replace(after, halfway).split(" ", 1)[1]
+    return Change(f"{change.id}-retarget", change.path, "intended", summary, change.new,
+                  change.new.replace(after, halfway), change)
 
 
 CONFIG = """version: 0.1
@@ -52,12 +73,17 @@ def values(bank: Bank) -> dict[str, str]:
     return bank.rules | {"bank": bank.name, "currency": bank.currency}
 
 
+# PURPOSE: ONE PROGRAM'S SOURCE AS THE BANK IMPORTED IT
+def imported(bank: Bank, name: str) -> str:
+    template = files("changeproof.banksim").joinpath("estate", f"{name}.cbl").read_text(encoding="utf-8")
+    return template.format(**values(bank))
+
+
 # PURPOSE: WRITES THE BANK'S PROGRAMS AND CHANGEPROOF.YAML INTO A FOLDER
 def render(bank: Bank, root: Path) -> None:
     (root / "src").mkdir(parents=True, exist_ok=True)
     for name in PROGRAMS:
-        template = files("changeproof.banksim").joinpath("estate", f"{name}.cbl").read_text(encoding="utf-8")
-        (root / "src" / f"{name}.cbl").write_text(template.format(**values(bank)), encoding="utf-8")
+        (root / "src" / f"{name}.cbl").write_text(imported(bank, name), encoding="utf-8")
     (root / "changeproof.yaml").write_text(CONFIG.format(
         market=bank.market, id=bank.id, owner=bank.approver[0],
         frameworks="[" + ", ".join(MARKETS[bank.market].frameworks) + "]"), encoding="utf-8")
@@ -70,6 +96,16 @@ def literal(value: Decimal, like: str) -> str:
 
 # PURPOSE: EVERY CHANGE A DEVELOPER AT THIS BANK MAY MAKE, WITH WHAT IT REALLY DOES
 def catalogue(bank: Bank) -> list[Change]:
+    firsts = first_changes(bank)
+    retargets = [retarget(c) for c in firsts if c.kind == "intended"]
+    # A follow-up whose old text is already in the imported program could land on the wrong line
+    # (the debit SUBTRACT, for one), so it is left out.
+    source = {f"src/{n}.cbl": imported(bank, n) for n in PROGRAMS}
+    return firsts + [c for c in retargets + [revert(c) for c in firsts + retargets] if c.old not in source[c.path]]
+
+
+# PURPOSE: THE CHANGES THAT APPLY TO A FRESHLY IMPORTED ESTATE
+def first_changes(bank: Bank) -> list[Change]:
     r = bank.rules
     other_basis = "360" if r["basis"] == "365" else "365"
     raised_rate = literal(Decimal(r["rate_high"]) + Decimal("0.0025"), r["rate_high"])

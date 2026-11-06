@@ -143,7 +143,8 @@ def scan(bank: Bank, state: Path, day: int, runner=None, only: str | None = None
     return {
         "day": day, "date": str(FIRST_DAY + timedelta(days=day)), "bank": bank.id, "name": bank.name,
         "region": bank.region, "market": bank.market, "change": change.id, "kind": change.kind,
-        "summary": change.summary, "commit": sha, "provenance": {"file": change.path, "line": line},
+        "summary": change.summary, "follows": change.follows and change.follows.id, "commit": sha,
+        "provenance": {"file": change.path, "line": line},
         "truth": {"behaviour": BEHAVIOUR[change.kind], "governance": governance},
         "engine": {"verdict": found["verdict"], "tests": found["summary"]["total"],
                    "different": found["summary"]["different"], "error": found["summary"]["error"],
