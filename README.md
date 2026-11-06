@@ -75,6 +75,12 @@ Weeks 1-13 (planned capabilities are labeled; proven ones cite their test):
   runs the day's interest, postings, payments and month-end fees for 300 invented accounts on its own
   programs, and a one-page record is rebuilt from the ledgers
   (`scripts/bank_sim.py`, `tests/test_banksim.py`, `docs/adr/014-bank-simulation.md`).
+- Pairwise boundary search: after the one-field search, characterization varies two boundary inputs
+  together from runs that reached each still-open condition, and keeps a test one step either side of
+  each boundary. On the simulated banks' own programs it reaches the overdraft fee path, runs the retail
+  waiver on its minimum and keeps a test one past an inclusive threshold (`tests/test_pairwise.py`).
+  Re-scanning the simulation's saved changes turns 17 of its 18 misses into catches with no new false
+  alarm (`scripts/bank_sim_rescan.py`, `docs/adr/015-pairwise-boundary-search.md`).
 - Behavioral equivalence: `changeproof equivalence <commit or range>` builds characterization tests
   from each program before the change, replays them after it, and prints a behavioral-equivalence
   predicate (signed with `--key`). By default it tests only programs outside the impact set and
