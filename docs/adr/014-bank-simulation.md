@@ -25,6 +25,11 @@ a design partner sees it. No real bank code may be used (CLAUDE.md compliance gu
    behaviour (including one that only looks risky, `>` to `>=` where the extra case adds zero), defects
    that break it while their commit message calls them a tidy-up, and intended rule changes. Each is
    committed under one of four approval paths: governed, self-approved, no ticket, or emergency.
+   A merged change's old text is gone, so on its own the catalogue drains to repeat defects (from
+   simulated day 45 every change was a defect). Each change therefore has a revert, and each intended
+   change a re-target halfway back to its starting value, that open only once it is on main. Backing
+   out a defect is a fix, so it counts as intended. A follow-up whose old text is already in the imported
+   program is left out, since it could land on the wrong line.
 3. **One simulated business day** (`run.py`): each bank commits one change; the engine builds the
    change record and runs behavioural equivalence over every program (`--scope full-suite`). The result
    is scored against the truth: `proven`, `caught`, `confirmed`, `missed`, `false-alarm` or
@@ -62,7 +67,8 @@ a design partner sees it. No real bank code may be used (CLAUDE.md compliance gu
 ## Evidence
 
 - `tests/test_banksim.py`: three US banks on `general` and three EU banks on `eu-dora`; every estate
-  parses and every catalogued change applies once; a planted rounding defect is caught and kept off main;
+  parses and every catalogued change applies once; each revert and re-target opens only once its change
+  is on main, and a merged refactor comes back as its revert, proven equivalent; a planted rounding defect is caught and kept off main;
   a refactor is proven equivalent and merged; approvals are scored from the change record; the ledger and
   scorecard add up and the stream repeats; a saved simulation carries on from its bundles; each bank
   opens the same book of accounts; a day's traffic accrues interest on every account and charges fees only at

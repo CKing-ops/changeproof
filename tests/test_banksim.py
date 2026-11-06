@@ -44,13 +44,59 @@ def test_every_catalogued_change_applies_once_to_its_bank_estate(tmp_path):
         root = tmp_path / bank.id
         render(bank, root)
         kinds = set()
-        for change in catalogue(bank):
+        for change in (c for c in catalogue(bank) if c.follows is None):
             text = (root / change.path).read_text()
             assert text.count(change.old) == 1, (bank.id, change.id)
             assert change.old != change.new
             assert max(map(len, text.replace(change.old, change.new).splitlines())) <= 72, (bank.id, change.id)
             kinds.add(change.kind)
         assert kinds == {"refactor", "defect", "intended"}
+
+
+def offered(bank, root):
+    return {c.id for c in catalogue(bank) if (root / c.path).read_text().count(c.old) == 1}
+
+
+def test_follow_ups_open_only_once_their_change_is_on_main_and_keep_every_kind_in_the_mix(tmp_path):
+    for bank in BANKS:
+        changes = catalogue(bank)
+        base = tmp_path / bank.id
+        render(bank, base)
+        firsts = {c.id for c in changes if c.follows is None}
+        assert offered(bank, base) == firsts
+        for change in changes:
+            if change.follows is None:
+                continue
+            assert change.kind == ("refactor" if change.follows.kind == "refactor" else "intended"), change.id
+            root = tmp_path / f"{bank.id}-{change.id}"
+            render(bank, root)
+            chain, parent = [], change.follows
+            while parent:
+                chain.insert(0, parent)
+                parent = parent.follows
+            for step in chain:
+                assert step.id in offered(bank, root), (bank.id, change.id, step.id)
+                path = root / step.path
+                path.write_text(path.read_text().replace(step.old, step.new, 1))
+            assert change.id in offered(bank, root), (bank.id, change.id)
+            text = (root / change.path).read_text()
+            assert max(map(len, text.replace(change.old, change.new).splitlines())) <= 72, (bank.id, change.id)
+        reverts = {c.follows.id for c in changes if c.id.endswith("-revert")} & firsts
+        assert reverts == firsts - {"post-credit-reversed", "post-limit-ignored"}  # their new text is already in the program
+        assert {c.follows.id for c in changes if c.id.endswith("-retarget")} == \
+            {c.id for c in changes if c.follows is None and c.kind == "intended"}
+
+
+def test_a_merged_change_comes_back_as_its_revert(tmp_path):
+    bank = BANKS[0]
+    state = tmp_path / "sim"
+    first = tick(bank, state, 1, LocalRunner(), only="intaccr-init")
+    assert first["merged"] and first["follows"] is None
+    root = state / "banks" / bank.id
+    assert "intaccr-init-revert" in offered(bank, root) and "intaccr-init" not in offered(bank, root)
+    back = tick(bank, state, 2, LocalRunner(), only="intaccr-init-revert")
+    assert (back["kind"], back["follows"], back["outcome"]) == ("refactor", "intaccr-init", "proven")
+    assert "intaccr-init" in offered(bank, root)
 
 
 def git(root, *args):
