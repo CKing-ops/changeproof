@@ -1,5 +1,8 @@
 import json
+import re
 from collections import Counter
+from decimal import Decimal
+from itertools import combinations
 from pathlib import Path
 
 from changeproof.adapters.base import Entity, IRModule
@@ -8,10 +11,13 @@ from changeproof.adapters.cobol.driver import Field, boundary_values, candidates
 from changeproof.adapters.cobol.gnucobol import DockerRunner, LocalRunner, Run, Runner, read_trace
 from changeproof.signer import digest
 
-__all__ = ["DockerRunner", "LocalRunner", "Runner", "candidates", "characterize", "input_fields", "linkage_fields", "outcomes",
-           "output_digest", "parse_picture", "read_trace", "replay", "rerun"]
+__all__ = ["DockerRunner", "LocalRunner", "Runner", "around", "candidates", "characterize", "input_fields",
+           "linkage_fields", "outcomes", "output_digest", "pairs", "parse_picture", "read_trace", "replay", "rerun"]
 
 MAX_ROUNDS = 6  # RENAME: SEARCH ROUNDS BEFORE GIVING UP ON AN OUTCOME NO INPUT HAS REACHED
+PAIR_SEEDS = 3  # RENAME: RUNS PER CONDITION THE PAIRWISE ROUND STARTS FROM
+PAIR_BUDGET = 3000  # RENAME: MOST RUNS THE PAIRWISE ROUND MAY ADD TO ONE PROGRAM'S SEARCH
+NUMBER = re.compile(r"-?\d+(\.\d+)?")
 HUNG = 124  # exit code of a run stopped by its timeout
 
 
@@ -43,6 +49,32 @@ def variants(seed: dict[str, str], pools: dict[str, list[str]]) -> list[dict[str
     return [seed | {name: value} for name, pool in pools.items() if len(pool) > 1 for value in pool]
 
 
+# PURPOSE: INPUT SETS THAT CHANGE TWO FIELDS OF A SEED TOGETHER, OVER EVERY PAIR OF THEIR VALUES
+def pairs(seed: dict[str, str], pools: dict[str, list[str]], names: list[str]) -> list[dict[str, str]]:
+    return [seed | {a: x, b: y} for a, b in combinations(names, 2) for x in pools[a] for y in pools[b]]
+
+
+# PURPOSE: A VALUE AND, WHEN IT IS A NUMBER, THE NUMBERS ONE UNIT OF ITS LAST DIGIT EITHER SIDE
+def neighbours(value: str) -> list[str]:
+    if not NUMBER.fullmatch(value):
+        return [value]
+    n = Decimal(value)
+    unit = Decimal(1).scaleb(n.as_tuple().exponent)
+    return [format(n - unit, "f"), value, format(n + unit, "f")]
+
+
+# PURPOSE: EACH ON-POINT VALUE AND ITS NEIGHBOURS ONE UNIT EITHER SIDE THAT THE FIELD'S POOL HOLDS, WITH THE BRANCHES
+def around(bounds: dict[str, dict[str, set[str]]], pools: dict[str, list[str]]) -> dict[str, dict[str, set[str]]]:
+    found: dict[str, dict[str, set[str]]] = {}  # RENAME: FIELD TO VALUE NEAR A LITERAL TO THE BRANCHES COMPARING THEM
+    for name, points in bounds.items():
+        pool = set(pools[name])
+        for value, branch_ids in points.items():
+            for near in neighbours(value):
+                if near in pool:
+                    found.setdefault(name, {}).setdefault(near, set()).update(branch_ids)
+    return found
+
+
 # PURPOSE: (FIELD, VALUE, CONDITION) FOR EACH INPUT SITTING EXACTLY ON A LITERAL A CONDITION THAT RAN COMPARED IT WITH
 def boundary_hits(inputs: dict[str, str], bounds: dict[str, dict[str, set[str]]], got: set) -> set[tuple[str, str, str]]:
     ran = {branch for branch, _ in got}
@@ -50,50 +82,81 @@ def boundary_hits(inputs: dict[str, str], bounds: dict[str, dict[str, set[str]]]
             for branch in bounds.get(name, {}).get(value, set()) & ran}
 
 
-# PURPOSE: (FIELD, VALUE) PAIRS OF A RUN THAT SAT EXACTLY ON A LITERAL A CONDITION THAT RAN COMPARED THE FIELD WITH
-def on_point(inputs: dict[str, str], bounds: dict[str, dict[str, set[str]]], got: set) -> set[tuple[str, str]]:
-    return {(name, value) for name, value, _ in boundary_hits(inputs, bounds, got)}
+# PURPOSE: (FIELD, VALUE) PAIRS OF A RUN THAT SAT ON OR NEXT TO A LITERAL A CONDITION THAT RAN COMPARED THE FIELD WITH
+def near_points(inputs: dict[str, str], near: dict[str, dict[str, set[str]]], got: set) -> set[tuple[str, str]]:
+    return {(name, value) for name, value, _ in boundary_hits(inputs, near, got)}
 
 
-# PURPOSE: BOUNDARY SEARCH, KEEPING THE FIRST RUN DOWN EACH PATH AND THE FIRST RUN ON EACH BOUNDARY POINT
+# PURPOSE: BOUNDARY SEARCH, KEEPING THE FIRST RUN DOWN EACH PATH AND THE FIRST RUN ON OR NEXT TO EACH BOUNDARY POINT
 def search(adapter: CobolAdapter, module: IRModule, branches: list[Entity], pools: dict[str, list[str]],
            bounds: dict[str, dict[str, set[str]]], batch: bool = False) -> tuple[list, int]:
-    bases = [{n: p[0] for n, p in pools.items()}, {n: p[len(p) // 2] for n, p in pools.items()},
-             {n: p[-1] for n, p in pools.items()}]
+    near = around(bounds, pools)
     goal = {(b.id, o) for b in branches for o in (True, False)}
     tried, results, covered = set(), [], set()
-    batch = bases + [v for b in bases for v in variants(b, pools)]
-    for _ in range(MAX_ROUNDS):
+
+    # PURPOSE: RUNS THE INPUT SETS NOT TRIED BEFORE; NONE WHEN ALL WERE, ELSE THE ONES THAT REACHED A NEW OUTCOME
+    def attempt(todo: list[dict[str, str]]) -> list[dict[str, str]] | None:
         fresh = []  # RENAME: INPUT SETS NOT RUN BEFORE
-        for inputs in batch:
+        for inputs in todo:
             if (key := tuple(sorted(inputs.items()))) not in tried:
                 tried.add(key)
                 fresh.append(inputs)
-        batch = fresh
-        if not batch:
-            break
-        _, runs = adapter.execute(module, batch)
+        if not fresh:
+            return None
+        _, runs = adapter.execute(module, fresh)
         seeds = []
-        for inputs, run in zip(batch, runs):
+        for inputs, run in zip(fresh, runs):
             # a batch job's return code is part of its behaviour; a subprogram's driver only fails when the call did
             if run.rc == HUNG or (run.rc and not batch):
                 continue
             got = reached(branches, run.lines)
             if got - covered:
                 seeds.append(inputs)
-                covered |= got
+                covered.update(got)
             results.append((inputs, run, got))
-        if covered >= goal:
+        return seeds
+
+    # PURPOSE: WHAT A CONDITION STILL LACKS: AN OUTCOME NO RUN TOOK, OR A VALUE NEAR ITS LITERAL NO RUN REACHING IT HELD
+    def open_at(branch: str) -> bool:
+        if {(branch, True), (branch, False)} - covered:
+            return True
+        want = {(n, v) for n, values in near.items() for v, ids in values.items() if branch in ids}
+        held = {(n, inputs[n]) for inputs, _, got in results if any(b == branch for b, _ in got) for n in near}
+        return bool(want - held)
+
+    bases = [{n: p[0] for n, p in pools.items()}, {n: p[len(p) // 2] for n, p in pools.items()},
+             {n: p[-1] for n, p in pools.items()}]
+    todo = bases + [v for b in bases for v in variants(b, pools)]
+    for _ in range(MAX_ROUNDS):
+        seeds = attempt(todo)
+        if seeds is None or covered >= goal:
             break
-        batch = [v for s in seeds for v in variants(s, pools)]
+        todo = [v for s in seeds for v in variants(s, pools)]
+    # one field at a time misses paths that need a balance, an amount and a limit set together, and boundaries
+    # behind a guard that the first runs met from the wrong side; start again from runs that reached each condition
+    names = [n for n in near if len(pools[n]) > 1]  # RENAME: FIELDS A CONDITION COMPARES WITH A LITERAL
+    budget = len(tried) + PAIR_BUDGET
+    for branch in branches:
+        if not open_at(branch.id):
+            continue
+        starts = {}  # RENAME: PATH TO THE FIRST RUN DOWN IT THAT REACHED THIS CONDITION
+        for inputs, _, got in results:
+            if any(b == branch.id for b, _ in got):
+                starts.setdefault(frozenset(got), inputs)
+        starts = list(starts.values())[:PAIR_SEEDS]
+        attempt([v for s in starts for v in variants(s, {n: pools[n] for n in names})])
+        for seed in starts:
+            if not open_at(branch.id) or len(tried) >= budget:
+                break
+            attempt(pairs(seed, pools, names)[:budget - len(tried)])
     paths = {}  # RENAME: SET OF OUTCOMES A RUN REACHED TO THE FIRST RUN THAT TOOK THAT PATH
     for result in results:
         paths.setdefault(frozenset(result[2]), result)
     chosen = list(paths.values())
-    # a run that puts a field exactly on a literal it is compared with catches an off-by-one the paths miss
-    points = {p for inputs, _, got in chosen for p in on_point(inputs, bounds, got)}
+    # a run on or one step past a literal catches an off-by-one, and arithmetic the on-point run multiplies by zero
+    points = {p for inputs, _, got in chosen for p in near_points(inputs, near, got)}
     for result in results:
-        if new := on_point(result[0], bounds, result[2]) - points:
+        if new := near_points(result[0], near, result[2]) - points:
             chosen.append(result)
             points |= new
     return chosen, len(tried)
