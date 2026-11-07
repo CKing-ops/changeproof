@@ -42,16 +42,19 @@ characterization search (`src/changeproof/characterize/__init__.py`, `search`):
   seen by replay: the overdraft fee path is covered both ways and a lowered fee differs, the retail
   waiver gets a segment `R` test on its minimum and the strict test differs, and a test one past an
   inclusive threshold is kept and the slipped rate differs. Three refactors still replay clean.
-- Re-scan of the saved simulation (`scripts/bank_sim_rescan.py`, results logged in the simulation's
-  `KNOWLEDGE.md`, 2026-11-06): 17 of the 18 missed rows are now caught or confirmed, all 34 refactors
-  still proven, all 20 confirmed intended changes still confirmed, and the first caught row of each defect
-  at each bank (48 rows) still caught.
+- Re-scan of the saved simulation through day 667 (`scripts/bank_sim_rescan.py`, 222 rows, results in
+  the simulation folder's `rescan-pairwise-2026-11-07.jsonl` and logged in its `KNOWLEDGE.md`): 38 of
+  the 41 missed rows are now caught or confirmed. All 60 refactors are still proven, all 41 confirmed
+  intended changes still confirmed, and the first caught row of each defect at each bank (80 rows) still
+  caught. No false alarm.
 
 ## Consequences
 
 - Suites are larger (about 43 to 45 tests per four-program scan in the re-scan, against 31 to 35 in the
   ledger) and characterization costs more runs (Prairie Ledger's `POSTTXN`: 687 runs against 279).
-- The one remaining miss, `intaccr-truncate` (rounding mode), is not a boundary problem. It needs a run
-  whose exact result sits at a half cent or above, which is **planned** (simulation idea 5).
+- Two of the three remaining misses, `intaccr-truncate` and its revert (rounding mode), are not a
+  boundary problem. They need a run whose exact result sits at a half cent or above, which is
+  **planned** (simulation idea 5). The third, a re-targeted online limit reverted at one bank, is not
+  yet looked into.
 - A condition that can never reach an outcome (dead code) costs up to `PAIR_BUDGET` runs every time the
   program is characterized.
