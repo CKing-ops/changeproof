@@ -6,7 +6,8 @@ containment fact, with its provenance, so each impacted entity comes with the pa
 
 Confidence tiers:
 - definite: reached only through static dependencies (contains, PERFORM, CALL of a literal, COPY,
-  EXEC PGM, CSD PROGRAM) or the use of a changed data definition;
+  EXEC PGM, CSD PROGRAM) or the use of a changed data definition or table or dataset definition (in-stream DDL
+  or IDCAMS);
 - probable: the path includes a dynamic target resolved through a moved literal, a data value
   flowing to a reader, or a step whose input changed;
 - possible: the path goes through a shared table, CICS file or dataset that an impacted entity writes.
@@ -53,6 +54,9 @@ CICS_READS = frozenset({"READ", "READNEXT", "READPREV", "STARTBR"})  # RENAME: C
 CICS_WRITES = frozenset({"WRITE", "REWRITE", "DELETE"})  # RENAME: CICS FILE COMMANDS THAT WRITE
 DD_WRITES = frozenset({"NEW", "MOD", "OLD"})  # RENAME: DISP STATUSES UNDER WHICH A STEP MAY WRITE THE DATASET
 DD_READS = frozenset({"SHR", "OLD"})  # RENAME: DISP STATUSES UNDER WHICH A STEP READS THE DATASET
+DEFINED_KINDS = frozenset({"table", "dataset", "cics-file"})  # RENAME: NODES WHOSE LAYOUT A DDL OR IDCAMS CHANGE ALTERS
+DEFINITION_USES = frozenset({  # RENAME: EDGES INTO A DEFINED NODE FROM SOMETHING THAT DEPENDS ON ITS LAYOUT
+    "reads-table", "writes-table", "cics-file", "cics-dataset", "dd"})
 
 
 # PURPOSE: THE DISP STATUS OF A DD; JCL TREATS A MISSING DISP AS NEW
@@ -83,6 +87,9 @@ class ImpactWalk:
     def anchors(self, change: EntityChange) -> list[tuple[str, str, Step | None]]:
         e = change.entity
         found: list[tuple[str, str, Step | None]] = []
+        if e.kind == "jcl-define":
+            node = f"{e.attributes['defines']}:{e.name}"
+            return [(node, "definition", Step(e.id, node, "defines", e.provenance))] if node in self.nodes else []
         if e.kind in ("jcl-step", "jcl-dd"):
             scope = e.id.split(":", 1)[1]
             step = "step:" + (scope.rsplit(".", 1)[0] if e.kind == "jcl-dd" else scope)
@@ -141,6 +148,10 @@ class ImpactWalk:
                 found.append((e.dst, "node", Tier.PROBABLE, Step(node, e.dst, "runs", e.provenance)))
             elif e.kind == "contains" and kind == "program" and e.dst in self.writers:
                 found.append((e.dst, "node", Tier.POSSIBLE, Step(node, e.dst, "may-change-output-of", e.provenance)))
+        if mode == "definition" and kind in DEFINED_KINDS:
+            found += [(e.src, "definition" if e.kind == "cics-dataset" else "node", Tier.DEFINITE,
+                       Step(node, e.src, "definition-used-by", e.provenance))
+                      for e in self.into.get(node, []) if e.kind in DEFINITION_USES]
         if kind in ("data", "file"):
             found += self.data_neighbours(node, mode)
         return found

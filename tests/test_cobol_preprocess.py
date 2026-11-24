@@ -99,3 +99,16 @@ def test_separator_commas_become_spaces_outside_literals(library):
     source = preprocess(PAYCALC, ROOT, library)
     call = next(ln.text for ln in source.lines if "WS-HASH-SVC USING" in ln.text)
     assert "," not in call
+
+
+def test_a_period_after_a_data_division_exec_block_goes_with_the_block(tmp_path):
+    # DCLGEN copybooks end their DECLARE TABLE with "END-EXEC." (corpus/ibm-cash-account/COBOL/DCLCASH.cpy:12)
+    (tmp_path / "P.cbl").write_text(
+        "       IDENTIFICATION DIVISION.\n       PROGRAM-ID. P.\n       DATA DIVISION.\n"
+        "       WORKING-STORAGE SECTION.\n           EXEC SQL DECLARE T TABLE\n"
+        "           ( X CHAR(1) ) END-EXEC.\n       01 Z PIC X.\n       PROCEDURE DIVISION.\n"
+        "           EXEC CICS RETURN END-EXEC.\n")
+    source = preprocess(tmp_path / "P.cbl", tmp_path, CopybookLibrary(tmp_path, []))
+    texts = [ln.text.strip() for ln in source.lines]
+    assert "." not in texts and "CONTINUE." in texts
+    assert [(e.kind, e.line, e.end_line) for e in source.execs] == [("SQL", 5, 6), ("CICS", 9, 9)]

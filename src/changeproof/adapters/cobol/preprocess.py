@@ -19,7 +19,7 @@ TOKEN_RE = re.compile(
 )
 LITERAL_RE = re.compile(r"'[^'\n]*'?|\"[^\"\n]*\"?")
 PARTIAL_WORD_RE = re.compile(r"^(?:\(\S+\)|:\S+:)$")
-EXEC_RE = re.compile(r"(?<![\w-])EXEC\s+(SQL|CICS|DLI)\b(.*?)\bEND-EXEC\b", re.IGNORECASE | re.DOTALL)
+EXEC_RE = re.compile(r"(?<![\w-])EXEC\s+(SQL|CICS|DLI)\b(.*?)\bEND-EXEC\b(\s*\.(?=\s|$))?", re.IGNORECASE | re.DOTALL)
 PROCEDURE_RE = re.compile(r"(?<![\w-])PROCEDURE\s+DIVISION\b", re.IGNORECASE)
 DIRECTIVE_RE = re.compile(r"^\s*(?:EJECT|SKIP[123])\s*\.?\s*$|^\s*(?:CBL|PROCESS)\s", re.IGNORECASE)
 
@@ -294,11 +294,14 @@ def mask_exec_blocks(lines: list[Line]) -> tuple[list[Line], list[ExecBlock]]:
     proc = PROCEDURE_RE.search(joined)
     execs = []
     for m in reversed(list(EXEC_RE.finditer(joined))):
-        first, last = locate(starts, m.start()), locate(starts, m.end() - 1)
+        closed = m.start(3) if m.group(3) else m.end()  # RENAME: OFFSET JUST AFTER END-EXEC
+        first, last = locate(starts, m.start()), locate(starts, closed - 1)
         end_line = lines[last].end_line or lines[last].line
         execs.append(ExecBlock(m.group(1).upper(), " ".join(m.group(2).split()), lines[first].file,
                                lines[first].line, end_line, first))
-        joined = splice(joined, m.start(), m.end(), "CONTINUE" if proc and m.start() > proc.start() else "")
+        # A data-division block leaves nothing behind, so its closing period goes with it.
+        in_procedure = proc and m.start() > proc.start()
+        joined = splice(joined, m.start(), closed if in_procedure else m.end(), "CONTINUE" if in_procedure else "")
     return split_back(lines, joined), execs[::-1]
 
 

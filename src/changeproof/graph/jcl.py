@@ -14,6 +14,10 @@ RUN_PROGRAM_RE = re.compile(r"\bRUN\s+PROG(?:RAM)?\s*\(\s*([A-Z@#$][A-Z0-9@#$]{0
 TSO_PROGRAMS = frozenset({"IKJEFT01", "IKJEFT1A", "IKJEFT1B"})  # RENAME: TSO BATCH PROGRAMS THAT RUN WHAT SYSTSIN NAMES
 IMS_PROGRAMS = frozenset({"DFSRRC00"})  # RENAME: IMS REGION CONTROLLERS WHOSE PARM NAMES THE PROGRAM
 IMS_REGIONS = frozenset({"BMP", "DLI", "DBB"})  # RENAME: PARM REGION TYPES WHOSE SECOND FIELD IS THE PROGRAM
+DEFINES_RE = {  # RENAME: WHAT AN IN-STREAM STATEMENT DEFINES (SQL DDL, IDCAMS) TO THE PATTERN THAT NAMES IT
+    "table": re.compile(r"^\s*(?:CREATE|ALTER|DROP)\s+TABLE\s+([A-Z0-9@#$_.]+)", re.IGNORECASE),
+    "dataset": re.compile(r"^\s*(?:DEFINE|DEF)\s+CLUSTER\s*\(\s*NAME\s*\(\s*([A-Z0-9@#$.]+)\s*\)", re.IGNORECASE),
+}
 
 
 @dataclass(frozen=True)
@@ -22,6 +26,8 @@ class JclDD:
     dataset: str | None
     disp: str | None
     provenance: Provenance
+    data: str | None = None  # in-stream input, whitespace collapsed
+    defines: tuple[tuple[str, str, str, Provenance], ...] = ()  # (table or dataset, name, statement, where)
 
 
 @dataclass
@@ -114,6 +120,30 @@ def tso_runs(lines: list[str], after: int, rel: str) -> list[tuple[str, Provenan
     return found
 
 
+# PURPOSE: THE IN-STREAM INPUT AFTER A DD * OR DD DATA STATEMENT, AND THE TABLES AND DATASETS IT DEFINES
+def instream(lines: list[str], after: int, rel: str) -> tuple[str, tuple[tuple[str, str, str, Provenance], ...]]:
+    body = []  # RENAME: (LINE NUMBER, TEXT) OF EACH INPUT LINE
+    for number in range(after + 1, len(lines) + 1):
+        line = lines[number - 1][:72]
+        if line.startswith(("//", "/*")):
+            break
+        body.append((number, line.rstrip()))
+    sql = any(";" in t for _, t in body)  # SQL ends a statement with a semicolon; IDCAMS continues one with - or +
+    defines, statement = [], []  # RENAME: LINES OF THE STATEMENT BEING READ
+    for number, line in body:
+        if line.strip() or statement:
+            statement.append((number, line))
+        if statement and (";" in line if sql else line.strip() and not line.endswith(("-", "+"))):
+            text = " ".join(" ".join(t.rstrip("-+") for _, t in statement).split())
+            for kind, pattern in DEFINES_RE.items():
+                if m := pattern.match(text):
+                    first = statement[0][0]
+                    defines.append((kind, m.group(1).upper(), text,
+                                    Provenance(file=rel, line=first, end_line=number if number != first else None)))
+            statement = []
+    return " ".join(" ".join(t for _, t in body).split()), tuple(defines)
+
+
 # PURPOSE: PARSES ONE JCL OR PROC MEMBER INTO JOBS, STEPS AND DD STATEMENTS WITH PROVENANCE
 def parse_jcl(path: Path, root: Path) -> list[JclJob]:
     rel = Path(path).relative_to(root).as_posix()  # RENAME: REPO-RELATIVE PATH USED IN PROVENANCE
@@ -138,7 +168,8 @@ def parse_jcl(path: Path, root: Path) -> list[JclJob]:
         elif op == "DD" and jobs and jobs[-1].steps:
             dsn = keywords.get("DSN") or keywords.get("DSNAME")
             dataset = MEMBER_RE.sub("", dsn).upper() if dsn else None
-            jobs[-1].steps[-1].dds.append(JclDD(name, dataset, keywords.get("DISP"), where))
+            data, defines = instream(lines, last, rel) if values[:1] in (["*"], ["DATA"]) else (None, ())
+            jobs[-1].steps[-1].dds.append(JclDD(name, dataset, keywords.get("DISP"), where, data, defines))
     return jobs
 
 
@@ -152,6 +183,11 @@ def jcl_module(path: Path, root: Path) -> IRModule:
             step_id = f"{job.name}.{step.name}"
             entities.append(Entity(id=f"jcl-step:{step_id}", kind="jcl-step", name=step.name, provenance=step.provenance,
                                    attributes={"program": step.program, "proc": step.proc}))
-            entities += [Entity(id=f"jcl-dd:{step_id}.{dd.name}", kind="jcl-dd", name=dd.name, provenance=dd.provenance,
-                                attributes={"dataset": dd.dataset, "disp": dd.disp}) for dd in step.dds]
+            for dd in step.dds:
+                entities.append(Entity(id=f"jcl-dd:{step_id}.{dd.name}", kind="jcl-dd", name=dd.name,
+                                       provenance=dd.provenance, attributes={"dataset": dd.dataset, "disp": dd.disp}
+                                       | ({"data": dd.data} if dd.data is not None else {})))
+                entities += [Entity(id=f"jcl-define:{step_id}.{dd.name}.{name}", kind="jcl-define", name=name,
+                                    provenance=where, attributes={"defines": kind, "statement": text})
+                             for kind, name, text, where in dd.defines]
     return IRModule(path=Path(path).relative_to(root).as_posix(), language="jcl", entities=entities)

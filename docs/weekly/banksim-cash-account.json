@@ -1,0 +1,323 @@
+{
+ "totals": {
+  "outcome": {
+   "inconclusive": 7
+  },
+  "impact": {
+   "reached": 6,
+   "nothing-required": 1
+  },
+  "governance": {
+   "flagged": 3,
+   "clean": 4
+  }
+ },
+ "rows": [
+  {
+   "day": 1,
+   "bank": "prairie-ledger",
+   "market": "general",
+   "change": "cash-msg-wording",
+   "kind": "refactor",
+   "summary": "Shorten the query success message",
+   "commit": "6496d65f1de162ccbbe9e92a4ebf99119a441d87",
+   "provenance": {
+    "file": "cash/src/CASH00.cbl",
+    "line": 147
+   },
+   "truth": {
+    "behaviour": "same",
+    "governance": "no-ticket"
+   },
+   "engine": {
+    "verdict": "inconclusive",
+    "tests": 45,
+    "different": 0,
+    "untested": [
+     "CASH00: no baseline: uses EXEC SQL at cash/copy/DCLCASH.cpy:8-12; stand-ins for CICS, Db2 and IMS calls are planned"
+    ],
+    "changed": 2,
+    "impacted": 11
+   },
+   "outcome": "inconclusive",
+   "impact": {
+    "expected": [
+     "program:CASH00"
+    ],
+    "missing": [],
+    "outcome": "reached"
+   },
+   "governance": {
+    "expected_flag": true,
+    "open_items": [
+     "no requester recorded",
+     "no approver recorded",
+     "no change request number",
+     "change type not recorded"
+    ],
+    "outcome": "flagged"
+   },
+   "merged": false,
+   "seconds": 54
+  },
+  {
+   "day": 2,
+   "bank": "prairie-ledger",
+   "market": "general",
+   "change": "cash-name-case",
+   "kind": "refactor",
+   "summary": "Spell the debit rate field in capitals",
+   "commit": "b36e17d4a8792767737358dbce63eff2f5e8a65f",
+   "provenance": {
+    "file": "cash/src/CASH00.cbl",
+    "line": 256
+   },
+   "truth": {
+    "behaviour": "same",
+    "governance": "governed"
+   },
+   "engine": {
+    "verdict": "inconclusive",
+    "tests": 45,
+    "different": 0,
+    "untested": [
+     "CASH00: no baseline: uses EXEC SQL at cash/copy/DCLCASH.cpy:8-12; stand-ins for CICS, Db2 and IMS calls are planned"
+    ],
+    "changed": 2,
+    "impacted": 26
+   },
+   "outcome": "inconclusive",
+   "impact": {
+    "expected": [],
+    "missing": [],
+    "outcome": "nothing-required"
+   },
+   "governance": {
+    "expected_flag": false,
+    "open_items": [],
+    "outcome": "clean"
+   },
+   "merged": false,
+   "seconds": 29
+  },
+  {
+   "day": 3,
+   "bank": "prairie-ledger",
+   "market": "general",
+   "change": "cash-credit-sign",
+   "kind": "defect",
+   "summary": "Tidy the credit computation",
+   "commit": "986708c42a6822809158b3a5c9fe6223001982d8",
+   "provenance": {
+    "file": "cash/src/CASH00.cbl",
+    "line": 222
+   },
+   "truth": {
+    "behaviour": "different",
+    "governance": "governed"
+   },
+   "engine": {
+    "verdict": "inconclusive",
+    "tests": 45,
+    "different": 0,
+    "untested": [
+     "CASH00: no baseline: uses EXEC SQL at cash/copy/DCLCASH.cpy:8-12; stand-ins for CICS, Db2 and IMS calls are planned"
+    ],
+    "changed": 2,
+    "impacted": 26
+   },
+   "outcome": "inconclusive",
+   "impact": {
+    "expected": [
+     "program:CASH00",
+     "table:STOCKTRD.CASHACCOUNTY"
+    ],
+    "missing": [],
+    "outcome": "reached"
+   },
+   "governance": {
+    "expected_flag": false,
+    "open_items": [],
+    "outcome": "clean"
+   },
+   "merged": false,
+   "seconds": 27
+  },
+  {
+   "day": 4,
+   "bank": "prairie-ledger",
+   "market": "general",
+   "change": "cash-history-key",
+   "kind": "defect",
+   "summary": "Simplify the history key",
+   "commit": "d8209f5c51899b1e78ae7d4353c83f07662ced45",
+   "provenance": {
+    "file": "cash/src/CASH00.cbl",
+    "line": 121
+   },
+   "truth": {
+    "behaviour": "different",
+    "governance": "governed"
+   },
+   "engine": {
+    "verdict": "inconclusive",
+    "tests": 45,
+    "different": 0,
+    "untested": [
+     "CASH00: no baseline: uses EXEC SQL at cash/copy/DCLCASH.cpy:8-12; stand-ins for CICS, Db2 and IMS calls are planned"
+    ],
+    "changed": 1,
+    "impacted": 12
+   },
+   "outcome": "inconclusive",
+   "impact": {
+    "expected": [
+     "cics-file:HISTORY",
+     "program:CASH00"
+    ],
+    "missing": [],
+    "outcome": "reached"
+   },
+   "governance": {
+    "expected_flag": false,
+    "open_items": [],
+    "outcome": "clean"
+   },
+   "merged": false,
+   "seconds": 28
+  },
+  {
+   "day": 5,
+   "bank": "prairie-ledger",
+   "market": "general",
+   "change": "cash-ksds-key",
+   "kind": "defect",
+   "summary": "Line the history key up with the record",
+   "commit": "9a521c03ddf411233d83f9a4f2e6846969347cab",
+   "provenance": {
+    "file": "cash/jcl/DEFKSDS.jcl",
+    "line": 14
+   },
+   "truth": {
+    "behaviour": "different",
+    "governance": "emergency"
+   },
+   "engine": {
+    "verdict": "inconclusive",
+    "tests": 45,
+    "different": 0,
+    "untested": [
+     "CASH00: no baseline: uses EXEC SQL at cash/copy/DCLCASH.cpy:8-12; stand-ins for CICS, Db2 and IMS calls are planned"
+    ],
+    "changed": 2,
+    "impacted": 13
+   },
+   "outcome": "inconclusive",
+   "impact": {
+    "expected": [
+     "cics-file:HISTORY",
+     "dataset:SYSD.STOCK.HISTORY",
+     "program:CASH00"
+    ],
+    "missing": [],
+    "outcome": "reached"
+   },
+   "governance": {
+    "expected_flag": true,
+    "open_items": [
+     "an approver is also the implementer"
+    ],
+    "outcome": "flagged"
+   },
+   "merged": false,
+   "seconds": 18
+  },
+  {
+   "day": 6,
+   "bank": "prairie-ledger",
+   "market": "general",
+   "change": "cash-balance-widen",
+   "kind": "intended",
+   "summary": "Widen the cash balance host variable",
+   "commit": "8b4d469b1f1f63fb6fbc0ac0902170584339eb32",
+   "provenance": {
+    "file": "cash/copy/DCLCASH.cpy",
+    "line": 18
+   },
+   "truth": {
+    "behaviour": "different",
+    "governance": "emergency"
+   },
+   "engine": {
+    "verdict": "inconclusive",
+    "tests": 45,
+    "different": 0,
+    "untested": [
+     "CASH00: no baseline: uses EXEC SQL at cash/copy/DCLCASH.cpy:8-12; stand-ins for CICS, Db2 and IMS calls are planned"
+    ],
+    "changed": 1,
+    "impacted": 27
+   },
+   "outcome": "inconclusive",
+   "impact": {
+    "expected": [
+     "program:CASH00"
+    ],
+    "missing": [],
+    "outcome": "reached"
+   },
+   "governance": {
+    "expected_flag": true,
+    "open_items": [
+     "an approver is also the implementer"
+    ],
+    "outcome": "flagged"
+   },
+   "merged": false,
+   "seconds": 28
+  },
+  {
+   "day": 7,
+   "bank": "prairie-ledger",
+   "market": "general",
+   "change": "cash-ddl-widen",
+   "kind": "intended",
+   "summary": "Widen the cash balance column",
+   "commit": "39c48dfd3a7d6d57a0eaa25c5c45252d7a7dcaf8",
+   "provenance": {
+    "file": "cash/jcl/DB2DDL.jcl",
+    "line": 48
+   },
+   "truth": {
+    "behaviour": "different",
+    "governance": "governed"
+   },
+   "engine": {
+    "verdict": "inconclusive",
+    "tests": 45,
+    "different": 0,
+    "untested": [
+     "CASH00: no baseline: uses EXEC SQL at cash/copy/DCLCASH.cpy:8-12; stand-ins for CICS, Db2 and IMS calls are planned"
+    ],
+    "changed": 2,
+    "impacted": 18
+   },
+   "outcome": "inconclusive",
+   "impact": {
+    "expected": [
+     "program:CASH00",
+     "table:STOCKTRD.CASHACCOUNTY"
+    ],
+    "missing": [],
+    "outcome": "reached"
+   },
+   "governance": {
+    "expected_flag": false,
+    "open_items": [],
+    "outcome": "clean"
+   },
+   "merged": false,
+   "seconds": 19
+  }
+ ]
+}
