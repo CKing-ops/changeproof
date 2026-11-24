@@ -151,6 +151,13 @@ Weeks 1-13 (planned capabilities are labeled; proven ones cite their test):
 - Crypto-inventory evidence: the MCP tool lists crypto calls with algorithm and line; migration
   categories, deadlines and the CBOM are **planned** (Week 16).
 
+- Private-network server (optional add-on, separate package `changeproof-server`): serves the same
+  read-only tools as the MCP server to machines inside a client's own network, one JSON-RPC message
+  per HTTP POST. It listens only on a Unix socket, loopback or a private address, needs mutual TLS on
+  a private address, answers only for the repositories it is given, and logs every request
+  (`tests/test_server.py`, `docs/adr/016-private-network-server.md`, `packages/changeproof-server/README.md`).
+  A direct post-quantum TLS listener: **planned**.
+
 ## Development
 
 ```sh

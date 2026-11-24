@@ -7,6 +7,12 @@ resolution-markers = [
     "sys_platform != 'emscripten' and sys_platform != 'win32'",
 ]
 
+[manifest]
+members = [
+    "changeproof",
+    "changeproof-server",
+]
+
 [[package]]
 name = "absl-py"
 version = "2.5.0"
@@ -88,6 +94,7 @@ dependencies = [
 
 [package.dev-dependencies]
 dev = [
+    { name = "changeproof-server" },
     { name = "pypdf" },
     { name = "pytest" },
     { name = "pytest-socket" },
@@ -118,6 +125,7 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [
+    { name = "changeproof-server", editable = "packages/changeproof-server" },
     { name = "pypdf", specifier = ">=6,<7" },
     { name = "pytest", specifier = ">=8" },
     { name = "pytest-socket", specifier = ">=0.8" },
@@ -128,6 +136,17 @@ spike = [
     { name = "tree-sitter-javascript", specifier = "==0.25.0" },
     { name = "tree-sitter-python", specifier = "==0.25.0" },
 ]
+
+[[package]]
+name = "changeproof-server"
+version = "0.1.0"
+source = { editable = "packages/changeproof-server" }
+dependencies = [
+    { name = "changeproof" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "changeproof", editable = "." }]
 
 [[package]]
 name = "cloudpickle"
