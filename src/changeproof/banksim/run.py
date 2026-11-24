@@ -21,9 +21,23 @@ from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 
 from changeproof.banksim.banks import BANKS, Bank
-from changeproof.banksim.estate import BEHAVIOUR, PROGRAMS, Change, catalogue, render
+from changeproof.banksim.estate import (
+    BEHAVIOUR,
+    PROGRAMS,
+    Change,
+    catalogue,
+    current,
+    render,
+    render_program,
+)
+from changeproof.banksim.operations import (
+    load_book,
+    run_rows,
+    save_book,
+    settle,
+    traffic,
+)
 from changeproof.banksim.record import page
-from changeproof.banksim.operations import load_book, run_rows, save_book, settle, traffic
 from changeproof.change import change_record
 from changeproof.change.git import checkout_tree
 from changeproof.characterize import LocalRunner
@@ -32,6 +46,7 @@ from changeproof.equivalence import equivalence
 
 FIRST_DAY = date(2026, 10, 20)  # RENAME: SIMULATED DATE OF THE IMPORT COMMIT
 GOVERNANCE = {"governed": 7, "self-approved": 1, "no-ticket": 1, "emergency": 1}  # RENAME: HOW CHANGES ARE APPROVED, WITH WEIGHTS
+KINDS = {"defect": 5, "intended": 3, "refactor": 2}  # RENAME: HOW OFTEN EACH KIND OF CHANGE IS DRAWN, WITH WEIGHTS
 LEDGER = "ledger.jsonl"
 OPERATIONS = "operations.jsonl"
 RECORD = "RECORD.md"  # RENAME: THE ONE-PAGE RECORD THE OWNER READS
@@ -71,18 +86,39 @@ def message(bank: Bank, day: int, change: Change, governance: str, developer: tu
             f"Approved-by: {named(approver)}\nChange-Type: {kind}")
 
 
-# PURPOSE: THE BANK'S REPOSITORY, CREATED WITH ITS IMPORT COMMIT ON FIRST USE
-def repository(bank: Bank, state: Path) -> Path:
+# PURPOSE: THE BANK'S REPOSITORY, CREATED WITH ITS IMPORT COMMIT ON FIRST USE; PROGRAMS ADDED SINCE ARE ONBOARDED ON THE DAY
+def repository(bank: Bank, state: Path, day: int = 0) -> Path:
     root = state / "banks" / bank.id
+    trailer = (f"Change-Request: CHG{BANKS.index(bank) * 100000:07d}\nRequested-by: {named(bank.requester)}\n"
+               f"Approved-by: {named(bank.approver)}\nChange-Type: normal")
     if not (root / ".git").is_dir():
         root.mkdir(parents=True)
         git(root, "init", "-q", "-b", "main")
         render(bank, root)
         commit(bank, root, 0, bank.developers[0],
-               f"{bank.ticket_project}-1: Import the {bank.name} deposit programs\n\n"
-               f"Change-Request: CHG{BANKS.index(bank) * 100000:07d}\nRequested-by: {named(bank.requester)}\n"
-               f"Approved-by: {named(bank.approver)}\nChange-Type: normal")
+               f"{bank.ticket_project}-1: Import the {bank.name} deposit programs\n\n{trailer}")
+    if missing := [n for n in PROGRAMS if not (root / "src" / f"{n}.cbl").exists()]:
+        for name in missing:
+            render_program(bank, root, name)
+        commit(bank, root, day, bank.developers[0],
+               f"{bank.ticket_project}-2: Onboard {', '.join(missing)}\n\n{trailer}")
     return root
+
+
+# PURPOSE: THE DAY'S CHANGE: A KIND BY WEIGHT, THEN A CHANGE OF THAT KIND, FAVOURING ONES THIS BANK HAS SEEN LEAST
+def draw(rng: random.Random, open_changes: list[Change], seen: Counter) -> Change:
+    kinds = [k for k in KINDS if any(c.kind == k for c in open_changes)]
+    kind = rng.choices(kinds, weights=[KINDS[k] for k in kinds])[0]
+    choices = [c for c in open_changes if c.kind == kind]
+    return rng.choices(choices, weights=[1 / (1 + seen[c.id]) for c in choices])[0]
+
+
+# PURPOSE: HOW OFTEN EACH CHANGE HAS BEEN DRAWN AT EACH BANK, FROM THE LEDGER
+def drawn(state: Path) -> dict[str, Counter]:
+    found: dict[str, Counter] = {}
+    for row in ledger(state):
+        found.setdefault(row["bank"], Counter())[row["change"]] += 1
+    return found
 
 
 # PURPOSE: WHAT THE SCAN GOT RIGHT OR WRONG ABOUT BEHAVIOUR, GIVEN WHAT THE CHANGE REALLY DOES
@@ -103,19 +139,21 @@ def governance_outcome(expected: bool, flagged: bool) -> str:
 
 
 # PURPOSE: ONE BANK'S CHANGE FOR THE DAY, SCANNED AND SCORED, THEN THE DAY'S BUSINESS RUN ON MAIN
-def scan(bank: Bank, state: Path, day: int, runner=None, only: str | None = None) -> tuple[dict, dict]:
+def scan(bank: Bank, state: Path, day: int, runner=None, only: str | None = None,
+         seen: Counter | None = None) -> tuple[dict, dict]:
     started = time.monotonic()
     runner = runner or LocalRunner()
-    root = repository(bank, state)
+    root = repository(bank, state, day)
     rng = random.Random(f"{bank.id}:{day}")
-    open_changes = [c for c in catalogue(bank) if (root / c.path).read_text(encoding="utf-8").count(c.old) == 1]
-    change = next(c for c in open_changes if c.id == only) if only else rng.choice(open_changes)
+    open_changes = [c for c in catalogue(bank, current(bank, root))
+                    if (root / c.path).read_text(encoding="utf-8").count(c.old) == c.count]
+    change = next(c for c in open_changes if c.id == only) if only else draw(rng, open_changes, seen or Counter())
     governance = rng.choices(list(GOVERNANCE), weights=list(GOVERNANCE.values()))[0]
     developer = rng.choice(bank.developers)
     path = root / change.path
     text = path.read_text(encoding="utf-8")
     line = text[:text.index(change.old)].count("\n") + 1
-    path.write_text(text.replace(change.old, change.new, 1), encoding="utf-8")
+    path.write_text(text.replace(change.old, change.new), encoding="utf-8")
     sha = commit(bank, root, day, developer, message(bank, day, change, governance, developer))
     kept = state / "baselines" / bank.id  # RENAME: CHARACTERIZATION SUITES KEPT BETWEEN DAYS
     kept.mkdir(parents=True, exist_ok=True)
@@ -175,8 +213,10 @@ def tick(bank: Bank, state: Path, day: int, runner=None, only: str | None = None
 
 # PURPOSE: ONE SIMULATED DAY ACROSS EVERY BANK, BANKS RUN SIDE BY SIDE
 def business_day(state: Path, day: int, workers: int) -> list[dict]:
+    seen = drawn(state)
     with ProcessPoolExecutor(workers) as pool:
-        found = list(pool.map(scan, BANKS, [state] * len(BANKS), [day] * len(BANKS)))
+        found = list(pool.map(scan, BANKS, [state] * len(BANKS), [day] * len(BANKS), [None] * len(BANKS),
+                              [None] * len(BANKS), [seen.get(b.id, Counter()) for b in BANKS]))
     append(state, [row for row, _ in found])
     append(state, [operations for _, operations in found], OPERATIONS)
     return [row for row, _ in found]

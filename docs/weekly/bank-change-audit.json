@@ -1,0 +1,3042 @@
+{
+ "banks": {
+  "prairie-ledger": [
+   {
+    "change": "intaccr-init",
+    "kind": "refactor",
+    "probes": 165,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-not-positive",
+    "kind": "refactor",
+    "probes": 165,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-tier-strict",
+    "kind": "defect",
+    "probes": 165,
+    "different": 3,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-truncate",
+    "kind": "defect",
+    "probes": 165,
+    "different": 66,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-basis",
+    "kind": "defect",
+    "probes": 165,
+    "different": 127,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-rate-up",
+    "kind": "intended",
+    "probes": 165,
+    "different": 51,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-rate-down",
+    "kind": "intended",
+    "probes": 165,
+    "different": 51,
+    "agrees": true
+   },
+   {
+    "change": "fee-compute",
+    "kind": "refactor",
+    "probes": 180,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "fee-free-txns-inclusive",
+    "kind": "refactor",
+    "probes": 180,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "fee-waiver-strict",
+    "kind": "defect",
+    "probes": 180,
+    "different": 5,
+    "agrees": true
+   },
+   {
+    "change": "fee-per-txn-slip",
+    "kind": "defect",
+    "probes": 180,
+    "different": 27,
+    "agrees": true
+   },
+   {
+    "change": "fee-retail-up",
+    "kind": "intended",
+    "probes": 180,
+    "different": 11,
+    "agrees": true
+   },
+   {
+    "change": "fee-retail-down",
+    "kind": "intended",
+    "probes": 180,
+    "different": 11,
+    "agrees": true
+   },
+   {
+    "change": "paysc-swap-compare",
+    "kind": "refactor",
+    "probes": 151,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "paysc-report-strict",
+    "kind": "defect",
+    "probes": 151,
+    "different": 6,
+    "agrees": true
+   },
+   {
+    "change": "paysc-daily-ignored",
+    "kind": "defect",
+    "probes": 151,
+    "different": 41,
+    "agrees": true
+   },
+   {
+    "change": "paysc-online-up",
+    "kind": "intended",
+    "probes": 151,
+    "different": 3,
+    "agrees": true
+   },
+   {
+    "change": "paysc-online-down",
+    "kind": "intended",
+    "probes": 151,
+    "different": 1,
+    "agrees": true
+   },
+   {
+    "change": "post-compute",
+    "kind": "refactor",
+    "probes": 36,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "post-credit-reversed",
+    "kind": "defect",
+    "probes": 36,
+    "different": 6,
+    "agrees": true
+   },
+   {
+    "change": "post-limit-ignored",
+    "kind": "defect",
+    "probes": 36,
+    "different": 3,
+    "agrees": true
+   },
+   {
+    "change": "post-rc-dropped",
+    "kind": "defect",
+    "probes": 36,
+    "different": 26,
+    "agrees": true
+   },
+   {
+    "change": "post-od-fee-down",
+    "kind": "intended",
+    "probes": 36,
+    "different": 3,
+    "agrees": true
+   },
+   {
+    "change": "post-od-fee-up",
+    "kind": "intended",
+    "probes": 36,
+    "different": 3,
+    "agrees": true
+   },
+   {
+    "change": "loan-subtract-giving",
+    "kind": "refactor",
+    "probes": 280,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "loan-grace-inclusive",
+    "kind": "refactor",
+    "probes": 280,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "loan-clamp-order",
+    "kind": "refactor",
+    "probes": 280,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "loan-interest-truncate",
+    "kind": "defect",
+    "probes": 280,
+    "different": 132,
+    "agrees": true
+   },
+   {
+    "change": "loan-late-fee-truncate",
+    "kind": "defect",
+    "probes": 280,
+    "different": 25,
+    "agrees": true
+   },
+   {
+    "change": "loan-delinquent-strict",
+    "kind": "defect",
+    "probes": 280,
+    "different": 14,
+    "agrees": true
+   },
+   {
+    "change": "loan-rate-mixup",
+    "kind": "defect",
+    "probes": 280,
+    "different": 87,
+    "agrees": true
+   },
+   {
+    "change": "loan-late-cap-down",
+    "kind": "intended",
+    "probes": 280,
+    "different": 117,
+    "agrees": true
+   },
+   {
+    "change": "loan-late-cap-up",
+    "kind": "intended",
+    "probes": 280,
+    "different": 114,
+    "agrees": true
+   },
+   {
+    "change": "loan-grace-up",
+    "kind": "intended",
+    "probes": 280,
+    "different": 31,
+    "agrees": true
+   },
+   {
+    "change": "loan-mortgage-rate-up",
+    "kind": "intended",
+    "probes": 280,
+    "different": 76,
+    "agrees": true
+   },
+   {
+    "change": "loan-mortgage-rate-down",
+    "kind": "intended",
+    "probes": 280,
+    "different": 76,
+    "agrees": true
+   },
+   {
+    "change": "loan-grace-down",
+    "kind": "intended",
+    "probes": 280,
+    "different": 33,
+    "agrees": true
+   },
+   {
+    "change": "loan-apr-precision",
+    "kind": "defect",
+    "probes": 280,
+    "different": 75,
+    "agrees": true
+   },
+   {
+    "change": "fx-multiply",
+    "kind": "refactor",
+    "probes": 192,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "fx-convert-truncate",
+    "kind": "defect",
+    "probes": 192,
+    "different": 75,
+    "agrees": true
+   },
+   {
+    "change": "fx-rate-swap",
+    "kind": "defect",
+    "probes": 192,
+    "different": 109,
+    "agrees": true
+   },
+   {
+    "change": "fx-premier-inverted",
+    "kind": "defect",
+    "probes": 192,
+    "different": 170,
+    "agrees": true
+   },
+   {
+    "change": "fx-fee-on-amount",
+    "kind": "defect",
+    "probes": 192,
+    "different": 75,
+    "agrees": true
+   },
+   {
+    "change": "fx-review-strict",
+    "kind": "defect",
+    "probes": 192,
+    "different": 3,
+    "agrees": true
+   },
+   {
+    "change": "fx-review-up",
+    "kind": "intended",
+    "probes": 192,
+    "different": 52,
+    "agrees": true
+   },
+   {
+    "change": "fx-min-fee-up",
+    "kind": "intended",
+    "probes": 192,
+    "different": 6,
+    "agrees": true
+   },
+   {
+    "change": "fx-spread-up",
+    "kind": "intended",
+    "probes": 192,
+    "different": 75,
+    "agrees": true
+   },
+   {
+    "change": "fx-spread-down",
+    "kind": "intended",
+    "probes": 192,
+    "different": 75,
+    "agrees": true
+   },
+   {
+    "change": "fx-review-down",
+    "kind": "intended",
+    "probes": 192,
+    "different": 37,
+    "agrees": true
+   },
+   {
+    "change": "cash-add-compute",
+    "kind": "refactor",
+    "probes": 324,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "cash-kind-reorder",
+    "kind": "refactor",
+    "probes": 324,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "cash-threshold-boundary",
+    "kind": "defect",
+    "probes": 324,
+    "different": 2,
+    "agrees": true
+   },
+   {
+    "change": "cash-aggregation-dropped",
+    "kind": "defect",
+    "probes": 324,
+    "different": 88,
+    "agrees": true
+   },
+   {
+    "change": "cash-out-ignored",
+    "kind": "defect",
+    "probes": 324,
+    "different": 34,
+    "agrees": true
+   },
+   {
+    "change": "cash-kind-negated",
+    "kind": "defect",
+    "probes": 324,
+    "different": 23,
+    "agrees": true
+   },
+   {
+    "change": "cash-total-narrow",
+    "kind": "defect",
+    "probes": 324,
+    "different": 140,
+    "agrees": true
+   },
+   {
+    "change": "cash-struct-first-deposit",
+    "kind": "defect",
+    "probes": 324,
+    "different": 9,
+    "agrees": true
+   },
+   {
+    "change": "cash-floor-up",
+    "kind": "intended",
+    "probes": 324,
+    "different": 7,
+    "agrees": true
+   },
+   {
+    "change": "cash-threshold-down",
+    "kind": "intended",
+    "probes": 324,
+    "different": 54,
+    "agrees": true
+   },
+   {
+    "change": "cash-floor-down",
+    "kind": "intended",
+    "probes": 324,
+    "different": 6,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-init-back",
+    "kind": "refactor",
+    "probes": 165,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-not-positive-back",
+    "kind": "refactor",
+    "probes": 165,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "fee-compute-back",
+    "kind": "refactor",
+    "probes": 180,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "fee-free-txns-inclusive-back",
+    "kind": "refactor",
+    "probes": 180,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "paysc-swap-compare-back",
+    "kind": "refactor",
+    "probes": 151,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "post-compute-back",
+    "kind": "refactor",
+    "probes": 36,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "loan-subtract-giving-back",
+    "kind": "refactor",
+    "probes": 280,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "loan-grace-inclusive-back",
+    "kind": "refactor",
+    "probes": 280,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "loan-clamp-order-back",
+    "kind": "refactor",
+    "probes": 280,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "fx-multiply-back",
+    "kind": "refactor",
+    "probes": 192,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "cash-add-compute-back",
+    "kind": "refactor",
+    "probes": 324,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "cash-kind-reorder-back",
+    "kind": "refactor",
+    "probes": 324,
+    "different": 0,
+    "agrees": true
+   }
+  ],
+  "tidewater": [
+   {
+    "change": "intaccr-init",
+    "kind": "refactor",
+    "probes": 165,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-not-positive",
+    "kind": "refactor",
+    "probes": 165,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-tier-strict",
+    "kind": "defect",
+    "probes": 165,
+    "different": 3,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-truncate",
+    "kind": "defect",
+    "probes": 165,
+    "different": 70,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-basis",
+    "kind": "defect",
+    "probes": 165,
+    "different": 121,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-rate-up",
+    "kind": "intended",
+    "probes": 165,
+    "different": 63,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-rate-down",
+    "kind": "intended",
+    "probes": 165,
+    "different": 63,
+    "agrees": true
+   },
+   {
+    "change": "fee-compute",
+    "kind": "refactor",
+    "probes": 180,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "fee-free-txns-inclusive",
+    "kind": "refactor",
+    "probes": 180,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "fee-waiver-strict",
+    "kind": "defect",
+    "probes": 180,
+    "different": 5,
+    "agrees": true
+   },
+   {
+    "change": "fee-per-txn-slip",
+    "kind": "defect",
+    "probes": 180,
+    "different": 37,
+    "agrees": true
+   },
+   {
+    "change": "fee-retail-up",
+    "kind": "intended",
+    "probes": 180,
+    "different": 5,
+    "agrees": true
+   },
+   {
+    "change": "fee-retail-down",
+    "kind": "intended",
+    "probes": 180,
+    "different": 5,
+    "agrees": true
+   },
+   {
+    "change": "paysc-swap-compare",
+    "kind": "refactor",
+    "probes": 151,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "paysc-report-strict",
+    "kind": "defect",
+    "probes": 151,
+    "different": 6,
+    "agrees": true
+   },
+   {
+    "change": "paysc-daily-ignored",
+    "kind": "defect",
+    "probes": 151,
+    "different": 26,
+    "agrees": true
+   },
+   {
+    "change": "paysc-online-up",
+    "kind": "intended",
+    "probes": 151,
+    "different": 6,
+    "agrees": true
+   },
+   {
+    "change": "paysc-online-down",
+    "kind": "intended",
+    "probes": 151,
+    "different": 5,
+    "agrees": true
+   },
+   {
+    "change": "post-compute",
+    "kind": "refactor",
+    "probes": 36,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "post-credit-reversed",
+    "kind": "defect",
+    "probes": 36,
+    "different": 6,
+    "agrees": true
+   },
+   {
+    "change": "post-limit-ignored",
+    "kind": "defect",
+    "probes": 36,
+    "different": 3,
+    "agrees": true
+   },
+   {
+    "change": "post-rc-dropped",
+    "kind": "defect",
+    "probes": 36,
+    "different": 26,
+    "agrees": true
+   },
+   {
+    "change": "post-od-fee-down",
+    "kind": "intended",
+    "probes": 36,
+    "different": 3,
+    "agrees": true
+   },
+   {
+    "change": "post-od-fee-up",
+    "kind": "intended",
+    "probes": 36,
+    "different": 3,
+    "agrees": true
+   },
+   {
+    "change": "loan-subtract-giving",
+    "kind": "refactor",
+    "probes": 280,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "loan-grace-inclusive",
+    "kind": "refactor",
+    "probes": 280,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "loan-clamp-order",
+    "kind": "refactor",
+    "probes": 280,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "loan-interest-truncate",
+    "kind": "defect",
+    "probes": 280,
+    "different": 104,
+    "agrees": true
+   },
+   {
+    "change": "loan-late-fee-truncate",
+    "kind": "defect",
+    "probes": 280,
+    "different": 15,
+    "agrees": true
+   },
+   {
+    "change": "loan-delinquent-strict",
+    "kind": "defect",
+    "probes": 280,
+    "different": 13,
+    "agrees": true
+   },
+   {
+    "change": "loan-rate-mixup",
+    "kind": "defect",
+    "probes": 280,
+    "different": 75,
+    "agrees": true
+   },
+   {
+    "change": "loan-late-cap-down",
+    "kind": "intended",
+    "probes": 280,
+    "different": 114,
+    "agrees": true
+   },
+   {
+    "change": "loan-late-cap-up",
+    "kind": "intended",
+    "probes": 280,
+    "different": 107,
+    "agrees": true
+   },
+   {
+    "change": "loan-grace-up",
+    "kind": "intended",
+    "probes": 280,
+    "different": 28,
+    "agrees": true
+   },
+   {
+    "change": "loan-mortgage-rate-up",
+    "kind": "intended",
+    "probes": 280,
+    "different": 84,
+    "agrees": true
+   },
+   {
+    "change": "loan-mortgage-rate-down",
+    "kind": "intended",
+    "probes": 280,
+    "different": 84,
+    "agrees": true
+   },
+   {
+    "change": "loan-grace-down",
+    "kind": "intended",
+    "probes": 280,
+    "different": 32,
+    "agrees": true
+   },
+   {
+    "change": "loan-apr-precision",
+    "kind": "defect",
+    "probes": 280,
+    "different": 83,
+    "agrees": true
+   },
+   {
+    "change": "fx-multiply",
+    "kind": "refactor",
+    "probes": 193,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "fx-convert-truncate",
+    "kind": "defect",
+    "probes": 193,
+    "different": 78,
+    "agrees": true
+   },
+   {
+    "change": "fx-rate-swap",
+    "kind": "defect",
+    "probes": 193,
+    "different": 122,
+    "agrees": true
+   },
+   {
+    "change": "fx-premier-inverted",
+    "kind": "defect",
+    "probes": 193,
+    "different": 171,
+    "agrees": true
+   },
+   {
+    "change": "fx-fee-on-amount",
+    "kind": "defect",
+    "probes": 193,
+    "different": 77,
+    "agrees": true
+   },
+   {
+    "change": "fx-review-strict",
+    "kind": "defect",
+    "probes": 193,
+    "different": 2,
+    "agrees": true
+   },
+   {
+    "change": "fx-review-up",
+    "kind": "intended",
+    "probes": 193,
+    "different": 46,
+    "agrees": true
+   },
+   {
+    "change": "fx-min-fee-up",
+    "kind": "intended",
+    "probes": 193,
+    "different": 6,
+    "agrees": true
+   },
+   {
+    "change": "fx-spread-up",
+    "kind": "intended",
+    "probes": 193,
+    "different": 77,
+    "agrees": true
+   },
+   {
+    "change": "fx-spread-down",
+    "kind": "intended",
+    "probes": 193,
+    "different": 77,
+    "agrees": true
+   },
+   {
+    "change": "fx-review-down",
+    "kind": "intended",
+    "probes": 193,
+    "different": 13,
+    "agrees": true
+   },
+   {
+    "change": "cash-add-compute",
+    "kind": "refactor",
+    "probes": 324,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "cash-kind-reorder",
+    "kind": "refactor",
+    "probes": 324,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "cash-threshold-boundary",
+    "kind": "defect",
+    "probes": 324,
+    "different": 2,
+    "agrees": true
+   },
+   {
+    "change": "cash-aggregation-dropped",
+    "kind": "defect",
+    "probes": 324,
+    "different": 86,
+    "agrees": true
+   },
+   {
+    "change": "cash-out-ignored",
+    "kind": "defect",
+    "probes": 324,
+    "different": 44,
+    "agrees": true
+   },
+   {
+    "change": "cash-kind-negated",
+    "kind": "defect",
+    "probes": 324,
+    "different": 23,
+    "agrees": true
+   },
+   {
+    "change": "cash-total-narrow",
+    "kind": "defect",
+    "probes": 324,
+    "different": 141,
+    "agrees": true
+   },
+   {
+    "change": "cash-struct-first-deposit",
+    "kind": "defect",
+    "probes": 324,
+    "different": 9,
+    "agrees": true
+   },
+   {
+    "change": "cash-floor-up",
+    "kind": "intended",
+    "probes": 324,
+    "different": 6,
+    "agrees": true
+   },
+   {
+    "change": "cash-threshold-down",
+    "kind": "intended",
+    "probes": 324,
+    "different": 56,
+    "agrees": true
+   },
+   {
+    "change": "cash-floor-down",
+    "kind": "intended",
+    "probes": 324,
+    "different": 8,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-init-back",
+    "kind": "refactor",
+    "probes": 165,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-not-positive-back",
+    "kind": "refactor",
+    "probes": 165,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "fee-compute-back",
+    "kind": "refactor",
+    "probes": 180,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "fee-free-txns-inclusive-back",
+    "kind": "refactor",
+    "probes": 180,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "paysc-swap-compare-back",
+    "kind": "refactor",
+    "probes": 151,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "post-compute-back",
+    "kind": "refactor",
+    "probes": 36,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "loan-subtract-giving-back",
+    "kind": "refactor",
+    "probes": 280,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "loan-grace-inclusive-back",
+    "kind": "refactor",
+    "probes": 280,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "loan-clamp-order-back",
+    "kind": "refactor",
+    "probes": 280,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "fx-multiply-back",
+    "kind": "refactor",
+    "probes": 193,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "cash-add-compute-back",
+    "kind": "refactor",
+    "probes": 324,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "cash-kind-reorder-back",
+    "kind": "refactor",
+    "probes": 324,
+    "different": 0,
+    "agrees": true
+   }
+  ],
+  "copperline": [
+   {
+    "change": "intaccr-init",
+    "kind": "refactor",
+    "probes": 165,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-not-positive",
+    "kind": "refactor",
+    "probes": 165,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-tier-strict",
+    "kind": "defect",
+    "probes": 165,
+    "different": 3,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-truncate",
+    "kind": "defect",
+    "probes": 165,
+    "different": 72,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-basis",
+    "kind": "defect",
+    "probes": 165,
+    "different": 88,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-rate-up",
+    "kind": "intended",
+    "probes": 165,
+    "different": 32,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-rate-down",
+    "kind": "intended",
+    "probes": 165,
+    "different": 32,
+    "agrees": true
+   },
+   {
+    "change": "fee-compute",
+    "kind": "refactor",
+    "probes": 180,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "fee-free-txns-inclusive",
+    "kind": "refactor",
+    "probes": 180,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "fee-waiver-strict",
+    "kind": "defect",
+    "probes": 180,
+    "different": 5,
+    "agrees": true
+   },
+   {
+    "change": "fee-per-txn-slip",
+    "kind": "defect",
+    "probes": 180,
+    "different": 17,
+    "agrees": true
+   },
+   {
+    "change": "fee-retail-up",
+    "kind": "intended",
+    "probes": 180,
+    "different": 15,
+    "agrees": true
+   },
+   {
+    "change": "fee-retail-down",
+    "kind": "intended",
+    "probes": 180,
+    "different": 15,
+    "agrees": true
+   },
+   {
+    "change": "paysc-swap-compare",
+    "kind": "refactor",
+    "probes": 151,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "paysc-report-strict",
+    "kind": "defect",
+    "probes": 151,
+    "different": 6,
+    "agrees": true
+   },
+   {
+    "change": "paysc-daily-ignored",
+    "kind": "defect",
+    "probes": 151,
+    "different": 61,
+    "agrees": true
+   },
+   {
+    "change": "paysc-online-up",
+    "kind": "intended",
+    "probes": 151,
+    "different": 37,
+    "agrees": true
+   },
+   {
+    "change": "paysc-online-down",
+    "kind": "intended",
+    "probes": 151,
+    "different": 14,
+    "agrees": true
+   },
+   {
+    "change": "post-compute",
+    "kind": "refactor",
+    "probes": 36,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "post-credit-reversed",
+    "kind": "defect",
+    "probes": 36,
+    "different": 6,
+    "agrees": true
+   },
+   {
+    "change": "post-limit-ignored",
+    "kind": "defect",
+    "probes": 36,
+    "different": 3,
+    "agrees": true
+   },
+   {
+    "change": "post-rc-dropped",
+    "kind": "defect",
+    "probes": 36,
+    "different": 26,
+    "agrees": true
+   },
+   {
+    "change": "post-od-fee-down",
+    "kind": "intended",
+    "probes": 36,
+    "different": 3,
+    "agrees": true
+   },
+   {
+    "change": "post-od-fee-up",
+    "kind": "intended",
+    "probes": 36,
+    "different": 3,
+    "agrees": true
+   },
+   {
+    "change": "loan-subtract-giving",
+    "kind": "refactor",
+    "probes": 280,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "loan-grace-inclusive",
+    "kind": "refactor",
+    "probes": 280,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "loan-clamp-order",
+    "kind": "refactor",
+    "probes": 280,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "loan-interest-truncate",
+    "kind": "defect",
+    "probes": 280,
+    "different": 97,
+    "agrees": true
+   },
+   {
+    "change": "loan-late-fee-truncate",
+    "kind": "defect",
+    "probes": 280,
+    "different": 13,
+    "agrees": true
+   },
+   {
+    "change": "loan-delinquent-strict",
+    "kind": "defect",
+    "probes": 280,
+    "different": 14,
+    "agrees": true
+   },
+   {
+    "change": "loan-rate-mixup",
+    "kind": "defect",
+    "probes": 280,
+    "different": 76,
+    "agrees": true
+   },
+   {
+    "change": "loan-late-cap-down",
+    "kind": "intended",
+    "probes": 280,
+    "different": 102,
+    "agrees": true
+   },
+   {
+    "change": "loan-late-cap-up",
+    "kind": "intended",
+    "probes": 280,
+    "different": 82,
+    "agrees": true
+   },
+   {
+    "change": "loan-grace-up",
+    "kind": "intended",
+    "probes": 280,
+    "different": 30,
+    "agrees": true
+   },
+   {
+    "change": "loan-mortgage-rate-up",
+    "kind": "intended",
+    "probes": 280,
+    "different": 81,
+    "agrees": true
+   },
+   {
+    "change": "loan-mortgage-rate-down",
+    "kind": "intended",
+    "probes": 280,
+    "different": 81,
+    "agrees": true
+   },
+   {
+    "change": "loan-grace-down",
+    "kind": "intended",
+    "probes": 280,
+    "different": 30,
+    "agrees": true
+   },
+   {
+    "change": "loan-apr-precision",
+    "kind": "defect",
+    "probes": 280,
+    "different": 157,
+    "agrees": true
+   },
+   {
+    "change": "fx-multiply",
+    "kind": "refactor",
+    "probes": 192,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "fx-convert-truncate",
+    "kind": "defect",
+    "probes": 192,
+    "different": 80,
+    "agrees": true
+   },
+   {
+    "change": "fx-rate-swap",
+    "kind": "defect",
+    "probes": 192,
+    "different": 111,
+    "agrees": true
+   },
+   {
+    "change": "fx-premier-inverted",
+    "kind": "defect",
+    "probes": 192,
+    "different": 170,
+    "agrees": true
+   },
+   {
+    "change": "fx-fee-on-amount",
+    "kind": "defect",
+    "probes": 192,
+    "different": 80,
+    "agrees": true
+   },
+   {
+    "change": "fx-review-strict",
+    "kind": "defect",
+    "probes": 192,
+    "different": 2,
+    "agrees": true
+   },
+   {
+    "change": "fx-review-up",
+    "kind": "intended",
+    "probes": 192,
+    "different": 13,
+    "agrees": true
+   },
+   {
+    "change": "fx-min-fee-up",
+    "kind": "intended",
+    "probes": 192,
+    "different": 7,
+    "agrees": true
+   },
+   {
+    "change": "fx-spread-up",
+    "kind": "intended",
+    "probes": 192,
+    "different": 79,
+    "agrees": true
+   },
+   {
+    "change": "fx-spread-down",
+    "kind": "intended",
+    "probes": 192,
+    "different": 79,
+    "agrees": true
+   },
+   {
+    "change": "fx-review-down",
+    "kind": "intended",
+    "probes": 192,
+    "different": 40,
+    "agrees": true
+   },
+   {
+    "change": "cash-add-compute",
+    "kind": "refactor",
+    "probes": 324,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "cash-kind-reorder",
+    "kind": "refactor",
+    "probes": 324,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "cash-threshold-boundary",
+    "kind": "defect",
+    "probes": 324,
+    "different": 2,
+    "agrees": true
+   },
+   {
+    "change": "cash-aggregation-dropped",
+    "kind": "defect",
+    "probes": 324,
+    "different": 83,
+    "agrees": true
+   },
+   {
+    "change": "cash-out-ignored",
+    "kind": "defect",
+    "probes": 324,
+    "different": 41,
+    "agrees": true
+   },
+   {
+    "change": "cash-kind-negated",
+    "kind": "defect",
+    "probes": 324,
+    "different": 23,
+    "agrees": true
+   },
+   {
+    "change": "cash-total-narrow",
+    "kind": "defect",
+    "probes": 324,
+    "different": 141,
+    "agrees": true
+   },
+   {
+    "change": "cash-struct-first-deposit",
+    "kind": "defect",
+    "probes": 324,
+    "different": 9,
+    "agrees": true
+   },
+   {
+    "change": "cash-floor-up",
+    "kind": "intended",
+    "probes": 324,
+    "different": 6,
+    "agrees": true
+   },
+   {
+    "change": "cash-threshold-down",
+    "kind": "intended",
+    "probes": 324,
+    "different": 57,
+    "agrees": true
+   },
+   {
+    "change": "cash-floor-down",
+    "kind": "intended",
+    "probes": 324,
+    "different": 6,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-init-back",
+    "kind": "refactor",
+    "probes": 165,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-not-positive-back",
+    "kind": "refactor",
+    "probes": 165,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "fee-compute-back",
+    "kind": "refactor",
+    "probes": 180,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "fee-free-txns-inclusive-back",
+    "kind": "refactor",
+    "probes": 180,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "paysc-swap-compare-back",
+    "kind": "refactor",
+    "probes": 151,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "post-compute-back",
+    "kind": "refactor",
+    "probes": 36,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "loan-subtract-giving-back",
+    "kind": "refactor",
+    "probes": 280,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "loan-grace-inclusive-back",
+    "kind": "refactor",
+    "probes": 280,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "loan-clamp-order-back",
+    "kind": "refactor",
+    "probes": 280,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "fx-multiply-back",
+    "kind": "refactor",
+    "probes": 192,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "cash-add-compute-back",
+    "kind": "refactor",
+    "probes": 324,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "cash-kind-reorder-back",
+    "kind": "refactor",
+    "probes": 324,
+    "different": 0,
+    "agrees": true
+   }
+  ],
+  "aldercove": [
+   {
+    "change": "intaccr-init",
+    "kind": "refactor",
+    "probes": 165,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-not-positive",
+    "kind": "refactor",
+    "probes": 165,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-tier-strict",
+    "kind": "defect",
+    "probes": 165,
+    "different": 3,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-truncate",
+    "kind": "defect",
+    "probes": 165,
+    "different": 76,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-basis",
+    "kind": "defect",
+    "probes": 165,
+    "different": 78,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-rate-up",
+    "kind": "intended",
+    "probes": 165,
+    "different": 45,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-rate-down",
+    "kind": "intended",
+    "probes": 165,
+    "different": 45,
+    "agrees": true
+   },
+   {
+    "change": "fee-compute",
+    "kind": "refactor",
+    "probes": 180,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "fee-free-txns-inclusive",
+    "kind": "refactor",
+    "probes": 180,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "fee-waiver-strict",
+    "kind": "defect",
+    "probes": 180,
+    "different": 5,
+    "agrees": true
+   },
+   {
+    "change": "fee-per-txn-slip",
+    "kind": "defect",
+    "probes": 180,
+    "different": 33,
+    "agrees": true
+   },
+   {
+    "change": "fee-retail-up",
+    "kind": "intended",
+    "probes": 180,
+    "different": 8,
+    "agrees": true
+   },
+   {
+    "change": "fee-retail-down",
+    "kind": "intended",
+    "probes": 180,
+    "different": 8,
+    "agrees": true
+   },
+   {
+    "change": "paysc-swap-compare",
+    "kind": "refactor",
+    "probes": 151,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "paysc-report-strict",
+    "kind": "defect",
+    "probes": 151,
+    "different": 6,
+    "agrees": true
+   },
+   {
+    "change": "paysc-daily-ignored",
+    "kind": "defect",
+    "probes": 151,
+    "different": 36,
+    "agrees": true
+   },
+   {
+    "change": "paysc-online-up",
+    "kind": "intended",
+    "probes": 151,
+    "different": 11,
+    "agrees": true
+   },
+   {
+    "change": "paysc-online-down",
+    "kind": "intended",
+    "probes": 151,
+    "different": 8,
+    "agrees": true
+   },
+   {
+    "change": "post-compute",
+    "kind": "refactor",
+    "probes": 36,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "post-credit-reversed",
+    "kind": "defect",
+    "probes": 36,
+    "different": 6,
+    "agrees": true
+   },
+   {
+    "change": "post-limit-ignored",
+    "kind": "defect",
+    "probes": 36,
+    "different": 3,
+    "agrees": true
+   },
+   {
+    "change": "post-rc-dropped",
+    "kind": "defect",
+    "probes": 36,
+    "different": 26,
+    "agrees": true
+   },
+   {
+    "change": "post-od-fee-down",
+    "kind": "intended",
+    "probes": 36,
+    "different": 3,
+    "agrees": true
+   },
+   {
+    "change": "post-od-fee-up",
+    "kind": "intended",
+    "probes": 36,
+    "different": 3,
+    "agrees": true
+   },
+   {
+    "change": "loan-subtract-giving",
+    "kind": "refactor",
+    "probes": 280,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "loan-grace-inclusive",
+    "kind": "refactor",
+    "probes": 280,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "loan-clamp-order",
+    "kind": "refactor",
+    "probes": 280,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "loan-interest-truncate",
+    "kind": "defect",
+    "probes": 280,
+    "different": 106,
+    "agrees": true
+   },
+   {
+    "change": "loan-late-fee-truncate",
+    "kind": "defect",
+    "probes": 280,
+    "different": 37,
+    "agrees": true
+   },
+   {
+    "change": "loan-delinquent-strict",
+    "kind": "defect",
+    "probes": 280,
+    "different": 15,
+    "agrees": true
+   },
+   {
+    "change": "loan-rate-mixup",
+    "kind": "defect",
+    "probes": 280,
+    "different": 84,
+    "agrees": true
+   },
+   {
+    "change": "loan-late-cap-down",
+    "kind": "intended",
+    "probes": 280,
+    "different": 110,
+    "agrees": true
+   },
+   {
+    "change": "loan-late-cap-up",
+    "kind": "intended",
+    "probes": 280,
+    "different": 79,
+    "agrees": true
+   },
+   {
+    "change": "loan-grace-up",
+    "kind": "intended",
+    "probes": 280,
+    "different": 31,
+    "agrees": true
+   },
+   {
+    "change": "loan-mortgage-rate-up",
+    "kind": "intended",
+    "probes": 280,
+    "different": 81,
+    "agrees": true
+   },
+   {
+    "change": "loan-mortgage-rate-down",
+    "kind": "intended",
+    "probes": 280,
+    "different": 81,
+    "agrees": true
+   },
+   {
+    "change": "loan-grace-down",
+    "kind": "intended",
+    "probes": 280,
+    "different": 30,
+    "agrees": true
+   },
+   {
+    "change": "loan-apr-precision",
+    "kind": "defect",
+    "probes": 280,
+    "different": 80,
+    "agrees": true
+   },
+   {
+    "change": "fx-multiply",
+    "kind": "refactor",
+    "probes": 193,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "fx-convert-truncate",
+    "kind": "defect",
+    "probes": 193,
+    "different": 84,
+    "agrees": true
+   },
+   {
+    "change": "fx-rate-swap",
+    "kind": "defect",
+    "probes": 193,
+    "different": 102,
+    "agrees": true
+   },
+   {
+    "change": "fx-premier-inverted",
+    "kind": "defect",
+    "probes": 193,
+    "different": 171,
+    "agrees": true
+   },
+   {
+    "change": "fx-fee-on-amount",
+    "kind": "defect",
+    "probes": 193,
+    "different": 84,
+    "agrees": true
+   },
+   {
+    "change": "fx-review-strict",
+    "kind": "defect",
+    "probes": 193,
+    "different": 3,
+    "agrees": true
+   },
+   {
+    "change": "fx-review-up",
+    "kind": "intended",
+    "probes": 193,
+    "different": 61,
+    "agrees": true
+   },
+   {
+    "change": "fx-min-fee-up",
+    "kind": "intended",
+    "probes": 193,
+    "different": 6,
+    "agrees": true
+   },
+   {
+    "change": "fx-spread-up",
+    "kind": "intended",
+    "probes": 193,
+    "different": 84,
+    "agrees": true
+   },
+   {
+    "change": "fx-spread-down",
+    "kind": "intended",
+    "probes": 193,
+    "different": 84,
+    "agrees": true
+   },
+   {
+    "change": "fx-review-down",
+    "kind": "intended",
+    "probes": 193,
+    "different": 35,
+    "agrees": true
+   },
+   {
+    "change": "cash-add-compute",
+    "kind": "refactor",
+    "probes": 324,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "cash-kind-reorder",
+    "kind": "refactor",
+    "probes": 324,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "cash-threshold-boundary",
+    "kind": "defect",
+    "probes": 324,
+    "different": 2,
+    "agrees": true
+   },
+   {
+    "change": "cash-aggregation-dropped",
+    "kind": "defect",
+    "probes": 324,
+    "different": 77,
+    "agrees": true
+   },
+   {
+    "change": "cash-out-ignored",
+    "kind": "defect",
+    "probes": 324,
+    "different": 47,
+    "agrees": true
+   },
+   {
+    "change": "cash-kind-negated",
+    "kind": "defect",
+    "probes": 324,
+    "different": 23,
+    "agrees": true
+   },
+   {
+    "change": "cash-total-narrow",
+    "kind": "defect",
+    "probes": 324,
+    "different": 117,
+    "agrees": true
+   },
+   {
+    "change": "cash-struct-first-deposit",
+    "kind": "defect",
+    "probes": 324,
+    "different": 9,
+    "agrees": true
+   },
+   {
+    "change": "cash-floor-up",
+    "kind": "intended",
+    "probes": 324,
+    "different": 7,
+    "agrees": true
+   },
+   {
+    "change": "cash-threshold-down",
+    "kind": "intended",
+    "probes": 324,
+    "different": 20,
+    "agrees": true
+   },
+   {
+    "change": "cash-floor-down",
+    "kind": "intended",
+    "probes": 324,
+    "different": 6,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-init-back",
+    "kind": "refactor",
+    "probes": 165,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-not-positive-back",
+    "kind": "refactor",
+    "probes": 165,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "fee-compute-back",
+    "kind": "refactor",
+    "probes": 180,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "fee-free-txns-inclusive-back",
+    "kind": "refactor",
+    "probes": 180,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "paysc-swap-compare-back",
+    "kind": "refactor",
+    "probes": 151,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "post-compute-back",
+    "kind": "refactor",
+    "probes": 36,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "loan-subtract-giving-back",
+    "kind": "refactor",
+    "probes": 280,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "loan-grace-inclusive-back",
+    "kind": "refactor",
+    "probes": 280,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "loan-clamp-order-back",
+    "kind": "refactor",
+    "probes": 280,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "fx-multiply-back",
+    "kind": "refactor",
+    "probes": 193,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "cash-add-compute-back",
+    "kind": "refactor",
+    "probes": 324,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "cash-kind-reorder-back",
+    "kind": "refactor",
+    "probes": 324,
+    "different": 0,
+    "agrees": true
+   }
+  ],
+  "serravento": [
+   {
+    "change": "intaccr-init",
+    "kind": "refactor",
+    "probes": 165,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-not-positive",
+    "kind": "refactor",
+    "probes": 165,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-tier-strict",
+    "kind": "defect",
+    "probes": 165,
+    "different": 3,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-truncate",
+    "kind": "defect",
+    "probes": 165,
+    "different": 77,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-basis",
+    "kind": "defect",
+    "probes": 165,
+    "different": 85,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-rate-up",
+    "kind": "intended",
+    "probes": 165,
+    "different": 34,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-rate-down",
+    "kind": "intended",
+    "probes": 165,
+    "different": 34,
+    "agrees": true
+   },
+   {
+    "change": "fee-compute",
+    "kind": "refactor",
+    "probes": 180,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "fee-free-txns-inclusive",
+    "kind": "refactor",
+    "probes": 180,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "fee-waiver-strict",
+    "kind": "defect",
+    "probes": 180,
+    "different": 5,
+    "agrees": true
+   },
+   {
+    "change": "fee-per-txn-slip",
+    "kind": "defect",
+    "probes": 180,
+    "different": 36,
+    "agrees": true
+   },
+   {
+    "change": "fee-retail-up",
+    "kind": "intended",
+    "probes": 180,
+    "different": 9,
+    "agrees": true
+   },
+   {
+    "change": "fee-retail-down",
+    "kind": "intended",
+    "probes": 180,
+    "different": 9,
+    "agrees": true
+   },
+   {
+    "change": "paysc-swap-compare",
+    "kind": "refactor",
+    "probes": 151,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "paysc-report-strict",
+    "kind": "defect",
+    "probes": 151,
+    "different": 6,
+    "agrees": true
+   },
+   {
+    "change": "paysc-daily-ignored",
+    "kind": "defect",
+    "probes": 151,
+    "different": 25,
+    "agrees": true
+   },
+   {
+    "change": "paysc-online-up",
+    "kind": "intended",
+    "probes": 151,
+    "different": 10,
+    "agrees": true
+   },
+   {
+    "change": "paysc-online-down",
+    "kind": "intended",
+    "probes": 151,
+    "different": 3,
+    "agrees": true
+   },
+   {
+    "change": "post-compute",
+    "kind": "refactor",
+    "probes": 36,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "post-credit-reversed",
+    "kind": "defect",
+    "probes": 36,
+    "different": 6,
+    "agrees": true
+   },
+   {
+    "change": "post-limit-ignored",
+    "kind": "defect",
+    "probes": 36,
+    "different": 3,
+    "agrees": true
+   },
+   {
+    "change": "post-rc-dropped",
+    "kind": "defect",
+    "probes": 36,
+    "different": 26,
+    "agrees": true
+   },
+   {
+    "change": "post-od-fee-down",
+    "kind": "intended",
+    "probes": 36,
+    "different": 3,
+    "agrees": true
+   },
+   {
+    "change": "post-od-fee-up",
+    "kind": "intended",
+    "probes": 36,
+    "different": 3,
+    "agrees": true
+   },
+   {
+    "change": "loan-subtract-giving",
+    "kind": "refactor",
+    "probes": 280,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "loan-grace-inclusive",
+    "kind": "refactor",
+    "probes": 280,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "loan-clamp-order",
+    "kind": "refactor",
+    "probes": 280,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "loan-interest-truncate",
+    "kind": "defect",
+    "probes": 280,
+    "different": 133,
+    "agrees": true
+   },
+   {
+    "change": "loan-late-fee-truncate",
+    "kind": "defect",
+    "probes": 280,
+    "different": 57,
+    "agrees": true
+   },
+   {
+    "change": "loan-delinquent-strict",
+    "kind": "defect",
+    "probes": 280,
+    "different": 13,
+    "agrees": true
+   },
+   {
+    "change": "loan-rate-mixup",
+    "kind": "defect",
+    "probes": 280,
+    "different": 81,
+    "agrees": true
+   },
+   {
+    "change": "loan-late-cap-down",
+    "kind": "intended",
+    "probes": 280,
+    "different": 102,
+    "agrees": true
+   },
+   {
+    "change": "loan-late-cap-up",
+    "kind": "intended",
+    "probes": 280,
+    "different": 69,
+    "agrees": true
+   },
+   {
+    "change": "loan-grace-up",
+    "kind": "intended",
+    "probes": 280,
+    "different": 33,
+    "agrees": true
+   },
+   {
+    "change": "loan-mortgage-rate-up",
+    "kind": "intended",
+    "probes": 280,
+    "different": 78,
+    "agrees": true
+   },
+   {
+    "change": "loan-mortgage-rate-down",
+    "kind": "intended",
+    "probes": 280,
+    "different": 78,
+    "agrees": true
+   },
+   {
+    "change": "loan-grace-down",
+    "kind": "intended",
+    "probes": 280,
+    "different": 28,
+    "agrees": true
+   },
+   {
+    "change": "loan-apr-precision",
+    "kind": "defect",
+    "probes": 280,
+    "different": 78,
+    "agrees": true
+   },
+   {
+    "change": "fx-multiply",
+    "kind": "refactor",
+    "probes": 193,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "fx-convert-truncate",
+    "kind": "defect",
+    "probes": 193,
+    "different": 90,
+    "agrees": true
+   },
+   {
+    "change": "fx-rate-swap",
+    "kind": "defect",
+    "probes": 193,
+    "different": 121,
+    "agrees": true
+   },
+   {
+    "change": "fx-premier-inverted",
+    "kind": "defect",
+    "probes": 193,
+    "different": 171,
+    "agrees": true
+   },
+   {
+    "change": "fx-fee-on-amount",
+    "kind": "defect",
+    "probes": 193,
+    "different": 89,
+    "agrees": true
+   },
+   {
+    "change": "fx-review-strict",
+    "kind": "defect",
+    "probes": 193,
+    "different": 3,
+    "agrees": true
+   },
+   {
+    "change": "fx-review-up",
+    "kind": "intended",
+    "probes": 193,
+    "different": 55,
+    "agrees": true
+   },
+   {
+    "change": "fx-min-fee-up",
+    "kind": "intended",
+    "probes": 193,
+    "different": 6,
+    "agrees": true
+   },
+   {
+    "change": "fx-spread-up",
+    "kind": "intended",
+    "probes": 193,
+    "different": 89,
+    "agrees": true
+   },
+   {
+    "change": "fx-spread-down",
+    "kind": "intended",
+    "probes": 193,
+    "different": 89,
+    "agrees": true
+   },
+   {
+    "change": "fx-review-down",
+    "kind": "intended",
+    "probes": 193,
+    "different": 28,
+    "agrees": true
+   },
+   {
+    "change": "cash-add-compute",
+    "kind": "refactor",
+    "probes": 324,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "cash-kind-reorder",
+    "kind": "refactor",
+    "probes": 324,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "cash-threshold-boundary",
+    "kind": "defect",
+    "probes": 324,
+    "different": 2,
+    "agrees": true
+   },
+   {
+    "change": "cash-aggregation-dropped",
+    "kind": "defect",
+    "probes": 324,
+    "different": 75,
+    "agrees": true
+   },
+   {
+    "change": "cash-out-ignored",
+    "kind": "defect",
+    "probes": 324,
+    "different": 44,
+    "agrees": true
+   },
+   {
+    "change": "cash-kind-negated",
+    "kind": "defect",
+    "probes": 324,
+    "different": 23,
+    "agrees": true
+   },
+   {
+    "change": "cash-total-narrow",
+    "kind": "defect",
+    "probes": 324,
+    "different": 113,
+    "agrees": true
+   },
+   {
+    "change": "cash-struct-first-deposit",
+    "kind": "defect",
+    "probes": 324,
+    "different": 9,
+    "agrees": true
+   },
+   {
+    "change": "cash-floor-up",
+    "kind": "intended",
+    "probes": 324,
+    "different": 7,
+    "agrees": true
+   },
+   {
+    "change": "cash-threshold-down",
+    "kind": "intended",
+    "probes": 324,
+    "different": 22,
+    "agrees": true
+   },
+   {
+    "change": "cash-floor-down",
+    "kind": "intended",
+    "probes": 324,
+    "different": 7,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-init-back",
+    "kind": "refactor",
+    "probes": 165,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-not-positive-back",
+    "kind": "refactor",
+    "probes": 165,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "fee-compute-back",
+    "kind": "refactor",
+    "probes": 180,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "fee-free-txns-inclusive-back",
+    "kind": "refactor",
+    "probes": 180,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "paysc-swap-compare-back",
+    "kind": "refactor",
+    "probes": 151,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "post-compute-back",
+    "kind": "refactor",
+    "probes": 36,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "loan-subtract-giving-back",
+    "kind": "refactor",
+    "probes": 280,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "loan-grace-inclusive-back",
+    "kind": "refactor",
+    "probes": 280,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "loan-clamp-order-back",
+    "kind": "refactor",
+    "probes": 280,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "fx-multiply-back",
+    "kind": "refactor",
+    "probes": 193,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "cash-add-compute-back",
+    "kind": "refactor",
+    "probes": 324,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "cash-kind-reorder-back",
+    "kind": "refactor",
+    "probes": 324,
+    "different": 0,
+    "agrees": true
+   }
+  ],
+  "kestrelmark": [
+   {
+    "change": "intaccr-init",
+    "kind": "refactor",
+    "probes": 165,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-not-positive",
+    "kind": "refactor",
+    "probes": 165,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-tier-strict",
+    "kind": "defect",
+    "probes": 165,
+    "different": 3,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-truncate",
+    "kind": "defect",
+    "probes": 165,
+    "different": 68,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-basis",
+    "kind": "defect",
+    "probes": 165,
+    "different": 91,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-rate-up",
+    "kind": "intended",
+    "probes": 165,
+    "different": 56,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-rate-down",
+    "kind": "intended",
+    "probes": 165,
+    "different": 56,
+    "agrees": true
+   },
+   {
+    "change": "fee-compute",
+    "kind": "refactor",
+    "probes": 180,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "fee-free-txns-inclusive",
+    "kind": "refactor",
+    "probes": 180,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "fee-waiver-strict",
+    "kind": "defect",
+    "probes": 180,
+    "different": 5,
+    "agrees": true
+   },
+   {
+    "change": "fee-per-txn-slip",
+    "kind": "defect",
+    "probes": 180,
+    "different": 36,
+    "agrees": true
+   },
+   {
+    "change": "fee-retail-up",
+    "kind": "intended",
+    "probes": 180,
+    "different": 10,
+    "agrees": true
+   },
+   {
+    "change": "fee-retail-down",
+    "kind": "intended",
+    "probes": 180,
+    "different": 10,
+    "agrees": true
+   },
+   {
+    "change": "paysc-swap-compare",
+    "kind": "refactor",
+    "probes": 151,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "paysc-report-strict",
+    "kind": "defect",
+    "probes": 151,
+    "different": 6,
+    "agrees": true
+   },
+   {
+    "change": "paysc-daily-ignored",
+    "kind": "defect",
+    "probes": 151,
+    "different": 40,
+    "agrees": true
+   },
+   {
+    "change": "paysc-online-up",
+    "kind": "intended",
+    "probes": 151,
+    "different": 22,
+    "agrees": true
+   },
+   {
+    "change": "paysc-online-down",
+    "kind": "intended",
+    "probes": 151,
+    "different": 8,
+    "agrees": true
+   },
+   {
+    "change": "post-compute",
+    "kind": "refactor",
+    "probes": 36,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "post-credit-reversed",
+    "kind": "defect",
+    "probes": 36,
+    "different": 6,
+    "agrees": true
+   },
+   {
+    "change": "post-limit-ignored",
+    "kind": "defect",
+    "probes": 36,
+    "different": 3,
+    "agrees": true
+   },
+   {
+    "change": "post-rc-dropped",
+    "kind": "defect",
+    "probes": 36,
+    "different": 26,
+    "agrees": true
+   },
+   {
+    "change": "post-od-fee-down",
+    "kind": "intended",
+    "probes": 36,
+    "different": 3,
+    "agrees": true
+   },
+   {
+    "change": "post-od-fee-up",
+    "kind": "intended",
+    "probes": 36,
+    "different": 3,
+    "agrees": true
+   },
+   {
+    "change": "loan-subtract-giving",
+    "kind": "refactor",
+    "probes": 280,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "loan-grace-inclusive",
+    "kind": "refactor",
+    "probes": 280,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "loan-clamp-order",
+    "kind": "refactor",
+    "probes": 280,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "loan-interest-truncate",
+    "kind": "defect",
+    "probes": 280,
+    "different": 184,
+    "agrees": true
+   },
+   {
+    "change": "loan-late-fee-truncate",
+    "kind": "defect",
+    "probes": 280,
+    "different": 15,
+    "agrees": true
+   },
+   {
+    "change": "loan-delinquent-strict",
+    "kind": "defect",
+    "probes": 280,
+    "different": 14,
+    "agrees": true
+   },
+   {
+    "change": "loan-rate-mixup",
+    "kind": "defect",
+    "probes": 280,
+    "different": 85,
+    "agrees": true
+   },
+   {
+    "change": "loan-late-cap-down",
+    "kind": "intended",
+    "probes": 280,
+    "different": 99,
+    "agrees": true
+   },
+   {
+    "change": "loan-late-cap-up",
+    "kind": "intended",
+    "probes": 280,
+    "different": 97,
+    "agrees": true
+   },
+   {
+    "change": "loan-grace-up",
+    "kind": "intended",
+    "probes": 280,
+    "different": 27,
+    "agrees": true
+   },
+   {
+    "change": "loan-mortgage-rate-up",
+    "kind": "intended",
+    "probes": 280,
+    "different": 81,
+    "agrees": true
+   },
+   {
+    "change": "loan-mortgage-rate-down",
+    "kind": "intended",
+    "probes": 280,
+    "different": 81,
+    "agrees": true
+   },
+   {
+    "change": "loan-grace-down",
+    "kind": "intended",
+    "probes": 280,
+    "different": 32,
+    "agrees": true
+   },
+   {
+    "change": "loan-apr-precision",
+    "kind": "defect",
+    "probes": 280,
+    "different": 81,
+    "agrees": true
+   },
+   {
+    "change": "fx-multiply",
+    "kind": "refactor",
+    "probes": 193,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "fx-convert-truncate",
+    "kind": "defect",
+    "probes": 193,
+    "different": 96,
+    "agrees": true
+   },
+   {
+    "change": "fx-rate-swap",
+    "kind": "defect",
+    "probes": 193,
+    "different": 122,
+    "agrees": true
+   },
+   {
+    "change": "fx-premier-inverted",
+    "kind": "defect",
+    "probes": 193,
+    "different": 171,
+    "agrees": true
+   },
+   {
+    "change": "fx-fee-on-amount",
+    "kind": "defect",
+    "probes": 193,
+    "different": 87,
+    "agrees": true
+   },
+   {
+    "change": "fx-review-strict",
+    "kind": "defect",
+    "probes": 193,
+    "different": 3,
+    "agrees": true
+   },
+   {
+    "change": "fx-review-up",
+    "kind": "intended",
+    "probes": 193,
+    "different": 59,
+    "agrees": true
+   },
+   {
+    "change": "fx-min-fee-up",
+    "kind": "intended",
+    "probes": 193,
+    "different": 7,
+    "agrees": true
+   },
+   {
+    "change": "fx-spread-up",
+    "kind": "intended",
+    "probes": 193,
+    "different": 87,
+    "agrees": true
+   },
+   {
+    "change": "fx-spread-down",
+    "kind": "intended",
+    "probes": 193,
+    "different": 87,
+    "agrees": true
+   },
+   {
+    "change": "fx-review-down",
+    "kind": "intended",
+    "probes": 193,
+    "different": 32,
+    "agrees": true
+   },
+   {
+    "change": "cash-add-compute",
+    "kind": "refactor",
+    "probes": 324,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "cash-kind-reorder",
+    "kind": "refactor",
+    "probes": 324,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "cash-threshold-boundary",
+    "kind": "defect",
+    "probes": 324,
+    "different": 2,
+    "agrees": true
+   },
+   {
+    "change": "cash-aggregation-dropped",
+    "kind": "defect",
+    "probes": 324,
+    "different": 81,
+    "agrees": true
+   },
+   {
+    "change": "cash-out-ignored",
+    "kind": "defect",
+    "probes": 324,
+    "different": 47,
+    "agrees": true
+   },
+   {
+    "change": "cash-kind-negated",
+    "kind": "defect",
+    "probes": 324,
+    "different": 23,
+    "agrees": true
+   },
+   {
+    "change": "cash-total-narrow",
+    "kind": "defect",
+    "probes": 324,
+    "different": 115,
+    "agrees": true
+   },
+   {
+    "change": "cash-struct-first-deposit",
+    "kind": "defect",
+    "probes": 324,
+    "different": 9,
+    "agrees": true
+   },
+   {
+    "change": "cash-floor-up",
+    "kind": "intended",
+    "probes": 324,
+    "different": 7,
+    "agrees": true
+   },
+   {
+    "change": "cash-threshold-down",
+    "kind": "intended",
+    "probes": 324,
+    "different": 24,
+    "agrees": true
+   },
+   {
+    "change": "cash-floor-down",
+    "kind": "intended",
+    "probes": 324,
+    "different": 6,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-init-back",
+    "kind": "refactor",
+    "probes": 165,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "intaccr-not-positive-back",
+    "kind": "refactor",
+    "probes": 165,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "fee-compute-back",
+    "kind": "refactor",
+    "probes": 180,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "fee-free-txns-inclusive-back",
+    "kind": "refactor",
+    "probes": 180,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "paysc-swap-compare-back",
+    "kind": "refactor",
+    "probes": 151,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "post-compute-back",
+    "kind": "refactor",
+    "probes": 36,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "loan-subtract-giving-back",
+    "kind": "refactor",
+    "probes": 280,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "loan-grace-inclusive-back",
+    "kind": "refactor",
+    "probes": 280,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "loan-clamp-order-back",
+    "kind": "refactor",
+    "probes": 280,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "fx-multiply-back",
+    "kind": "refactor",
+    "probes": 193,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "cash-add-compute-back",
+    "kind": "refactor",
+    "probes": 324,
+    "different": 0,
+    "agrees": true
+   },
+   {
+    "change": "cash-kind-reorder-back",
+    "kind": "refactor",
+    "probes": 324,
+    "different": 0,
+    "agrees": true
+   }
+  ]
+ },
+ "changes": 432,
+ "disagreements": []
+}
