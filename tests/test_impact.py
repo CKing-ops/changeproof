@@ -153,3 +153,37 @@ def test_the_first_commit_compares_with_an_empty_tree_and_lists_unanalyzed_files
     assert "program:INVMAIN" in {c["id"] for c in predicate["changed"]}
     assert {"description": "changeproof.yaml changed but was not analyzed: no adapter for this file type",
             "provenance": {"file": "changeproof.yaml", "line": 1}} in predicate["unresolved"]
+
+
+def test_a_table_definition_change_in_ddl_reaches_every_program_that_uses_the_table(tmp_path):
+    import subprocess
+
+    def git(*args):
+        subprocess.run(["git", "-C", str(tmp_path), "-c", "user.name=t", "-c", "user.email=t@x", *args],
+                       check=True, capture_output=True)
+
+    (tmp_path / "src").mkdir()
+    (tmp_path / "jcl").mkdir()
+    (tmp_path / "src" / "ACCTRD.cbl").write_text(
+        "       IDENTIFICATION DIVISION.\n       PROGRAM-ID. ACCTRD.\n       DATA DIVISION.\n"
+        "       WORKING-STORAGE SECTION.\n       01 WS-BAL PIC S9(7)V99 COMP-3.\n       PROCEDURE DIVISION.\n"
+        "       MAIN.\n           EXEC SQL SELECT BAL INTO :WS-BAL FROM BANK.ACCT END-EXEC.\n           GOBACK.\n")
+    ddl = ("//DDL JOB (1),'DDL'\n//MAKE EXEC PGM=IKJEFT01\n//SYSIN DD *\n"
+           "CREATE TABLE BANK.ACCT (\n   BAL NUMERIC(9,2));\n/*\n//DEF EXEC PGM=IDCAMS\n//SYSIN DD *\n"
+           "  DEFINE CLUSTER (NAME(BANK.HIST) KEYS(29 0))\n/*\n")
+    (tmp_path / "jcl" / "DDL.jcl").write_text(ddl)
+    git("init", "-q")
+    git("add", "-A")
+    git("commit", "-qm", "base")
+    (tmp_path / "jcl" / "DDL.jcl").write_text(ddl.replace("NUMERIC(9,2)", "NUMERIC(11,2)").replace("29 0", "30 0"))
+    git("commit", "-qam", "widen the balance and the history key")
+    found = impact(tmp_path, "HEAD")
+    assert sorted(c["id"] for c in found["changed"]) == [
+        "jcl-dd:DDL.DEF.SYSIN", "jcl-dd:DDL.MAKE.SYSIN", "jcl-define:DDL.DEF.SYSIN.BANK.HIST",
+        "jcl-define:DDL.MAKE.SYSIN.BANK.ACCT"]
+    reached = {i["id"]: i for i in found["impacted"]}
+    assert reached["program:ACCTRD"]["confidence"] == "definite"
+    assert reached["program:ACCTRD"]["via"][0] == {
+        "from": "jcl-define:DDL.MAKE.SYSIN.BANK.ACCT", "to": "table:BANK.ACCT", "edge": "defines",
+        "provenance": {"file": "jcl/DDL.jcl", "line": 4, "end_line": 5}}
+    assert {"step:DDL.DEF", "step:DDL.MAKE"} <= set(reached)
