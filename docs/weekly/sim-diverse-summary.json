@@ -1,0 +1,729 @@
+{
+ "days": [
+  1280,
+  1281,
+  1282,
+  1283,
+  1284,
+  1285,
+  1286,
+  1287,
+  1288,
+  1289,
+  1290,
+  1291,
+  1292,
+  1293,
+  1294,
+  1295,
+  1296,
+  1297,
+  1298,
+  1299,
+  1300,
+  1301,
+  1302,
+  1303,
+  1304,
+  1305,
+  1306,
+  1307,
+  1308,
+  1309,
+  1310,
+  1311,
+  1312,
+  1313,
+  1314,
+  1315,
+  1316,
+  1317,
+  1318,
+  1319,
+  1320,
+  1321,
+  1322,
+  1323,
+  1324,
+  1325,
+  1326,
+  1327,
+  1328,
+  1329,
+  1330,
+  1331,
+  1332,
+  1333,
+  1334,
+  1335,
+  1336,
+  1337,
+  1338,
+  1339,
+  1340
+ ],
+ "changes": 366,
+ "distinct_changes": 64,
+ "by_kind": {
+  "defect": {
+   "caught": 159,
+   "missed": 19
+  },
+  "intended": {
+   "missed": 15,
+   "confirmed": 88
+  },
+  "refactor": {
+   "proven": 85
+  }
+ },
+ "by_market": {
+  "eu-dora": {
+   "proven": 45,
+   "caught": 75,
+   "confirmed": 49,
+   "missed": 14
+  },
+  "general": {
+   "proven": 40,
+   "missed": 20,
+   "confirmed": 39,
+   "caught": 84
+  }
+ },
+ "by_program": {
+  "CASHAGG": {
+   "missed": 21,
+   "caught": 42,
+   "confirmed": 10,
+   "proven": 11
+  },
+  "FEEASSES": {
+   "proven": 12,
+   "confirmed": 8,
+   "caught": 8
+  },
+  "FXCONV": {
+   "caught": 49,
+   "confirmed": 12,
+   "missed": 7,
+   "proven": 10
+  },
+  "INTACCR": {
+   "confirmed": 15,
+   "proven": 18
+  },
+  "LOANPMT": {
+   "proven": 25,
+   "confirmed": 29,
+   "caught": 59,
+   "missed": 6
+  },
+  "PAYSCRN": {
+   "confirmed": 5,
+   "proven": 5
+  },
+  "POSTTXN": {
+   "confirmed": 9,
+   "proven": 4,
+   "caught": 1
+  }
+ },
+ "by_class": {
+  "boundary": {
+   "caught": 21,
+   "missed": 11
+  },
+  "data-division": {
+   "caught": 19
+  },
+  "logic": {
+   "caught": 85,
+   "missed": 6
+  },
+  "rounding": {
+   "caught": 34,
+   "missed": 2
+  }
+ },
+ "by_change": {
+  "cash-add-compute": {
+   "proven": 5
+  },
+  "cash-add-compute-back": {
+   "proven": 2
+  },
+  "cash-aggregation-dropped": {
+   "caught": 11
+  },
+  "cash-floor-down": {
+   "missed": 8
+  },
+  "cash-floor-up": {
+   "confirmed": 8
+  },
+  "cash-kind-negated": {
+   "caught": 6,
+   "missed": 1
+  },
+  "cash-kind-reorder": {
+   "proven": 2
+  },
+  "cash-kind-reorder-back": {
+   "proven": 2
+  },
+  "cash-out-ignored": {
+   "caught": 7
+  },
+  "cash-struct-first-deposit": {
+   "missed": 5
+  },
+  "cash-threshold-boundary": {
+   "caught": 6,
+   "missed": 6
+  },
+  "cash-threshold-down": {
+   "confirmed": 2,
+   "missed": 1
+  },
+  "cash-total-narrow": {
+   "caught": 12
+  },
+  "fee-compute": {
+   "proven": 2
+  },
+  "fee-compute-back": {
+   "proven": 3
+  },
+  "fee-free-txns-inclusive": {
+   "proven": 1
+  },
+  "fee-free-txns-inclusive-back": {
+   "proven": 6
+  },
+  "fee-per-txn-slip": {
+   "caught": 8
+  },
+  "fee-retail-down": {
+   "confirmed": 6
+  },
+  "fee-retail-up": {
+   "confirmed": 2
+  },
+  "fx-convert-truncate": {
+   "caught": 10
+  },
+  "fx-fee-on-amount": {
+   "caught": 13
+  },
+  "fx-min-fee-up": {
+   "confirmed": 2
+  },
+  "fx-multiply": {
+   "proven": 5
+  },
+  "fx-multiply-back": {
+   "proven": 5
+  },
+  "fx-premier-inverted": {
+   "caught": 13
+  },
+  "fx-rate-swap": {
+   "caught": 13
+  },
+  "fx-review-down": {
+   "missed": 2
+  },
+  "fx-review-strict": {
+   "missed": 5
+  },
+  "fx-review-up": {
+   "confirmed": 1
+  },
+  "fx-spread-down": {
+   "confirmed": 5
+  },
+  "fx-spread-up": {
+   "confirmed": 4
+  },
+  "intaccr-init": {
+   "proven": 3
+  },
+  "intaccr-init-back": {
+   "proven": 7
+  },
+  "intaccr-not-positive": {
+   "proven": 2
+  },
+  "intaccr-not-positive-back": {
+   "proven": 6
+  },
+  "intaccr-rate-down": {
+   "confirmed": 13
+  },
+  "intaccr-rate-up": {
+   "confirmed": 2
+  },
+  "loan-apr-precision": {
+   "caught": 7
+  },
+  "loan-clamp-order": {
+   "proven": 6
+  },
+  "loan-clamp-order-back": {
+   "proven": 1
+  },
+  "loan-delinquent-strict": {
+   "caught": 15
+  },
+  "loan-grace-down": {
+   "confirmed": 5
+  },
+  "loan-grace-inclusive": {
+   "proven": 5
+  },
+  "loan-grace-inclusive-back": {
+   "proven": 2
+  },
+  "loan-grace-up": {
+   "confirmed": 8
+  },
+  "loan-interest-truncate": {
+   "caught": 14
+  },
+  "loan-late-cap-down": {
+   "confirmed": 3,
+   "missed": 1
+  },
+  "loan-late-cap-up": {
+   "missed": 3
+  },
+  "loan-late-fee-truncate": {
+   "caught": 10,
+   "missed": 2
+  },
+  "loan-mortgage-rate-down": {
+   "confirmed": 5
+  },
+  "loan-mortgage-rate-up": {
+   "confirmed": 8
+  },
+  "loan-rate-mixup": {
+   "caught": 13
+  },
+  "loan-subtract-giving": {
+   "proven": 7
+  },
+  "loan-subtract-giving-back": {
+   "proven": 4
+  },
+  "paysc-online-down": {
+   "confirmed": 4
+  },
+  "paysc-online-up": {
+   "confirmed": 1
+  },
+  "paysc-swap-compare": {
+   "proven": 2
+  },
+  "paysc-swap-compare-back": {
+   "proven": 3
+  },
+  "post-compute": {
+   "proven": 1
+  },
+  "post-compute-back": {
+   "proven": 3
+  },
+  "post-credit-reversed": {
+   "caught": 1
+  },
+  "post-od-fee-down": {
+   "confirmed": 2
+  },
+  "post-od-fee-up": {
+   "confirmed": 7
+  }
+ },
+ "governance": {
+  "clean": 252,
+  "flagged": 114
+ },
+ "governance_paths": {
+  "governed": 252,
+  "no-ticket": 34,
+  "self-approved": 35,
+  "emergency": 45
+ },
+ "merged_defects": 19,
+ "seconds_per_scan": 35.2,
+ "tests_per_scan": 108.3,
+ "wrong": [
+  {
+   "day": 1280,
+   "bank": "tidewater",
+   "change": "cash-floor-down",
+   "kind": "intended",
+   "where": "src/CASHAGG.cbl:31",
+   "tests": 113,
+   "live_traffic_different": 0,
+   "live_runs": 36
+  },
+  {
+   "day": 1281,
+   "bank": "serravento",
+   "change": "loan-late-fee-truncate",
+   "kind": "defect",
+   "where": "src/LOANPMT.cbl:44",
+   "tests": 114,
+   "live_traffic_different": 1,
+   "live_runs": 23
+  },
+  {
+   "day": 1282,
+   "bank": "prairie-ledger",
+   "change": "cash-struct-first-deposit",
+   "kind": "defect",
+   "where": "src/CASHAGG.cbl:30",
+   "tests": 111,
+   "live_traffic_different": 0,
+   "live_runs": 25
+  },
+  {
+   "day": 1283,
+   "bank": "serravento",
+   "change": "cash-floor-down",
+   "kind": "intended",
+   "where": "src/CASHAGG.cbl:31",
+   "tests": 114,
+   "live_traffic_different": 0,
+   "live_runs": 23
+  },
+  {
+   "day": 1283,
+   "bank": "kestrelmark",
+   "change": "fx-review-strict",
+   "kind": "defect",
+   "where": "src/FXCONV.cbl:44",
+   "tests": 110,
+   "live_traffic_different": 0,
+   "live_runs": 19
+  },
+  {
+   "day": 1284,
+   "bank": "aldercove",
+   "change": "fx-review-strict",
+   "kind": "defect",
+   "where": "src/FXCONV.cbl:44",
+   "tests": 113,
+   "live_traffic_different": 0,
+   "live_runs": 15
+  },
+  {
+   "day": 1284,
+   "bank": "kestrelmark",
+   "change": "cash-floor-down",
+   "kind": "intended",
+   "where": "src/CASHAGG.cbl:31",
+   "tests": 110,
+   "live_traffic_different": 0,
+   "live_runs": 37
+  },
+  {
+   "day": 1286,
+   "bank": "prairie-ledger",
+   "change": "fx-review-strict",
+   "kind": "defect",
+   "where": "src/FXCONV.cbl:44",
+   "tests": 102,
+   "live_traffic_different": 0,
+   "live_runs": 3
+  },
+  {
+   "day": 1286,
+   "bank": "copperline",
+   "change": "cash-struct-first-deposit",
+   "kind": "defect",
+   "where": "src/CASHAGG.cbl:30",
+   "tests": 114,
+   "live_traffic_different": 0,
+   "live_runs": 6
+  },
+  {
+   "day": 1287,
+   "bank": "copperline",
+   "change": "cash-threshold-boundary",
+   "kind": "defect",
+   "where": "src/CASHAGG.cbl:27",
+   "tests": 105,
+   "live_traffic_different": 0,
+   "live_runs": 28
+  },
+  {
+   "day": 1288,
+   "bank": "prairie-ledger",
+   "change": "cash-kind-negated",
+   "kind": "defect",
+   "where": "src/CASHAGG.cbl:24",
+   "tests": 102,
+   "live_traffic_different": 0,
+   "live_runs": 44
+  },
+  {
+   "day": 1292,
+   "bank": "aldercove",
+   "change": "loan-late-cap-up",
+   "kind": "intended",
+   "where": "src/LOANPMT.cbl:50",
+   "tests": 114,
+   "live_traffic_different": 0,
+   "live_runs": 2
+  },
+  {
+   "day": 1294,
+   "bank": "prairie-ledger",
+   "change": "loan-late-cap-up",
+   "kind": "intended",
+   "where": "src/LOANPMT.cbl:47",
+   "tests": 102,
+   "live_traffic_different": 0,
+   "live_runs": 27
+  },
+  {
+   "day": 1294,
+   "bank": "tidewater",
+   "change": "cash-struct-first-deposit",
+   "kind": "defect",
+   "where": "src/CASHAGG.cbl:30",
+   "tests": 113,
+   "live_traffic_different": 2,
+   "live_runs": 33
+  },
+  {
+   "day": 1294,
+   "bank": "serravento",
+   "change": "fx-review-down",
+   "kind": "intended",
+   "where": "src/FXCONV.cbl:45",
+   "tests": 113,
+   "live_traffic_different": 0,
+   "live_runs": 12
+  },
+  {
+   "day": 1295,
+   "bank": "tidewater",
+   "change": "cash-threshold-boundary",
+   "kind": "defect",
+   "where": "src/CASHAGG.cbl:27",
+   "tests": 104,
+   "live_traffic_different": 2,
+   "live_runs": 31
+  },
+  {
+   "day": 1297,
+   "bank": "tidewater",
+   "change": "fx-review-down",
+   "kind": "intended",
+   "where": "src/FXCONV.cbl:44",
+   "tests": 104,
+   "live_traffic_different": 2,
+   "live_runs": 16
+  },
+  {
+   "day": 1299,
+   "bank": "kestrelmark",
+   "change": "loan-late-fee-truncate",
+   "kind": "defect",
+   "where": "src/LOANPMT.cbl:44",
+   "tests": 110,
+   "live_traffic_different": 0,
+   "live_runs": 5
+  },
+  {
+   "day": 1308,
+   "bank": "prairie-ledger",
+   "change": "cash-floor-down",
+   "kind": "intended",
+   "where": "src/CASHAGG.cbl:31",
+   "tests": 103,
+   "live_traffic_different": 0,
+   "live_runs": 22
+  },
+  {
+   "day": 1309,
+   "bank": "copperline",
+   "change": "cash-floor-down",
+   "kind": "intended",
+   "where": "src/CASHAGG.cbl:31",
+   "tests": 105,
+   "live_traffic_different": 0,
+   "live_runs": 32
+  },
+  {
+   "day": 1313,
+   "bank": "aldercove",
+   "change": "cash-floor-down",
+   "kind": "intended",
+   "where": "src/CASHAGG.cbl:31",
+   "tests": 110,
+   "live_traffic_different": 0,
+   "live_runs": 5
+  },
+  {
+   "day": 1314,
+   "bank": "copperline",
+   "change": "loan-late-cap-down",
+   "kind": "intended",
+   "where": "src/LOANPMT.cbl:50",
+   "tests": 104,
+   "live_traffic_different": 1,
+   "live_runs": 2
+  },
+  {
+   "day": 1316,
+   "bank": "tidewater",
+   "change": "cash-threshold-boundary",
+   "kind": "defect",
+   "where": "src/CASHAGG.cbl:27",
+   "tests": 104,
+   "live_traffic_different": 0,
+   "live_runs": 35
+  },
+  {
+   "day": 1317,
+   "bank": "tidewater",
+   "change": "loan-late-cap-up",
+   "kind": "intended",
+   "where": "src/LOANPMT.cbl:46",
+   "tests": 104,
+   "live_traffic_different": 1,
+   "live_runs": 15
+  },
+  {
+   "day": 1319,
+   "bank": "serravento",
+   "change": "cash-floor-down",
+   "kind": "intended",
+   "where": "src/CASHAGG.cbl:31",
+   "tests": 113,
+   "live_traffic_different": 0,
+   "live_runs": 36
+  },
+  {
+   "day": 1324,
+   "bank": "copperline",
+   "change": "fx-review-strict",
+   "kind": "defect",
+   "where": "src/FXCONV.cbl:44",
+   "tests": 105,
+   "live_traffic_different": 0,
+   "live_runs": 20
+  },
+  {
+   "day": 1328,
+   "bank": "tidewater",
+   "change": "fx-review-strict",
+   "kind": "defect",
+   "where": "src/FXCONV.cbl:45",
+   "tests": 104,
+   "live_traffic_different": 0,
+   "live_runs": 2
+  },
+  {
+   "day": 1329,
+   "bank": "tidewater",
+   "change": "cash-threshold-boundary",
+   "kind": "defect",
+   "where": "src/CASHAGG.cbl:27",
+   "tests": 104,
+   "live_traffic_different": 0,
+   "live_runs": 33
+  },
+  {
+   "day": 1331,
+   "bank": "tidewater",
+   "change": "cash-threshold-boundary",
+   "kind": "defect",
+   "where": "src/CASHAGG.cbl:27",
+   "tests": 104,
+   "live_traffic_different": 1,
+   "live_runs": 44
+  },
+  {
+   "day": 1332,
+   "bank": "aldercove",
+   "change": "cash-floor-down",
+   "kind": "intended",
+   "where": "src/CASHAGG.cbl:31",
+   "tests": 110,
+   "live_traffic_different": 0,
+   "live_runs": 33
+  },
+  {
+   "day": 1335,
+   "bank": "serravento",
+   "change": "cash-struct-first-deposit",
+   "kind": "defect",
+   "where": "src/CASHAGG.cbl:30",
+   "tests": 113,
+   "live_traffic_different": 0,
+   "live_runs": 4
+  },
+  {
+   "day": 1337,
+   "bank": "copperline",
+   "change": "cash-threshold-boundary",
+   "kind": "defect",
+   "where": "src/CASHAGG.cbl:27",
+   "tests": 105,
+   "live_traffic_different": 0,
+   "live_runs": 34
+  },
+  {
+   "day": 1337,
+   "bank": "kestrelmark",
+   "change": "cash-struct-first-deposit",
+   "kind": "defect",
+   "where": "src/CASHAGG.cbl:30",
+   "tests": 114,
+   "live_traffic_different": 0,
+   "live_runs": 29
+  },
+  {
+   "day": 1339,
+   "bank": "kestrelmark",
+   "change": "cash-threshold-down",
+   "kind": "intended",
+   "where": "src/CASHAGG.cbl:27",
+   "tests": 105,
+   "live_traffic_different": 2,
+   "live_runs": 34
+  }
+ ],
+ "business": {
+  "bank_days": 366,
+  "postings": 17438,
+  "payments": 10968,
+  "loan_installments": 6066,
+  "loan_interest": {
+   "EUR": "974547.83",
+   "USD": "1621025.88"
+  },
+  "late_fees": {
+   "EUR": "4078.86",
+   "USD": "11429.90"
+  },
+  "fx_conversions": 3998,
+  "fx_converted": {
+   "EUR": "16344918.75",
+   "USD": "14311629.55"
+  },
+  "fx_fees": {
+   "EUR": "146207.72",
+   "USD": "183202.64"
+  },
+  "cash_transactions": 9363,
+  "cash_reports": 1198,
+  "structuring_alerts": 936
+ }
+}

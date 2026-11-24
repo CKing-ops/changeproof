@@ -168,7 +168,7 @@ def catalogue(bank: Bank, rules: dict[str, str] | None = None) -> list[Change]:
         Change("post-od-fee-up", t, "intended", f"Raise the overdraft fee to {raised_od_fee}",
                f"SUBTRACT {r['overdraft_fee']} FROM ACCT-BALANCE", f"SUBTRACT {raised_od_fee} FROM ACCT-BALANCE"),
     ]
-    changes += loan_changes(r, loan) + fx_changes(r, fx) + cash_changes(r, cash)
+    changes += loan_changes(r, loan) + fx_changes(r, fx) + cash_changes(r, cash, bank.rules["cash_op"])
     return changes + [back(c) for c in changes if c.kind == "refactor"]
 
 
@@ -274,8 +274,8 @@ def fx_changes(r: dict[str, str], path: str) -> list[Change]:
 
 
 # PURPOSE: CASH MONITORING CHANGES: THE REPORTING BOUNDARY, LOST AGGREGATION, A FIELD TOO SHORT FOR THE TOTAL
-def cash_changes(r: dict[str, str], path: str) -> list[Change]:
-    flipped = ">=" if r["cash_op"] == ">" else ">"
+def cash_changes(r: dict[str, str], path: str, rule_op: str) -> list[Change]:
+    flipped = ">=" if rule_op == ">" else ">"  # from the bank's own rule, so a merged flip is never flipped back as a defect
     threshold = r["cash_threshold"]
     changes = [
         Change("cash-add-compute", path, "refactor", "Write the cash total as a COMPUTE",
@@ -283,7 +283,7 @@ def cash_changes(r: dict[str, str], path: str) -> list[Change]:
         Change("cash-kind-reorder", path, "refactor", "List cash out first in the cash test",
                "IF KIND-CASH-IN OR KIND-CASH-OUT", "IF KIND-CASH-OUT OR KIND-CASH-IN"),
         Change("cash-threshold-boundary", path, "defect", "Tidy the cash reporting test",
-               f"IF WS-CASH-TOTAL {r['cash_op']} {threshold}", f"IF WS-CASH-TOTAL {flipped} {threshold}"),
+               f"IF WS-CASH-TOTAL {rule_op} {threshold}", f"IF WS-CASH-TOTAL {flipped} {threshold}"),
         Change("cash-aggregation-dropped", path, "defect", "Start each cash check from zero",
                "MOVE LK-CASH-TODAY TO WS-CASH-TOTAL", "MOVE 0 TO WS-CASH-TOTAL"),
         Change("cash-out-ignored", path, "defect", "Count cash deposits in the daily total",

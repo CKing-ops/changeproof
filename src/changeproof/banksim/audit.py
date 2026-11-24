@@ -8,7 +8,7 @@ refactor's "same" is a sampled check, not a proof.
 
 import random
 import tempfile
-from decimal import Decimal
+from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
 
 from changeproof.banksim.banks import Bank
@@ -16,6 +16,7 @@ from changeproof.banksim.estate import BEHAVIOUR, Change, current, render
 from changeproof.banksim.operations import FOREIGN, UNQUOTED, run_rows
 
 DRAWS = 120  # RENAME: RANDOM PROBES PER PROGRAM ON TOP OF THE BOUNDARY ONES
+CENT = Decimal("0.01")
 
 
 # PURPOSE: A VALUE ONE CENT (OR ONE UNIT) EITHER SIDE OF A LITERAL, AND THE LITERAL ITSELF
@@ -27,6 +28,14 @@ def around(value: str) -> list[str]:
 # PURPOSE: A RANDOM MONEY AMOUNT WITH CENTS
 def cents(rng: random.Random, high: float) -> str:
     return f"{rng.uniform(0.01, high):.2f}"
+
+
+# PURPOSE: AMOUNTS WHOSE CONVERSION AT A RATE, ROUNDED TO THE CENT, LANDS ON A TARGET OR ONE CENT EITHER SIDE
+def landing(target: str, rate: str) -> list[str]:
+    start = (Decimal(target) / Decimal(rate)).quantize(CENT)
+    near = (start + n * CENT for n in range(-200, 201))
+    wanted = {Decimal(v) for v in around(target)}
+    return [str(a) for a in near if (a * Decimal(rate)).quantize(CENT, ROUND_HALF_UP) in wanted]
 
 
 # PURPOSE: PROBE INPUTS FOR ONE PROGRAM: EVERY RULE BOUNDARY CROSSED WITH THE CODES THAT PICK A PATH, PLUS RANDOM DRAWS
@@ -64,9 +73,10 @@ def probes(bank: Bank, program: str, rules: dict[str, str]) -> list[dict]:
         quoted = (r["fx1"], r["fx2"], r["fx3"])
         edges = [{"LK-AMOUNT": a, "LK-FROM-CCY": c, "LK-CUSTOMER": k}
                  for a in ["0.00", "1.00", "123.45", "999.99", "4321.09"]
-                 + [str((Decimal(v) / Decimal(r["fx1_rate"])).quantize(Decimal("0.01"))) for v in around(r["fx_review"])]
                  + [str(Decimal(v) * 2) for v in around(r["fx_review"])]
                  for c in (*quoted, UNQUOTED[0]) for k in "PS"]
+        edges += [{"LK-AMOUNT": a, "LK-FROM-CCY": r[c], "LK-CUSTOMER": "S"}
+                  for c in ("fx1", "fx2", "fx3") for a in landing(r["fx_review"], r[f"{c}_rate"])]
         draws = [{"LK-AMOUNT": cents(rng, 80000), "LK-FROM-CCY": rng.choice(quoted), "LK-CUSTOMER": rng.choice("PS")}
                  for _ in range(DRAWS)]
     elif program == "CASHAGG":

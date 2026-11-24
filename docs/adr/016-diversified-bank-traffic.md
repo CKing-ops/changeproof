@@ -55,3 +55,14 @@ small programs.
   programs, REDEFINES-heavy records, GO TO or ALTER, and no multi-file changes. Those remain untested
   here (see the public-code graft in its own ADR).
 - No core schema changed; nothing leaves the machine.
+
+## Results (2026-11-24)
+
+- Label audit: 432 of 432 catalogued changes behave as labelled on their probes
+  (`docs/weekly/bank-change-audit.json`, `scripts/bank_audit.py`).
+- 61 simulated days, 366 changes (days 1280 to 1340, `/mnt/project-files/changeproof/sim-diverse/`,
+  summed in `docs/weekly/sim-diverse-summary.json` by `scripts/bank_report.py`): defects caught 159 of
+  178, intended changes confirmed 88 of 103, refactors proven 85 of 85, 0 false alarms, approval gaps
+  flagged 114 of 114 with 0 wrongly flagged. All 34 misses are in the three new programs.
+- A missed structuring defect on main hides the next reporting-boundary flip:
+  `test_a_cash_boundary_flip_is_caught_after_a_missed_structuring_defect_merged` (xfail, planned).

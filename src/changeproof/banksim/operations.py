@@ -119,8 +119,8 @@ def conversions(bank: Bank, rng: random.Random, weekend: bool) -> list[dict]:
     return rows
 
 
-# PURPOSE: THE DAY'S CASH IN AND OUT, EACH ROW CARRYING THE CUSTOMER'S EARLIER CASH THAT DAY IN THE SAME DIRECTION;
-# SOME CUSTOMERS SPLIT DEPOSITS UNDER THE REPORTING THRESHOLD AND SOME BRING EXACTLY THE THRESHOLD
+# Some customers split deposits just under the reporting threshold and some bring exactly the threshold.
+# PURPOSE: THE DAY'S CASH IN AND OUT, EACH ROW CARRYING THE CUSTOMER'S EARLIER SAME-DIRECTION CASH THAT DAY
 def cash(bank: Bank, book: list[Account], rng: random.Random, weekend: bool) -> list[dict]:
     threshold = Decimal(bank.rules["cash_threshold"])
     floor = Decimal(bank.rules["structuring_floor"])

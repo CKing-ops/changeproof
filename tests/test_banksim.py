@@ -35,6 +35,7 @@ from changeproof.banksim.run import (
 )
 from changeproof.characterize import LocalRunner
 from changeproof.config import load_config
+from changeproof.equivalence import equivalence
 
 
 def test_three_us_banks_on_the_general_profile_and_three_eu_banks_on_dora():
@@ -261,3 +262,26 @@ def test_a_days_new_business_is_settled_from_the_programs_outputs(tmp_path):
     assert day["loans"]["installments"] == len(today["LOANPMT"]) and Decimal(day["loans"]["interest"]) > 0
     assert sum(day["fx"]["decisions"].values()) == len(today["FXCONV"])
     assert day["cash"]["transactions"] == len(today["CASHAGG"]) and day["cash"]["reported"] > 0
+
+
+def test_a_merged_reporting_flip_is_not_offered_again_as_a_defect(tmp_path):
+    bank = BANKS[1]
+    render(bank, tmp_path)
+    flip = next(c for c in catalogue(bank) if c.id == "cash-threshold-boundary")
+    path = tmp_path / flip.path
+    path.write_text(path.read_text().replace(flip.old, flip.new))
+    again = next(c for c in catalogue(bank, current(bank, tmp_path)) if c.id == "cash-threshold-boundary")
+    assert path.read_text().count(again.old) == 0
+
+
+@pytest.mark.xfail(strict=True, reason="planned: a missed structuring defect on main hides the next boundary flip")
+def test_a_cash_boundary_flip_is_caught_after_a_missed_structuring_defect_merged(tmp_path):
+    bank = BANKS[1]
+    root = repository(bank, tmp_path)
+    for change_id in ("cash-floor-down", "cash-struct-first-deposit", "cash-threshold-boundary"):
+        change = next(c for c in catalogue(bank, current(bank, root)) if c.id == change_id)
+        path = root / change.path
+        path.write_text(path.read_text().replace(change.old, change.new))
+        git(root, "-c", "user.name=x", "-c", "user.email=x@example.invalid", "commit", "-qam", change_id)
+    found = equivalence(root, "HEAD", scope="full-suite", runner=LocalRunner()).predicate
+    assert found["verdict"] == "not-equivalent"
