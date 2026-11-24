@@ -114,7 +114,7 @@ def test_a_bank_started_before_a_program_existed_onboards_it_in_one_commit(tmp_p
     root = repository(bank, tmp_path)
     for name in ("LOANPMT", "FXCONV", "CASHAGG"):
         (root / "src" / f"{name}.cbl").unlink()
-    git(root, "commit", "-q", "-am", "drop", "--author", "x <x@example.invalid>")
+    git(root, "-c", "user.name=x", "-c", "user.email=x@example.invalid", "commit", "-q", "-am", "drop")
     again = repository(bank, tmp_path, 9)
     assert sorted(p.stem for p in (again / "src").glob("*.cbl")) == sorted(PROGRAMS)
     assert git(again, "log", "-1", "--format=%s").strip() == "TRUST-2: Onboard LOANPMT, FXCONV, CASHAGG"
