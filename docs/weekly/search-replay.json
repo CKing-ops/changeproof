@@ -1,0 +1,1168 @@
+{
+  "ledger_rows": 1050,
+  "outcomes": [
+    "missed",
+    "proven",
+    "confirmed"
+  ],
+  "summary": {
+    "confirmed -> not-equivalent": 20,
+    "missed -> equivalent": 1,
+    "missed -> not-equivalent": 17,
+    "proven -> equivalent": 34
+  },
+  "scans": [
+    {
+      "bank": "tidewater",
+      "day": 1,
+      "change": "paysc-online-up",
+      "kind": "intended",
+      "commit": "6dfec3cd416681377e589ceb5da759130db382e2",
+      "provenance": {
+        "file": "src/PAYSCRN.cbl",
+        "line": 32
+      },
+      "recorded": "confirmed",
+      "recorded_verdict": "not-equivalent",
+      "recorded_tests": 34,
+      "verdict": "not-equivalent",
+      "tests": 46
+    },
+    {
+      "bank": "copperline",
+      "day": 1,
+      "change": "paysc-swap-compare",
+      "kind": "refactor",
+      "commit": "24040095bce168af21b2e6776ba3b95a5cef8e54",
+      "provenance": {
+        "file": "src/PAYSCRN.cbl",
+        "line": 37
+      },
+      "recorded": "proven",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 35,
+      "verdict": "equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "aldercove",
+      "day": 1,
+      "change": "intaccr-not-positive",
+      "kind": "refactor",
+      "commit": "316af5e1dd35f5bb467154331c7066139939161a",
+      "provenance": {
+        "file": "src/INTACCR.cbl",
+        "line": 21
+      },
+      "recorded": "proven",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 35,
+      "verdict": "equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "serravento",
+      "day": 1,
+      "change": "intaccr-rate-up",
+      "kind": "intended",
+      "commit": "a721a7002dc718d01620aff6de8bfbd3143303c7",
+      "provenance": {
+        "file": "src/INTACCR.cbl",
+        "line": 28
+      },
+      "recorded": "confirmed",
+      "recorded_verdict": "not-equivalent",
+      "recorded_tests": 34,
+      "verdict": "not-equivalent",
+      "tests": 46
+    },
+    {
+      "bank": "kestrelmark",
+      "day": 1,
+      "change": "intaccr-not-positive",
+      "kind": "refactor",
+      "commit": "71ae52e3345159a14990e92fa76c415251228684",
+      "provenance": {
+        "file": "src/INTACCR.cbl",
+        "line": 21
+      },
+      "recorded": "proven",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 35,
+      "verdict": "equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "prairie-ledger",
+      "day": 2,
+      "change": "paysc-swap-compare",
+      "kind": "refactor",
+      "commit": "8f1c745c8c7e51970536e35a95f15b857a7247aa",
+      "provenance": {
+        "file": "src/PAYSCRN.cbl",
+        "line": 37
+      },
+      "recorded": "proven",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 32,
+      "verdict": "equivalent",
+      "tests": 45
+    },
+    {
+      "bank": "tidewater",
+      "day": 2,
+      "change": "fee-free-txns-inclusive",
+      "kind": "refactor",
+      "commit": "fe488ffb341034ee3693d38a13f42877b4b90318",
+      "provenance": {
+        "file": "src/FEEASSES.cbl",
+        "line": 31
+      },
+      "recorded": "proven",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 34,
+      "verdict": "equivalent",
+      "tests": 46
+    },
+    {
+      "bank": "copperline",
+      "day": 2,
+      "change": "fee-waiver-strict",
+      "kind": "defect",
+      "commit": "a0b37aa53f3c685944ce57910192a4daa2f4555b",
+      "provenance": {
+        "file": "src/FEEASSES.cbl",
+        "line": 24
+      },
+      "recorded": "missed",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 35,
+      "verdict": "not-equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "aldercove",
+      "day": 2,
+      "change": "paysc-swap-compare",
+      "kind": "refactor",
+      "commit": "77d5b49944822eb18836443a14178396d3ef5790",
+      "provenance": {
+        "file": "src/PAYSCRN.cbl",
+        "line": 37
+      },
+      "recorded": "proven",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 35,
+      "verdict": "equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "serravento",
+      "day": 2,
+      "change": "post-od-fee-down",
+      "kind": "intended",
+      "commit": "2633e8782a3d463924ac0d8ef01b322075d07567",
+      "provenance": {
+        "file": "src/POSTTXN.cbl",
+        "line": 94
+      },
+      "recorded": "missed",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 34,
+      "verdict": "not-equivalent",
+      "tests": 46
+    },
+    {
+      "bank": "tidewater",
+      "day": 3,
+      "change": "paysc-swap-compare",
+      "kind": "refactor",
+      "commit": "0c44416d2310505ccd6519743442b8f03f3ea0ed",
+      "provenance": {
+        "file": "src/PAYSCRN.cbl",
+        "line": 37
+      },
+      "recorded": "proven",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 33,
+      "verdict": "equivalent",
+      "tests": 46
+    },
+    {
+      "bank": "copperline",
+      "day": 3,
+      "change": "fee-retail-up",
+      "kind": "intended",
+      "commit": "61f0480c71e6d91fcf856fd6963b4d992e53ab16",
+      "provenance": {
+        "file": "src/FEEASSES.cbl",
+        "line": 27
+      },
+      "recorded": "confirmed",
+      "recorded_verdict": "not-equivalent",
+      "recorded_tests": 35,
+      "verdict": "not-equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "aldercove",
+      "day": 3,
+      "change": "fee-free-txns-inclusive",
+      "kind": "refactor",
+      "commit": "bc1b6d1c291ae45c31dfd46d424b91eef523c294",
+      "provenance": {
+        "file": "src/FEEASSES.cbl",
+        "line": 31
+      },
+      "recorded": "proven",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 35,
+      "verdict": "equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "prairie-ledger",
+      "day": 4,
+      "change": "post-compute",
+      "kind": "refactor",
+      "commit": "ea4313a0a2792fb88d99c05ed60002210a3c021a",
+      "provenance": {
+        "file": "src/POSTTXN.cbl",
+        "line": 85
+      },
+      "recorded": "proven",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 32,
+      "verdict": "equivalent",
+      "tests": 45
+    },
+    {
+      "bank": "tidewater",
+      "day": 4,
+      "change": "fee-waiver-strict",
+      "kind": "defect",
+      "commit": "5553916a7e8660f640a82404ed4a406f982d6dd4",
+      "provenance": {
+        "file": "src/FEEASSES.cbl",
+        "line": 24
+      },
+      "recorded": "missed",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 33,
+      "verdict": "not-equivalent",
+      "tests": 46
+    },
+    {
+      "bank": "serravento",
+      "day": 4,
+      "change": "paysc-swap-compare",
+      "kind": "refactor",
+      "commit": "98484808a51082d89cd2b79dbc37335cb64a9903",
+      "provenance": {
+        "file": "src/PAYSCRN.cbl",
+        "line": 37
+      },
+      "recorded": "proven",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 34,
+      "verdict": "equivalent",
+      "tests": 46
+    },
+    {
+      "bank": "copperline",
+      "day": 5,
+      "change": "intaccr-rate-up",
+      "kind": "intended",
+      "commit": "c3549942feed35caa1ae9c433dcd24a6732c7692",
+      "provenance": {
+        "file": "src/INTACCR.cbl",
+        "line": 28
+      },
+      "recorded": "confirmed",
+      "recorded_verdict": "not-equivalent",
+      "recorded_tests": 35,
+      "verdict": "not-equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "aldercove",
+      "day": 5,
+      "change": "fee-compute",
+      "kind": "refactor",
+      "commit": "ee346ad0890d6288d76d5399db720b38fe348e17",
+      "provenance": {
+        "file": "src/FEEASSES.cbl",
+        "line": 27
+      },
+      "recorded": "proven",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 35,
+      "verdict": "equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "tidewater",
+      "day": 6,
+      "change": "fee-retail-up",
+      "kind": "intended",
+      "commit": "a219f06d219ddd82727b7065aa98adb31a90d6dd",
+      "provenance": {
+        "file": "src/FEEASSES.cbl",
+        "line": 27
+      },
+      "recorded": "confirmed",
+      "recorded_verdict": "not-equivalent",
+      "recorded_tests": 33,
+      "verdict": "not-equivalent",
+      "tests": 46
+    },
+    {
+      "bank": "aldercove",
+      "day": 6,
+      "change": "paysc-online-up",
+      "kind": "intended",
+      "commit": "1f6e06fb75a92f77012761702f3fe41d94786101",
+      "provenance": {
+        "file": "src/PAYSCRN.cbl",
+        "line": 32
+      },
+      "recorded": "confirmed",
+      "recorded_verdict": "not-equivalent",
+      "recorded_tests": 35,
+      "verdict": "not-equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "kestrelmark",
+      "day": 6,
+      "change": "post-compute",
+      "kind": "refactor",
+      "commit": "6c1f12006a0a6d250f749c0208c353c12acff7ea",
+      "provenance": {
+        "file": "src/POSTTXN.cbl",
+        "line": 85
+      },
+      "recorded": "proven",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 35,
+      "verdict": "equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "prairie-ledger",
+      "day": 7,
+      "change": "fee-free-txns-inclusive",
+      "kind": "refactor",
+      "commit": "5b614ac17afdd52efdc8208fe43035651e9807e3",
+      "provenance": {
+        "file": "src/FEEASSES.cbl",
+        "line": 31
+      },
+      "recorded": "proven",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 32,
+      "verdict": "equivalent",
+      "tests": 45
+    },
+    {
+      "bank": "aldercove",
+      "day": 7,
+      "change": "post-od-fee-down",
+      "kind": "intended",
+      "commit": "7cefb6be540a30bcaee259ca8f4a867cf216a605",
+      "provenance": {
+        "file": "src/POSTTXN.cbl",
+        "line": 94
+      },
+      "recorded": "missed",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 35,
+      "verdict": "not-equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "kestrelmark",
+      "day": 7,
+      "change": "intaccr-init",
+      "kind": "refactor",
+      "commit": "46c3c7c2a3b4ffef821bb8a15c887db223edb032",
+      "provenance": {
+        "file": "src/INTACCR.cbl",
+        "line": 19
+      },
+      "recorded": "proven",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 35,
+      "verdict": "equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "tidewater",
+      "day": 8,
+      "change": "post-od-fee-down",
+      "kind": "intended",
+      "commit": "9f9c5026e4645f598271a88f0487c5b5e463db4b",
+      "provenance": {
+        "file": "src/POSTTXN.cbl",
+        "line": 94
+      },
+      "recorded": "missed",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 33,
+      "verdict": "not-equivalent",
+      "tests": 46
+    },
+    {
+      "bank": "serravento",
+      "day": 8,
+      "change": "fee-retail-up",
+      "kind": "intended",
+      "commit": "63dd0c0cf5c95352e3424b3457ab9cb2e0ffca47",
+      "provenance": {
+        "file": "src/FEEASSES.cbl",
+        "line": 27
+      },
+      "recorded": "confirmed",
+      "recorded_verdict": "not-equivalent",
+      "recorded_tests": 34,
+      "verdict": "not-equivalent",
+      "tests": 46
+    },
+    {
+      "bank": "prairie-ledger",
+      "day": 9,
+      "change": "post-od-fee-down",
+      "kind": "intended",
+      "commit": "11c6d558a42c6ff2e7eda6f64b881da13e715545",
+      "provenance": {
+        "file": "src/POSTTXN.cbl",
+        "line": 94
+      },
+      "recorded": "missed",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 31,
+      "verdict": "not-equivalent",
+      "tests": 45
+    },
+    {
+      "bank": "copperline",
+      "day": 9,
+      "change": "fee-free-txns-inclusive",
+      "kind": "refactor",
+      "commit": "cbdf4fa1990095a50cc1e94047027365be5874ba",
+      "provenance": {
+        "file": "src/FEEASSES.cbl",
+        "line": 31
+      },
+      "recorded": "proven",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 35,
+      "verdict": "equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "kestrelmark",
+      "day": 9,
+      "change": "paysc-online-up",
+      "kind": "intended",
+      "commit": "ddffcd9e22a0578a0ec5de46bb4fd54ba18f356c",
+      "provenance": {
+        "file": "src/PAYSCRN.cbl",
+        "line": 32
+      },
+      "recorded": "confirmed",
+      "recorded_verdict": "not-equivalent",
+      "recorded_tests": 35,
+      "verdict": "not-equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "tidewater",
+      "day": 10,
+      "change": "paysc-online-up",
+      "kind": "intended",
+      "commit": "c4381b72e653aad809c9f0a20e3d3466d5c24e9d",
+      "provenance": {
+        "file": "src/PAYSCRN.cbl",
+        "line": 32
+      },
+      "recorded": "confirmed",
+      "recorded_verdict": "not-equivalent",
+      "recorded_tests": 33,
+      "verdict": "not-equivalent",
+      "tests": 46
+    },
+    {
+      "bank": "aldercove",
+      "day": 10,
+      "change": "fee-waiver-strict",
+      "kind": "defect",
+      "commit": "6828487198e6ebcd8721fdd8a9bd168770969d50",
+      "provenance": {
+        "file": "src/FEEASSES.cbl",
+        "line": 24
+      },
+      "recorded": "missed",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 35,
+      "verdict": "not-equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "kestrelmark",
+      "day": 10,
+      "change": "intaccr-rate-up",
+      "kind": "intended",
+      "commit": "325917b17b95f19113b4628742ac3a2c8119154b",
+      "provenance": {
+        "file": "src/INTACCR.cbl",
+        "line": 28
+      },
+      "recorded": "confirmed",
+      "recorded_verdict": "not-equivalent",
+      "recorded_tests": 35,
+      "verdict": "not-equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "prairie-ledger",
+      "day": 11,
+      "change": "fee-retail-up",
+      "kind": "intended",
+      "commit": "07ce2747a0d34d0eaeb1c2270dcdf962dbc953cd",
+      "provenance": {
+        "file": "src/FEEASSES.cbl",
+        "line": 27
+      },
+      "recorded": "confirmed",
+      "recorded_verdict": "not-equivalent",
+      "recorded_tests": 31,
+      "verdict": "not-equivalent",
+      "tests": 45
+    },
+    {
+      "bank": "tidewater",
+      "day": 11,
+      "change": "post-compute",
+      "kind": "refactor",
+      "commit": "d64c4a85c51d9c3feee1e5e5144a20e581367366",
+      "provenance": {
+        "file": "src/POSTTXN.cbl",
+        "line": 85
+      },
+      "recorded": "proven",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 34,
+      "verdict": "equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "copperline",
+      "day": 11,
+      "change": "fee-compute",
+      "kind": "refactor",
+      "commit": "54a0dac464faccc7ff86662691fab16c329c9136",
+      "provenance": {
+        "file": "src/FEEASSES.cbl",
+        "line": 27
+      },
+      "recorded": "proven",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 34,
+      "verdict": "equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "serravento",
+      "day": 11,
+      "change": "fee-retail-up",
+      "kind": "intended",
+      "commit": "852bff8b6a4f79fb91117399cfd195669be6baf6",
+      "provenance": {
+        "file": "src/FEEASSES.cbl",
+        "line": 27
+      },
+      "recorded": "confirmed",
+      "recorded_verdict": "not-equivalent",
+      "recorded_tests": 34,
+      "verdict": "not-equivalent",
+      "tests": 46
+    },
+    {
+      "bank": "tidewater",
+      "day": 12,
+      "change": "intaccr-init",
+      "kind": "refactor",
+      "commit": "088b6a6685b19394073f2629b2026264c334260f",
+      "provenance": {
+        "file": "src/INTACCR.cbl",
+        "line": 19
+      },
+      "recorded": "proven",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 34,
+      "verdict": "equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "copperline",
+      "day": 12,
+      "change": "fee-per-txn-slip",
+      "kind": "defect",
+      "commit": "e55a1c18851d71778ce426d684d6e0c4902037a1",
+      "provenance": {
+        "file": "src/FEEASSES.cbl",
+        "line": 33
+      },
+      "recorded": "missed",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 34,
+      "verdict": "not-equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "prairie-ledger",
+      "day": 14,
+      "change": "intaccr-init",
+      "kind": "refactor",
+      "commit": "86b0360796d29a7beb4d74082d6cd9b2917cd6ad",
+      "provenance": {
+        "file": "src/INTACCR.cbl",
+        "line": 19
+      },
+      "recorded": "proven",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 31,
+      "verdict": "equivalent",
+      "tests": 45
+    },
+    {
+      "bank": "tidewater",
+      "day": 14,
+      "change": "fee-per-txn-slip",
+      "kind": "defect",
+      "commit": "34aeb85265bb62940859819e9e933521e968a16b",
+      "provenance": {
+        "file": "src/FEEASSES.cbl",
+        "line": 33
+      },
+      "recorded": "missed",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 34,
+      "verdict": "not-equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "copperline",
+      "day": 14,
+      "change": "intaccr-init",
+      "kind": "refactor",
+      "commit": "ba7881fbe0630673d04c8b1bb0f0563e57b681b1",
+      "provenance": {
+        "file": "src/INTACCR.cbl",
+        "line": 19
+      },
+      "recorded": "proven",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 34,
+      "verdict": "equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "serravento",
+      "day": 14,
+      "change": "post-compute",
+      "kind": "refactor",
+      "commit": "7d65f4509e1a15b6b6bb66dd6ee8f93641580883",
+      "provenance": {
+        "file": "src/POSTTXN.cbl",
+        "line": 85
+      },
+      "recorded": "proven",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 34,
+      "verdict": "equivalent",
+      "tests": 46
+    },
+    {
+      "bank": "prairie-ledger",
+      "day": 15,
+      "change": "fee-per-txn-slip",
+      "kind": "defect",
+      "commit": "fc59f9e20579d9bcec0a2864e5a541c43c32ba6a",
+      "provenance": {
+        "file": "src/FEEASSES.cbl",
+        "line": 33
+      },
+      "recorded": "missed",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 31,
+      "verdict": "not-equivalent",
+      "tests": 45
+    },
+    {
+      "bank": "copperline",
+      "day": 15,
+      "change": "intaccr-not-positive",
+      "kind": "refactor",
+      "commit": "fae8c2c7efaa9729cbb1912cfaa32b2d21fa5f96",
+      "provenance": {
+        "file": "src/INTACCR.cbl",
+        "line": 21
+      },
+      "recorded": "proven",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 34,
+      "verdict": "equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "aldercove",
+      "day": 15,
+      "change": "post-compute",
+      "kind": "refactor",
+      "commit": "403cdbf3ac7789107559c2b81c80f6fcfe55ccd6",
+      "provenance": {
+        "file": "src/POSTTXN.cbl",
+        "line": 85
+      },
+      "recorded": "proven",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 35,
+      "verdict": "equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "tidewater",
+      "day": 16,
+      "change": "intaccr-not-positive",
+      "kind": "refactor",
+      "commit": "99287a8a576eea1d3b97a91625236cd0e3f5e753",
+      "provenance": {
+        "file": "src/INTACCR.cbl",
+        "line": 21
+      },
+      "recorded": "proven",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 34,
+      "verdict": "equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "serravento",
+      "day": 17,
+      "change": "fee-compute",
+      "kind": "refactor",
+      "commit": "88057cb93de882270b60131ba606c3d786b562ff",
+      "provenance": {
+        "file": "src/FEEASSES.cbl",
+        "line": 27
+      },
+      "recorded": "proven",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 34,
+      "verdict": "equivalent",
+      "tests": 46
+    },
+    {
+      "bank": "prairie-ledger",
+      "day": 18,
+      "change": "intaccr-not-positive",
+      "kind": "refactor",
+      "commit": "936068075413b5628306acf92520b0f8bfb4498f",
+      "provenance": {
+        "file": "src/INTACCR.cbl",
+        "line": 21
+      },
+      "recorded": "proven",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 31,
+      "verdict": "equivalent",
+      "tests": 45
+    },
+    {
+      "bank": "aldercove",
+      "day": 18,
+      "change": "intaccr-rate-up",
+      "kind": "intended",
+      "commit": "086672ef2d9426bc31d38c7270943341abc12efb",
+      "provenance": {
+        "file": "src/INTACCR.cbl",
+        "line": 28
+      },
+      "recorded": "confirmed",
+      "recorded_verdict": "not-equivalent",
+      "recorded_tests": 35,
+      "verdict": "not-equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "kestrelmark",
+      "day": 18,
+      "change": "fee-compute",
+      "kind": "refactor",
+      "commit": "4b69d35afc0bfad873cf21e761d014b17c7b99ad",
+      "provenance": {
+        "file": "src/FEEASSES.cbl",
+        "line": 27
+      },
+      "recorded": "proven",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 35,
+      "verdict": "equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "copperline",
+      "day": 19,
+      "change": "post-compute",
+      "kind": "refactor",
+      "commit": "cde8d043c7d3ed4ae1c8734c1da147a7b93d3799",
+      "provenance": {
+        "file": "src/POSTTXN.cbl",
+        "line": 85
+      },
+      "recorded": "proven",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 34,
+      "verdict": "equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "tidewater",
+      "day": 20,
+      "change": "intaccr-rate-up",
+      "kind": "intended",
+      "commit": "f968cd841228994a65b328c347c3372fb4cff132",
+      "provenance": {
+        "file": "src/INTACCR.cbl",
+        "line": 28
+      },
+      "recorded": "confirmed",
+      "recorded_verdict": "not-equivalent",
+      "recorded_tests": 34,
+      "verdict": "not-equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "aldercove",
+      "day": 20,
+      "change": "intaccr-init",
+      "kind": "refactor",
+      "commit": "586f723744fcd627923ae979ea72044f58b051eb",
+      "provenance": {
+        "file": "src/INTACCR.cbl",
+        "line": 19
+      },
+      "recorded": "proven",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 35,
+      "verdict": "equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "copperline",
+      "day": 21,
+      "change": "post-od-fee-down",
+      "kind": "intended",
+      "commit": "f1e9b4ae5990992de358be4e2972591c3e1c567f",
+      "provenance": {
+        "file": "src/POSTTXN.cbl",
+        "line": 94
+      },
+      "recorded": "missed",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 34,
+      "verdict": "not-equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "prairie-ledger",
+      "day": 22,
+      "change": "paysc-online-up",
+      "kind": "intended",
+      "commit": "77512d695b7d7ba0ec16cb32a1f02bab4d47b85b",
+      "provenance": {
+        "file": "src/PAYSCRN.cbl",
+        "line": 32
+      },
+      "recorded": "missed",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 31,
+      "verdict": "not-equivalent",
+      "tests": 45
+    },
+    {
+      "bank": "serravento",
+      "day": 23,
+      "change": "intaccr-not-positive",
+      "kind": "refactor",
+      "commit": "8aafb18c8cb77a9eab98e214e8a355493aed0c7e",
+      "provenance": {
+        "file": "src/INTACCR.cbl",
+        "line": 21
+      },
+      "recorded": "proven",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 34,
+      "verdict": "equivalent",
+      "tests": 46
+    },
+    {
+      "bank": "kestrelmark",
+      "day": 23,
+      "change": "post-od-fee-down",
+      "kind": "intended",
+      "commit": "09605a7fe662bd960e04bdf54da53962b219aa1a",
+      "provenance": {
+        "file": "src/POSTTXN.cbl",
+        "line": 94
+      },
+      "recorded": "missed",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 35,
+      "verdict": "not-equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "prairie-ledger",
+      "day": 24,
+      "change": "fee-waiver-strict",
+      "kind": "defect",
+      "commit": "fa71e58e7722fd44d418a118a30c2880b76ce048",
+      "provenance": {
+        "file": "src/FEEASSES.cbl",
+        "line": 24
+      },
+      "recorded": "missed",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 33,
+      "verdict": "not-equivalent",
+      "tests": 46
+    },
+    {
+      "bank": "copperline",
+      "day": 24,
+      "change": "intaccr-rate-up",
+      "kind": "intended",
+      "commit": "5d798601cb279ce976dc0d0956e13043e5a7764f",
+      "provenance": {
+        "file": "src/INTACCR.cbl",
+        "line": 28
+      },
+      "recorded": "confirmed",
+      "recorded_verdict": "not-equivalent",
+      "recorded_tests": 34,
+      "verdict": "not-equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "kestrelmark",
+      "day": 27,
+      "change": "paysc-swap-compare",
+      "kind": "refactor",
+      "commit": "a15d1f8402477b62e4cc256b8ee73050230cb95b",
+      "provenance": {
+        "file": "src/PAYSCRN.cbl",
+        "line": 37
+      },
+      "recorded": "proven",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 35,
+      "verdict": "equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "copperline",
+      "day": 31,
+      "change": "paysc-online-up",
+      "kind": "intended",
+      "commit": "b01fe702b3bee16494abc6047c63fc9854b1a44a",
+      "provenance": {
+        "file": "src/PAYSCRN.cbl",
+        "line": 32
+      },
+      "recorded": "confirmed",
+      "recorded_verdict": "not-equivalent",
+      "recorded_tests": 34,
+      "verdict": "not-equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "serravento",
+      "day": 32,
+      "change": "paysc-online-up",
+      "kind": "intended",
+      "commit": "f3c8a785b7bb27f38808365d529e3a9858b268ba",
+      "provenance": {
+        "file": "src/PAYSCRN.cbl",
+        "line": 32
+      },
+      "recorded": "confirmed",
+      "recorded_verdict": "not-equivalent",
+      "recorded_tests": 34,
+      "verdict": "not-equivalent",
+      "tests": 46
+    },
+    {
+      "bank": "serravento",
+      "day": 34,
+      "change": "fee-free-txns-inclusive",
+      "kind": "refactor",
+      "commit": "1b6f600ccaa876cfd42e5450bee3934a5c103fca",
+      "provenance": {
+        "file": "src/FEEASSES.cbl",
+        "line": 31
+      },
+      "recorded": "proven",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 35,
+      "verdict": "equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "kestrelmark",
+      "day": 34,
+      "change": "fee-free-txns-inclusive",
+      "kind": "refactor",
+      "commit": "c6eb7e1477e81053b0fe1c293a0bfe604d880a1e",
+      "provenance": {
+        "file": "src/FEEASSES.cbl",
+        "line": 31
+      },
+      "recorded": "proven",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 35,
+      "verdict": "equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "prairie-ledger",
+      "day": 36,
+      "change": "intaccr-rate-up",
+      "kind": "intended",
+      "commit": "a7ba57d52c7211d9d931c674193e693e94e1e219",
+      "provenance": {
+        "file": "src/INTACCR.cbl",
+        "line": 28
+      },
+      "recorded": "confirmed",
+      "recorded_verdict": "not-equivalent",
+      "recorded_tests": 33,
+      "verdict": "not-equivalent",
+      "tests": 46
+    },
+    {
+      "bank": "serravento",
+      "day": 39,
+      "change": "intaccr-init",
+      "kind": "refactor",
+      "commit": "3c49474cae922cb80ac300f22af3cc9136d3c940",
+      "provenance": {
+        "file": "src/INTACCR.cbl",
+        "line": 19
+      },
+      "recorded": "proven",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 34,
+      "verdict": "equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "tidewater",
+      "day": 42,
+      "change": "intaccr-truncate",
+      "kind": "defect",
+      "commit": "763189e7d8b224ea7800eba132b697a9ff908417",
+      "provenance": {
+        "file": "src/INTACCR.cbl",
+        "line": 38
+      },
+      "recorded": "missed",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 34,
+      "verdict": "equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "copperline",
+      "day": 42,
+      "change": "paysc-online-up",
+      "kind": "intended",
+      "commit": "8d2631e8b58cb91a798e129acbf8f28eaf83cfdd",
+      "provenance": {
+        "file": "src/PAYSCRN.cbl",
+        "line": 32
+      },
+      "recorded": "confirmed",
+      "recorded_verdict": "not-equivalent",
+      "recorded_tests": 34,
+      "verdict": "not-equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "serravento",
+      "day": 42,
+      "change": "fee-per-txn-slip",
+      "kind": "defect",
+      "commit": "2b6ce7948e242dbe11c5edb3506673b4f2241f05",
+      "provenance": {
+        "file": "src/FEEASSES.cbl",
+        "line": 33
+      },
+      "recorded": "missed",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 34,
+      "verdict": "not-equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "tidewater",
+      "day": 45,
+      "change": "intaccr-rate-up",
+      "kind": "intended",
+      "commit": "c4980af12f8a6febf6e3056be47c003f59051ff1",
+      "provenance": {
+        "file": "src/INTACCR.cbl",
+        "line": 28
+      },
+      "recorded": "confirmed",
+      "recorded_verdict": "not-equivalent",
+      "recorded_tests": 34,
+      "verdict": "not-equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "kestrelmark",
+      "day": 45,
+      "change": "fee-waiver-strict",
+      "kind": "defect",
+      "commit": "878156b6dc34ed7027af1123d3d28ab55b51bfc8",
+      "provenance": {
+        "file": "src/FEEASSES.cbl",
+        "line": 24
+      },
+      "recorded": "missed",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 35,
+      "verdict": "not-equivalent",
+      "tests": 47
+    },
+    {
+      "bank": "serravento",
+      "day": 56,
+      "change": "fee-waiver-strict",
+      "kind": "defect",
+      "commit": "ffde1ffdddfda2185ed5a2ed6abdf78076b8ee17",
+      "provenance": {
+        "file": "src/FEEASSES.cbl",
+        "line": 24
+      },
+      "recorded": "missed",
+      "recorded_verdict": "equivalent",
+      "recorded_tests": 34,
+      "verdict": "not-equivalent",
+      "tests": 47
+    }
+  ]
+}
