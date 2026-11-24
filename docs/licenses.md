@@ -5,6 +5,11 @@ Every dependency, vendored file and corpus source, with its license. Only permis
 Versions are the ones pinned in `uv.lock` as of Week 1; licenses were read from each package's
 installed metadata.
 
+## Optional add-on: changeproof-server (ADR 016)
+
+Shipped only to a client who asks. It adds no third-party package: it uses the Python standard
+library (`http.server`, `socketserver`, `ssl`) and the engine's own dependencies listed below.
+
 ## Runtime (shipped)
 
 | Package | Version | License |

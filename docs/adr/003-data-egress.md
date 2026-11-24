@@ -107,6 +107,15 @@ sanitizer.
    provider supports it; under `cnsa2`, `hybrid` and `nist-pqc` the call is refused otherwise.
    **Planned** (Week 20); the config rule that keeps `require_pq_transport` on is already enforced.
 
+### Inside the client's own network (added 2026-11-24, ADR 016)
+
+The optional `changeproof-server` package may serve evidence to other machines inside the client's
+own private network. That is not egress: nothing goes to a vendor or past the client's network.
+It is a separate package, so point 3 still holds for the engine package. It listens only on a Unix
+socket, loopback or a private address, needs mutual TLS on a private address, and while
+`require_pq_transport` is on it listens only on a Unix socket or loopback behind the client's own
+post-quantum TLS proxy (`tests/test_server.py`).
+
 ### Setup-time network use is separate
 
 Fetching dependencies (`uv sync`) and fetching the corpus (`scripts/fetch_corpus.py`) happen at
